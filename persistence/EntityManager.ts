@@ -1,86 +1,105 @@
-import { DependencyInjector }     from "../di/DependencyInjector";
+
+import { Data }    from "../Data/Model";
+import { Network } from "../Network/Ajax";
 import { EntityManagerInterface } from "./interfaces/EntityManagerInterface";
 
-export class EntityManager implements EntityManagerInterface
+export namespace Persistence
 {
-
-    private di     : DependencyInjector;
-    private source : string;
-    private model  : Object;
-    uow            : Object;
-
-    public constructor()
+    export class EntityManager implements EntityManagerInterface
     {
+        private source     : string;
+        private model      : Object;
+        private fnResponse : Function;
+        uow                : Object;
 
-    }
+        public constructor()
+        {
 
-    public find(model : Object, params : Object)
-    {
-        return [];
-    }
+        }
 
-    public findOne()
-    {
-        return {};
-    }
+        getData(model : Data.Model)
+        {
+            return [];
+        }
 
-    public update()
-    {
-        return false;
-    }
+        public initAjax(model : Data.Model)
+        {
+            var ajax = new Network.Ajax();
+            ajax.setUrl(model.getFind());
+            ajax.setParams(model.getFindParams());
+            ajax.setMethod(model.getMethod());
+            return ajax;
+        }
 
-    public delete()
-    {
-        return false;
-    }
+        private findFilter(data, params : Object)
+        {
+            
+        }
 
-    public save()
-    {
-        return false;
-    }
+        public find(model : Data.Model, params : Object)
+        {
+            var ajax = this.initAjax(model);
+            return this;
+        }
 
-    public flush()
-    {
-        return false;
-    }
+        public response(fn : Function)
+        {
+            this.fnResponse = fn.bind(this);
+        }
 
-    public reset()
-    {
-        return false;
-    }
+        public findOne(model : Object, params : Object)
+        {
+            return {};
+        }
 
-    public group()
-    {
-        return {};
-    }
+        public update()
+        {
+            return false;
+        }
 
-    public distinct()
-    {
-        return {};
-    }
+        public delete()
+        {
+            return false;
+        }
 
-    public count()
-    {
-        return 0;
-    }
+        public save()
+        {
+            return false;
+        }
 
-    public purge()
-    {
-        return false;
-    }
+        public flush()
+        {
+            return false;
+        }
 
-    public forget()
-    {
-        return false;
-    }
+        public reset()
+        {
+            return false;
+        }
 
-    public setDi(dependencyInjector : DependencyInjector)
-    {
-        this.di = dependencyInjector;
-    }
+        public group()
+        {
+            return {};
+        }
 
-    public getDi()
-    {
-        return this.di;
+        public distinct()
+        {
+            return {};
+        }
+
+        public count()
+        {
+            return 0;
+        }
+
+        public purge()
+        {
+            return false;
+        }
+
+        public forget()
+        {
+            return false;
+        }
     }
 }

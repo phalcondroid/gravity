@@ -1,5 +1,5 @@
-export class DataTypes
-{
+
+export class DataTypes {
     static BOOLEAN = 1;
     static INTEGER = 2;
     static STRING  = 3;

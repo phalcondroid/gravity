@@ -1,6 +1,6 @@
 
-export class Hydrator
-{
+export class Hydrator {
+
     public constructor()
     {
 
@@ -38,6 +38,6 @@ export class Hydrator
 
     public hydrateClass()
     {
-        
+
     }
 }
