@@ -1,6 +1,6 @@
-import { GravityArray } from "../../core/GravityArray"
-import { GravityString } from "../../core/GravityString"
-import { Ajax } from "../../core/Ajax"
+import { GravityArray } from "../core/GravityArray"
+import { GravityString } from "../core/GravityString"
+import { Ajax } from "../core/Ajax"
 
 /**
  * [Html description]
@@ -425,8 +425,7 @@ namespace Html
         public favIcon(favIcon) {
             let icon = new Html.I("favIcon" + this.id)
             .class(favIcon);
-            this.getElement()
-                .append(icon.getElement());
+            this.append(icon.getElement());
             return this;
         }
 
@@ -436,7 +435,7 @@ namespace Html
          * @return {[type]}      [description]
          */
         public href(href) {
-            this.getElement().attr("href", href);
+            this.attr("href", href);
             return this;
         }
     }
@@ -556,7 +555,7 @@ namespace Html
          * @return {[type]}      [description]
          */
         public type(type) {
-            this.getElement().attr("type", type);
+            this.attr("type", type);
             return this;
         }
 
@@ -568,8 +567,7 @@ namespace Html
         {
             let icon = new Html.I("favIcon" + this.id)
             .class(favIcon);
-            this.getElement()
-                .append(icon.getElement());
+            this.append(icon.getElement());
             return this;
         }
 
@@ -861,7 +859,7 @@ namespace Html
     {
         public src(src)
         {
-            this.getElement().attr("src", src);
+            this.attr("src", src);
             return this;
         }
     }
@@ -880,7 +878,7 @@ namespace Html
          */
         public type(type)
         {
-            this.getElement().attr("type", type);
+            this.attr("type", type);
             return this;
         }
 
@@ -892,7 +890,7 @@ namespace Html
         public val(value: any = null)
         {
             if (value === null) {
-                return this.getElement().val();
+                return this.val();
             }
             this.getElement().val(value);
             return this;
@@ -1161,7 +1159,7 @@ namespace Html
                 option.attr({
                     "value" : content[key],
                 });
-                option.getElement().text(content[key]);
+                option.text(content[key]);
                 this.append([
                     option
                 ]);
@@ -1271,7 +1269,7 @@ namespace Html
                     );
                 }
 
-                this.tr.getElement().append(
+                this.tr.append(
                     th.getElement()
                 );
 
@@ -1282,11 +1280,11 @@ namespace Html
                 i++;
             }
 
-            this.thead.getElement().append(
+            this.thead.append(
                 this.tr.getElement()
             );
 
-            this.getElement().append(
+            this.append(
                 this.thead.getElement()
             );
 
@@ -1437,25 +1435,6 @@ namespace Html
                 return true;
             }
             return false;
-        }
-
-        /**
-         *
-         * @param  {[type]} row [description]
-         * @return {[type]}     [description]
-         */
-        private paginate(row: any = 10)
-        {
-            this.getElement().DataTable({
-                searching: false,
-                lengthChange: false,
-                pageLength: row,
-                aoColumns : [
-                    null,
-                    null
-                ]
-            });
-            return this;
         }
     }
 

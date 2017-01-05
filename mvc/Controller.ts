@@ -1,11 +1,8 @@
 
-namespace Mvc {
-    
-    export class Controller
+export class Controller
+{
+    public constructor()
     {
-        public constructor()
-        {
 
-        }
     }
 }
