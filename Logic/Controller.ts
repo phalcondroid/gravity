@@ -1,20 +1,17 @@
+///<reference path="../Service/Service" />
 
-import { InjectionAwareInterface } from "../Service/InjectionAwareInterface";
-import { Service } from "../Service/Service";
-
-export namespace Logic
+namespace Logic
 {
-    export class Controller implements InjectionAwareInterface
+    export class Controller implements Service.InjectionAwareInterface
     {
-
-        private di;
+        di : Service.Container;
 
         public constructor()
         {
-            
+
         }
 
-        public setDi(di : Service.Locator)
+        public setDi(di : Service.Container)
         {
             this.di = di;
         }

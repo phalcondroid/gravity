@@ -1,43 +1,38 @@
 
-export class Hydrator {
+/// <reference path="../Reflection/Reflection" />
 
-    public constructor()
-    {
+namespace Hydrator {
 
-    }
+    export class Hydrator {
 
-    public hydrate()
-    {
+        private reflector : Reflection.Reflection;
 
-    }
+        public constructor()
+        {
+        }
 
-    public hydrateArray()
-    {
+        public hydrate(model : any, data)
+        {
+            var newModel = new model();
 
-    }
+            console.log(model, data);
 
-    public hydrateBoolean()
-    {
-
-    }
-
-    public hydrateString()
-    {
-
-    }
-
-    public hydrateInteger()
-    {
-
-    }
-
-    public hydrateObject()
-    {
-
-    }
-
-    public hydrateClass()
-    {
-
+            for (let key in data) {
+                switch (typeof newModel[key]) {
+                    case "function":
+                        var auxPropNested = new newModel[key];
+                        if (auxPropNested instanceof Data.RawModel) {
+                            newModel[key] = this.hydrate(newModel[key], data[key]);
+                        } else {
+                            newModel[key] = data[key];
+                        }
+                        break;
+                    default:
+                        newModel[key] = data[key];
+                        break;
+                }
+            }
+            return newModel;
+        }
     }
 }

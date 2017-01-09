@@ -1,27 +1,61 @@
-export namespace Network
+
+namespace Network
 {
     export class Ajax
     {
-
         private httpRequest;
         private method      : string = "GET";
         private parameters  : string = "";
         private error       : any;
         private url         : string;
-        private bfSendFn    : Function;
+        private container   : any[] = [];
+        public  responseFn  : Function = function() {};
+        public  bfSendFn    : Function = function () {}.bind(this);
 
+        /**
+         *
+         */
         public constructor()
         {
             this.httpRequest = new XMLHttpRequest();
-            this.bfSendFn();
         }
 
+        /**
+         *
+         */
         public setUrl(url)
         {
             this.url = url;
             return this;
         }
 
+        /**
+         *
+         */
+        public getUrl()
+        {
+            return this.url;
+        }
+
+        /**
+         *
+         */
+        public setContainer(key, value)
+        {
+            this.container[key] = value;
+        }
+
+        /**
+         *
+         */
+        public getContainer(key)
+        {
+            return this.container[key];
+        }
+
+        /**
+         *
+         */
         public setParams(params, value : any = false)
         {
             if (typeof params == "object") {
@@ -41,47 +75,73 @@ export namespace Network
             return this;
         }
 
+        /**
+         *
+         */
         public post()
         {
             this.setMethod("POST");
             return this;
         }
 
+        /**
+         *
+         */
         public get()
         {
             this.setMethod("GET");
             return this;
         }
 
+        /**
+         *
+         */
         public setMethod(method : string)
         {
             this.method = method;
             return this;
         }
 
-        public response(responseFunction)
+        /**
+         *
+         */
+        public response(responseFunction : Function)
         {
+            this.responseFn = responseFunction;
             try {
+                this.bfSendFn();
                 this.httpRequest.onreadystatechange = function () {
                     if (this.httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (this.httpRequest.status === 200) {
-                            responseFunction(this.httpRequest.response);
+                            if (typeof this.httpRequest.response != "undefined") {
+                                if (typeof this.responseFn != "undefined") {
+                                    this.responseFn(
+                                        this.httpRequest.response
+                                    );
+                                }
+                            }
                         } else {
                             this.error = "ajax status" + this.httpRequest.status + " " + this.httpRequest.statusText;
                         }
                     }
-                };
+                }.bind(this);
             } catch (e) {
-                responseFunction(e.description);
+                console.log("Network.AJax.Exception", e);
             }
             return this;
         }
 
-        public beforeSend(fn : Function = function() {})
+        /**
+         *
+         */
+        public beforeSend(fn : Function)
         {
             this.bfSendFn = fn;
         }
 
+        /**
+         *
+         */
         private setHeaders()
         {
             this.httpRequest.setRequestHeader(
@@ -90,15 +150,33 @@ export namespace Network
             );
         }
 
+        /**
+         *
+         */
         public getError(errorFunction)
         {
             errorFunction(this.error);
         }
 
+        public clear()
+        {
+            this.method     = "GET";
+            this.parameters = "";
+            this.error      = null;
+            this.url        = "";
+            this.bfSendFn   = function () {};
+            this.responseFn = function () {};
+            this.container  = [];
+        }
+
+        /**
+         *
+         */
         public send(fn : any = false)
         {
+
             if (typeof fn == "function") {
-                this.response(fn);
+                this.response(fn.bind(this));
             }
 
             this.httpRequest.open(

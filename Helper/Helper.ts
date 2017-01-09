@@ -1,4 +1,7 @@
-export namespace Helper
+/// <reference path="../Errors/Errors"/>
+
+
+namespace Helper
 {
     export class ArrayHelper
     {
@@ -29,7 +32,7 @@ export namespace Helper
             return Math.floor((Math.random() * last) + init);
         }
 
-        public getUUID()
+        public static getUUID()
         {
           return this.getS4() + this.getS4() + '-' +
                  this.getS4() + '-' + this.getS4() + '-' +
@@ -37,7 +40,7 @@ export namespace Helper
                  this.getS4() + this.getS4();
         }
 
-        private getS4() {
+        private static getS4() {
             return Math.floor((1 + Math.random()) * 0x10000)
             .toString(16)
             .substring(1);
@@ -69,6 +72,27 @@ export namespace Helper
          */
         public static capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+    }
+
+    export class Validator
+    {
+        public static validStructArray(data : any[])
+        {
+            try {
+                if (Array.isArray(data)) {
+                    var firstPosition = data[0];
+                    if (typeof firstPosition == "object") {
+                        return true;
+                    } else {
+                        throw Errors.Message.NOT_VALID_ARRAY_OBJECT;
+                    }
+                } else {
+                    throw Errors.Message.NOT_VALID_ARRAY;
+                }
+            } catch (e) {
+
+            }
         }
     }
 }

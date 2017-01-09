@@ -1,11 +1,11 @@
-import { Helper } from "../Helper/Helper";
-import { Network } from "../Network/Ajax";
+/// <reference path="../Helper/Helper" />
+/// <reference path="../Network/Network" />
 
 /**
  * [Html description]
  * @type {[type]}
  */
-export namespace Html
+namespace Html
 {
 
     /**
