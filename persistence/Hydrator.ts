@@ -15,8 +15,6 @@ namespace Hydrator {
         {
             var newModel = new model();
 
-            console.log(model, data);
-
             for (let key in data) {
                 switch (typeof newModel[key]) {
                     case "function":
