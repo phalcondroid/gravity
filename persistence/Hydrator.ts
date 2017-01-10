@@ -1,4 +1,5 @@
 
+/// <reference path="./UnitOfWork" />
 /// <reference path="../Reflection/Reflection" />
 
 namespace Hydrator {
@@ -14,6 +15,7 @@ namespace Hydrator {
         public hydrate(model : any, data)
         {
             var newModel = new model();
+            newModel.state = UnitOfWork.UnitOfWork.CREATED;
 
             for (let key in data) {
                 switch (typeof newModel[key]) {

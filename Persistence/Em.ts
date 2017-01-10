@@ -1,29 +1,27 @@
+
+/// <reference path="./UnitOfWork" />
 /// <reference path="../Network/Network" />
 /// <reference path="../Data/Data" />
+/// <reference path="./Criteria" />
+/// <reference path="./Hydrator" />
 
 namespace Em
 {
     export class EntityManager implements EntityManagerInterface
     {
         di                 : Service.Container;
-        uow                : Object;
+        uow                : UnitOfWork.UnitOfWork;
         private container  : Service.Container = null;
         private ajax       : Network.Ajax      = null;
         private hydrator   : Hydrator.Hydrator = null;
         private source     : string;
         private model      : Object;
-        private fnResponse : Function;
+        private fnResponse : any[] = new Array;
         private resultSet  : any;
 
-        /**
-         *
-         */
-        private getAjax()
+        public constructor()
         {
-            if (this.ajax == null) {
-                this.ajax = this.getDi().get("Network.Ajax");
-            }
-            return this.ajax;
+            this.uow = new UnitOfWork.UnitOfWork;
         }
 
         /**
@@ -32,108 +30,144 @@ namespace Em
         private getContainer()
         {
             if (this.container == null) {
-                this.container = this.getDi().get("Service.Container");
+                this.container = this.getDi().get("container");
             }
             return this.container;
         }
 
-        private getHydrator()
+        /**
+         *
+         */
+        public find(model : any, params : Object = {})
         {
-            if (this.hydrator == null) {
-                this.hydrator = this.getDi().get("Hydrator.Hydrator");
-            }
-            return this.hydrator;
+            this.ajax = new Network.Ajax();
+
+            this.getContainer()
+                .set("transactionModel", model);
+
+            this.getContainer()
+                .set("transactionParams", params);
+
+            this.ajax.setContainer(
+                "transactionType",
+                "find"
+            );
+
+            let objModel = new model();
+            this.ajax.setUrl(
+                objModel.getFindUrl()
+            );
+            this.ajax.setParams(
+                objModel.getParams()
+            );
+            this.ajax.setMethod(
+                objModel.getMethod()
+            );
+
+            return this;
         }
 
         /**
          *
          */
-        public initAjax(uninitModel : any)
+        public findOne(model : any, params : Object = {})
         {
-            var model = new uninitModel();
-            this.getAjax().setUrl(
-                model.getFindUrl()
+
+            this.ajax = new Network.Ajax();
+
+            this.getContainer()
+                .set("transactionModel", model);
+
+            this.getContainer()
+                .set("transactionParams", params);
+
+            this.ajax.setContainer(
+                "transactionType",
+                "findOne"
             );
-            this.getAjax().setParams(
+
+            let objModel = new model();
+            this.ajax.setUrl(
+                objModel.getFindUrl()
+            );
+            this.ajax.setParams(
+                objModel.getParams()
+            );
+            this.ajax.setMethod(
+                objModel.getMethod()
+            );
+
+            return this;
+        }
+
+        private getResultSet(response, params, model)
+        {
+            let resultSet : any = new Array();
+            let hydrator = new Hydrator.Hydrator;
+
+            let filters  = new Criteria.Filters;
+            filters.buildCondition(params);
+
+            let data = filters.getMultipleRowValues(
+                response
+            );
+
+            for (let key in data) {
+                let newModel = hydrator.hydrate(
+                    model,
+                    data[key]
+                );
+                resultSet.push(
+                    newModel
+                );
+            }
+
+            if (resultSet.length == 0) {
+                resultSet = false;
+            }
+
+            return resultSet;
+        }
+
+        /**
+         *
+         */
+        public save(model : any)
+        {
+            this.ajax = new Network.Ajax();
+
+            this.getContainer()
+                .set("transactionModel", model);
+
+            this.getContainer()
+                .set("transactionObjectModel", model);
+
+            this.ajax.setContainer(
+                "transactionType",
+                "save"
+            );
+
+            switch (model.state) {
+                case UnitOfWork.UnitOfWork.NEW:
+                        this.ajax.setUrl(
+                            model.getInsertUrl()
+                        );
+                    break;
+                case UnitOfWork.UnitOfWork.CREATED:
+                        this.ajax.setUrl(
+                            model.getUpdateUrl()
+                        );
+                    break;
+            }
+
+            this.ajax.setParams(
                 model.getParams()
             );
-            this.getAjax().setMethod(
+            this.ajax.setMethod(
                 model.getMethod()
             );
-        }
-
-        /**
-         *
-         */
-        public find(model : Data.ModelAjax, params : Object)
-        {
-            this.initAjax(model);
-
-            this.getContainer()
-                .set("findModel", model);
-
-            this.getContainer()
-                .set("modelParams", params);
 
             return this;
-        }
-
-        /**
-         *
-         */
-        public response(fn : Function)
-        {
-            var params = this.getContainer()
-                .get("modelParams");
-
-            this.getAjax()
-                .response(function (response) {
-
-                    var filters = this.getDi().get("Criteria.Filters");
-                    filters.buildCondition(params);
-                    var data = filters.getMultipleRowValues(
-                        response
-                    );
-
-                    var resultSet : any = new Array();
-
-                    for (let key in data) {
-                        resultSet.push(
-                            this.getHydrator().hydrate(
-                                this.getContainer().get("findModel"),
-                                data[key]
-                            )
-                        );
-                    }
-
-                    if (resultSet.length == 0) {
-                        resultSet = false;
-                    }
-
-                    fn(resultSet);
-
-                }.bind(this));
-
-            this.getAjax()
-                .send();
-
-            return this;
-        }
-
-        /**
-         *
-         */
-        public findOne(model : Data.ModelAjax, params : Object)
-        {
-            return {};
-        }
-
-        /**
-         *
-         */
-        public update()
-        {
-            return false;
         }
 
         /**
@@ -147,9 +181,53 @@ namespace Em
         /**
          *
          */
-        public save()
+        public response(fn : Function)
         {
-            return false;
+
+            var model  = this.getContainer()
+                .get("transactionModel");
+
+            var type = this.ajax.getContainer("transactionType");
+
+            if (type == "find" || type == "findOne") {
+                var params = this.getContainer()
+                    .get("transactionParams");
+            }
+
+            this.ajax.response(function (response) {
+
+                    let resultSet : any = new Array();
+
+                    switch (type) {
+                        case "findOne":
+                                resultSet = this.getResultSet(
+                                    response,
+                                    params,
+                                    model
+                                );
+                                if (resultSet != false) {
+                                    resultSet = resultSet[0];
+                                }
+                            break;
+                        case "find":
+                                resultSet = this.getResultSet(
+                                    response,
+                                    params,
+                                    model
+                                );
+                            break;
+                        case "save":
+                                resultSet = response;
+                            break;
+                    }
+
+                    fn(resultSet).bind(this);
+
+            }.bind(this));
+
+            this.ajax.send();
+
+            return this;
         }
 
         /**
@@ -206,6 +284,18 @@ namespace Em
         public forget()
         {
             return false;
+        }
+
+        public checksum(obj)
+        {
+            var keys = Object.keys(obj).sort();
+            var output = [], prop;
+            for (var i = 0; i < keys.length; i++) {
+                prop = keys[i];
+                output.push(prop);
+                output.push(obj[prop]);
+            }
+            return JSON.stringify(output);
         }
 
         public setDi(di : Service.Container)

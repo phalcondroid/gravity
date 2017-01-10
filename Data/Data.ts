@@ -3,6 +3,9 @@ namespace Data
 {
     export class RawModel
     {
+
+        state         : number = 1;
+
         public initialize()
         {
         }
@@ -33,7 +36,6 @@ namespace Data
         updateUrl     : string;
         findUrl       : string;
         params        : Object;
-        state         : number;
         internalId    : string;
         method        : string = "POST";
 

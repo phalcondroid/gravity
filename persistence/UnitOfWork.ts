@@ -2,9 +2,9 @@
 namespace UnitOfWork {
     export class UnitOfWork
     {
-        static NEW = 1;
-        static UPDATED = 2;
-        static DELETED = 3;
+        public static NEW = 1;
+        public static CREATED   = 2;
+        public static DELETED   = 3;
 
         private detached : string[];
         private updated  : string[];

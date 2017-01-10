@@ -1,7 +1,8 @@
-/// <reference path="../Persistence/Em" />
+
 /// <reference path="../Persistence/Criteria" />
 /// <reference path="../Persistence/Hydrator" />
 /// <reference path="../Network/Network" />
+/// <reference path="../Persistence/Em" />
 /// <reference path="../Errors/Errors" />
 
 namespace Service
@@ -33,15 +34,13 @@ namespace Service
 
     }
 
-    export class Factory extends Service.Container
+    export class FactoryDefault extends Service.Container
     {
         public constructor()
         {
             super();
-            this.set("Network.Ajax",      new Network.Ajax);
-            this.set("Criteria.Filters",  new Criteria.Filters);
-            this.set("Service.Container", new Service.Container);
-            this.set("Hydrator.Hydrator", new Hydrator.Hydrator);
+            this.set("ajax",      new Network.Ajax);
+            this.set("container", new Service.Container);
 
             var em = new Em.EntityManager;
             em.setDi(this);

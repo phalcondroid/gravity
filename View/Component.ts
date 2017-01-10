@@ -1,3 +1,6 @@
+
+/// <reference path="./Html" />
+
 namespace View
 {
     export class Component
@@ -6,5 +9,6 @@ namespace View
         {
 
         }
+
     }
 }

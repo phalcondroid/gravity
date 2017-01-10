@@ -8,6 +8,16 @@ namespace Logic
 
         public constructor()
         {
+            
+        }
+
+        public initialize()
+        {
+
+        }
+
+        public onConstruct()
+        {
 
         }
 
