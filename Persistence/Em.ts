@@ -1,4 +1,5 @@
 
+/// <reference path="../Reflection/Reflection" />
 /// <reference path="./UnitOfWork" />
 /// <reference path="../Network/Network" />
 /// <reference path="../Data/Data" />
@@ -16,7 +17,7 @@ namespace Em
         private hydrator   : Hydrator.Hydrator = null;
         private source     : string;
         private model      : Object;
-        private fnResponse : any[] = new Array;
+        private fnResponse : Function;
         private resultSet  : any;
 
         public constructor()
@@ -54,12 +55,20 @@ namespace Em
             );
 
             let objModel = new model();
+            var url = objModel.getFindUrl();
+            if (url == null) {
+                url = this.getDi().get("url").getBaseUrl() +
+                objModel.getClassName() +
+                "/find";
+            }
             this.ajax.setUrl(
-                objModel.getFindUrl()
+                url
             );
+
             this.ajax.setParams(
-                objModel.getParams()
+                params
             );
+
             this.ajax.setMethod(
                 objModel.getMethod()
             );
@@ -72,7 +81,6 @@ namespace Em
          */
         public findOne(model : any, params : Object = {})
         {
-
             this.ajax = new Network.Ajax();
 
             this.getContainer()
@@ -87,11 +95,18 @@ namespace Em
             );
 
             let objModel = new model();
+
+            var url = objModel.getFindUrl();
+            if (url == null) {
+                url = this.getDi().get("url").getBaseUrl() +
+                objModel.getClassName() +
+                "/find";
+            }
             this.ajax.setUrl(
-                objModel.getFindUrl()
+                url
             );
             this.ajax.setParams(
-                objModel.getParams()
+                params
             );
             this.ajax.setMethod(
                 objModel.getMethod()
@@ -149,16 +164,31 @@ namespace Em
 
             switch (model.state) {
                 case UnitOfWork.UnitOfWork.NEW:
+                        var url = model.getInsertUrl();
+                        if (url == null) {
+                            url = this.getDi().get("url").getBaseUrl() +
+                            model.getClassName() +
+                            "/insert";
+                        }
                         this.ajax.setUrl(
-                            model.getInsertUrl()
+                            url
                         );
                     break;
                 case UnitOfWork.UnitOfWork.CREATED:
+                        var url = model.getUpdateUrl();
+                        if (url == null) {
+                            url = this.getDi().get("url").getBaseUrl() +
+                            model.getClassName() +
+                            "/update";
+                        }
                         this.ajax.setUrl(
-                            model.getUpdateUrl()
+                            url
                         );
                     break;
             }
+
+            var reflection = new Reflection.Reflection();
+            console.log("save.reflect", reflection.getAtttributeAsObjects(model));
 
             this.ajax.setParams(
                 model.getParams()
@@ -194,6 +224,8 @@ namespace Em
                     .get("transactionParams");
             }
 
+            var fn = fn;
+
             this.ajax.response(function (response) {
 
                     let resultSet : any = new Array();
@@ -218,7 +250,7 @@ namespace Em
                             break;
                         case "save":
                                 resultSet = response;
-                                
+
                             break;
                     }
 

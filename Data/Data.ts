@@ -31,10 +31,10 @@ namespace Data
     {
 
         source        : string;
-        insertUrl     : string;
-        deleteUrl     : string;
-        updateUrl     : string;
-        findUrl       : string;
+        insertUrl     : string = null;
+        deleteUrl     : string = null;
+        updateUrl     : string = null;
+        findUrl       : string = null;
         params        : Object;
         internalId    : string;
         method        : string = "POST";
@@ -47,7 +47,7 @@ namespace Data
 
         public setSource(data : any)
         {
-            this.setInsertUrl(data.insert);
+            this.setInsertUrl(data.find);
             this.setUpdateUrl(data.update);
             this.setInsertUrl(data.insert);
             this.setFindUrl(data.insert);

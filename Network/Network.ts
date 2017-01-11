@@ -4,7 +4,7 @@ namespace Network
     export class Ajax
     {
         private httpRequest;
-        private method      : string = "GET";
+        private method      : string = "POST";
         private parameters  : string = "";
         private error       : any;
         private url         : string;
