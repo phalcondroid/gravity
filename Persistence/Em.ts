@@ -100,7 +100,7 @@ namespace Em
             if (url == null) {
                 url = this.getDi().get("url").getBaseUrl() +
                 objModel.getClassName() +
-                "/find";
+                "/findOne";
             }
             this.ajax.setUrl(
                 url
@@ -119,26 +119,31 @@ namespace Em
         {
             let resultSet : any = new Array();
             let hydrator = new Hydrator.Hydrator;
+            var data = JSON.parse(response);
 
-            let filters  = new Criteria.Filters;
-            filters.buildCondition(params);
+            if (Array.isArray(data)) {
+                for (let key in response) {
+                    let newModel = hydrator.hydrate(
+                        model,
+                        data[key]
+                    );
+                    resultSet.push(
+                        newModel
+                    );
+                }
 
-            let data = filters.getMultipleRowValues(
-                response
-            );
-
-            for (let key in data) {
+                if (resultSet.length == 0) {
+                    resultSet = false;
+                }
+            } else {
                 let newModel = hydrator.hydrate(
                     model,
-                    data[key]
+                    data
                 );
-                resultSet.push(
-                    newModel
-                );
-            }
-
-            if (resultSet.length == 0) {
-                resultSet = false;
+                resultSet = newModel;
+                if (resultSet.length == 0) {
+                    resultSet = false;
+                }
             }
 
             return resultSet;
@@ -162,12 +167,14 @@ namespace Em
                 "save"
             );
 
+            var modelName = model.getClassName();
+
             switch (model.state) {
                 case UnitOfWork.UnitOfWork.NEW:
                         var url = model.getInsertUrl();
                         if (url == null) {
                             url = this.getDi().get("url").getBaseUrl() +
-                            model.getClassName() +
+                            modelName +
                             "/insert";
                         }
                         this.ajax.setUrl(
@@ -178,7 +185,7 @@ namespace Em
                         var url = model.getUpdateUrl();
                         if (url == null) {
                             url = this.getDi().get("url").getBaseUrl() +
-                            model.getClassName() +
+                            modelName +
                             "/update";
                         }
                         this.ajax.setUrl(
@@ -188,11 +195,14 @@ namespace Em
             }
 
             var reflection = new Reflection.Reflection();
-            console.log("save.reflect", reflection.getAtttributeAsObjects(model));
-
-            this.ajax.setParams(
-                model.getParams()
+            var attrsAsString = JSON.stringify(
+                reflection.getAtttributeAsObjects(model)
             );
+            var objParams = {};
+            objParams[modelName] = attrsAsString;
+
+            this.ajax.setParams(objParams);
+
             this.ajax.setMethod(
                 model.getMethod()
             );
@@ -224,8 +234,6 @@ namespace Em
                     .get("transactionParams");
             }
 
-            var fn = fn;
-
             this.ajax.response(function (response) {
 
                     let resultSet : any = new Array();
@@ -254,7 +262,7 @@ namespace Em
                             break;
                     }
 
-                    fn(resultSet).bind(this);
+                    fn(resultSet);
 
             }.bind(this));
 

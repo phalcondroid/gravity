@@ -61,7 +61,7 @@ namespace Data
 
         public setInsertUrl(url : string)
         {
-            this.insertUrl    = url;
+            this.insertUrl  = url;
         }
 
         public setFindUrl(url : string)
@@ -71,12 +71,12 @@ namespace Data
 
         public setDeleteUrl(url : string)
         {
-            this.deleteUrl    = url;
+            this.deleteUrl  = url;
         }
 
         public setUpdateUrl(url : string)
         {
-            this.updateUrl    = url;
+            this.updateUrl  = url;
         }
 
         public getInsertUrl()
@@ -123,6 +123,24 @@ namespace Data
     export class SimpleModel extends RawModel
     {
 
+    }
+
+    export class Deny
+    {
+        public static getDeny()
+        {
+            return [
+                "state",
+                "source",
+                "insertUrl",
+                "deleteUrl",
+                "updateUrl",
+                "findUrl",
+                "params",
+                "internalId",
+                "method"
+            ];
+        }
     }
 
     export interface ModelInterface

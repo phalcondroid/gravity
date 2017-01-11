@@ -62,6 +62,7 @@ namespace Reflection
             }
 
             var output = '';
+            let attributes = new Array();
 
             for (var i in obj) {
 
@@ -69,28 +70,32 @@ namespace Reflection
                 var propValue = obj[i];
 
                 var type = (typeof propValue);
+                var tempObj = {};
 
                 switch (type) {
+                    case 'function':
+
+                        break;
 
                     case 'object':
-                        console.log("refelction", propValue);
                         if (propValue instanceof Data.RawModel) {
-                            this.attributes.push({
-                                propName : this.getAtttributeAsObjects(propValue)
-                            });
+                            tempObj[propName] = this.getAtttributeAsObjects(propValue);
+                            attributes.push(tempObj);
                         }
                         break;
 
                     default:
-                        this.attributes.push({
-                            propName : propValue
-                        });
+                        var deny = Data.Deny.getDeny();
+                        if (deny.indexOf(propName) == -1) {
+                            tempObj[propName] = propValue;
+                            attributes.push(tempObj);
+                        }
                         break;
 
                 }
             }
 
-            return output;
+            return attributes;
         }
 
         /**
