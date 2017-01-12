@@ -1,7 +1,8 @@
 
 /// <reference path="../Reflection/Reflection" />
-/// <reference path="./UnitOfWork" />
+/// <reference path="../Service/Service" />
 /// <reference path="../Network/Network" />
+/// <reference path="./UnitOfWork" />
 /// <reference path="../Data/Data" />
 /// <reference path="./Criteria" />
 /// <reference path="./Hydrator" />
@@ -42,6 +43,7 @@ namespace Em
         public find(model : any, params : Object = {})
         {
             this.ajax = new Network.Ajax();
+            this.ajax.setDi(this.getDi());
 
             this.getContainer()
                 .set("transactionModel", model);
@@ -57,7 +59,7 @@ namespace Em
             let objModel = new model();
             var url = objModel.getFindUrl();
             if (url == null) {
-                url = this.getDi().get("url").getBaseUrl() +
+                url = this.getDi().get("url").get("baseUrl") +
                 objModel.getClassName() +
                 "/find";
             }
@@ -82,6 +84,7 @@ namespace Em
         public findOne(model : any, params : Object = {})
         {
             this.ajax = new Network.Ajax();
+            this.ajax.setDi(this.getDi());
 
             this.getContainer()
                 .set("transactionModel", model);
@@ -98,7 +101,7 @@ namespace Em
 
             var url = objModel.getFindUrl();
             if (url == null) {
-                url = this.getDi().get("url").getBaseUrl() +
+                url = this.getDi().get("url").get("baseUrl") +
                 objModel.getClassName() +
                 "/findOne";
             }
@@ -119,31 +122,26 @@ namespace Em
         {
             let resultSet : any = new Array();
             let hydrator = new Hydrator.Hydrator;
-            var data = JSON.parse(response);
 
-            if (Array.isArray(data)) {
-                for (let key in response) {
-                    let newModel = hydrator.hydrate(
-                        model,
-                        data[key]
-                    );
-                    resultSet.push(
-                        newModel
-                    );
-                }
+            let filters  = new Criteria.Filters;
+            filters.buildCondition(params);
 
-                if (resultSet.length == 0) {
-                    resultSet = false;
-                }
-            } else {
+            let data = filters.getMultipleRowValues(
+                response
+            );
+
+            for (let key in data) {
                 let newModel = hydrator.hydrate(
                     model,
-                    data
+                    data[key]
                 );
-                resultSet = newModel;
-                if (resultSet.length == 0) {
-                    resultSet = false;
-                }
+                resultSet.push(
+                    newModel
+                );
+            }
+
+            if (resultSet.length == 0) {
+                resultSet = false;
             }
 
             return resultSet;
@@ -155,6 +153,7 @@ namespace Em
         public save(model : any)
         {
             this.ajax = new Network.Ajax();
+            this.ajax.setDi(this.getDi());
 
             this.getContainer()
                 .set("transactionModel", model);
@@ -173,7 +172,7 @@ namespace Em
                 case UnitOfWork.UnitOfWork.NEW:
                         var url = model.getInsertUrl();
                         if (url == null) {
-                            url = this.getDi().get("url").getBaseUrl() +
+                            url = this.getDi().get("url").get("baseUrl")+
                             modelName +
                             "/insert";
                         }
@@ -184,7 +183,7 @@ namespace Em
                 case UnitOfWork.UnitOfWork.CREATED:
                         var url = model.getUpdateUrl();
                         if (url == null) {
-                            url = this.getDi().get("url").getBaseUrl() +
+                            url = this.getDi().get("url").get("baseUrl") +
                             modelName +
                             "/update";
                         }
@@ -223,7 +222,6 @@ namespace Em
          */
         public response(fn : Function)
         {
-
             var model  = this.getContainer()
                 .get("transactionModel");
 
@@ -258,11 +256,10 @@ namespace Em
                             break;
                         case "save":
                                 resultSet = response;
-
                             break;
                     }
 
-                    fn(resultSet);
+                    return fn(resultSet);
 
             }.bind(this));
 

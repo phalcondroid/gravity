@@ -1,8 +1,9 @@
 
 namespace Network
 {
-    export class Ajax
+    export class Ajax implements Service.InjectionAwareInterface
     {
+        di                  : Service.Container;
         private httpRequest;
         private method      : string = "POST";
         private parameters  : string = "";
@@ -187,6 +188,22 @@ namespace Network
             this.httpRequest.send(
                 this.parameters
             );
+        }
+
+        /**
+         *
+         */
+        public setDi(di : Service.Container)
+        {
+            this.di = di;
+        }
+
+        /**
+         *
+         */
+        public getDi()
+        {
+            return this.di;
         }
     }
 }

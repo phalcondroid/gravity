@@ -62,6 +62,37 @@ namespace Html
         /**
          *
          */
+        public byId(id : string)
+        {
+            this.element = document.getElementById(id);
+            return this;
+        }
+
+        /**
+         *
+         */
+        public byTag(name : string)
+        {
+            this.element = document.getElementsByTagName(
+                name
+            );
+            return this;
+        }
+
+        /**
+         *
+         */
+        public byClass(name : string)
+        {
+            this.element = document.getElementsByClassName(
+                name
+            );
+            return this;
+        }
+
+        /**
+         *
+         */
         public create(tag: string)
         {
             this.element = this.init(tag, this.id);
@@ -235,20 +266,56 @@ namespace Html
          */
         public append(append)
         {
-
             if (Array.isArray(append)) {
                 for (let key in append) {
-                    this.element.appendChild(append[key])
+                    this.checkAppendValue(
+                        append[key]
+                    );
                 }
             } else {
-                if (typeof append != "object") {
-                    this.element.appendChild(append);
-                } else {
-                    this.element.appendChild(append)
-                }
+                this.checkAppendValue(
+                    append
+                );
             }
 
             return this;
+        }
+
+        /**
+         *
+         */
+        private checkAppendValue(append)
+        {
+            switch (typeof append) {
+                case "string":
+                        this.element.appendChild(
+                            document.createTextNode(append)
+                        );
+                    break;
+                case "number":
+                        this.element.appendChild(
+                            document.createTextNode(
+                                append.toString()
+                            )
+                        );
+                    break;
+                case "object":
+                        if (append instanceof Html.HtmlElement) {
+                            this.element.appendChild(
+                                append.getElement()
+                            );
+                        } else {
+                            this.element.appendChild(
+                                append
+                            );
+                        }
+                    break;
+                default:
+                        this.element.appendChild(
+                            append
+                        );
+                    break;
+            }
         }
 
         /**
@@ -257,11 +324,11 @@ namespace Html
          * @return {[type]}      [description]
          */
         public html(html: any = null) {
-            if (html) {
-                this.element.innerHtml = html;
+            if (html != null) {
+                this.getElement().innerHTML = html;
                 return this;
             } else {
-                return this.element.innerHtml;
+                return this.element.innerHTML;
             }
         }
 
@@ -1329,7 +1396,7 @@ namespace Html
                     var trIdentify2 = Helper.StringHelper.sanitizeString(key) + Helper.StringHelper.sanitizeString(row) + this.id;
                     var td = new Html.Td("TbodyTd" + trIdentify2);
 
-                    if (this.validateSystemKeys(row)) {
+                    if (!this.validateSystemKeys(row)) {
 
                         var contentRow = content[key][row];
                         var finalContent;
@@ -1379,9 +1446,9 @@ namespace Html
                             finalContent
                         ]);
 
-                        tr.append([
-                            td.getElement()
-                        ]);
+                        tr.append(
+                            td
+                        );
                     }
 
                     if (typeof this.fnCContent === "function") {
@@ -1394,9 +1461,9 @@ namespace Html
                     j++;
                 }
 
-                this.tbody.append([
-                    tr.getElement()
-                ]);
+                this.tbody.append(
+                    tr
+                );
 
                 i++;
             }
@@ -1405,9 +1472,9 @@ namespace Html
                 this.setHeader(header);
             }
 
-            this.append([
-                this.tbody.getElement()
-            ]);
+            this.append(
+                this.tbody
+            );
 
             return this;
         }

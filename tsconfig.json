@@ -10,6 +10,7 @@
     "filesGlob": [
         "./*.ts",
         "./**/*.ts",
+        "!./*.d.ts",
         "!./**/*.d.ts",
         "!./node_modules/**/*.ts"
     ]

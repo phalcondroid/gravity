@@ -1,28 +1,10 @@
+
+/// <reference path="../Service/Service" />
+
 namespace Url
 {
-    export class Url
+    export class Url extends Service.Container
     {
-
-        private baseUrl : string;
-
-        public constructor(base : string = "")
-        {
-            this.setBaseUrl(base);
-        }
-
-        public get(opt1 : string)
-        {
-            return this.baseUrl + opt1;
-        }
-
-        public setBaseUrl(url : string)
-        {
-            this.baseUrl = url;
-        }
-
-        public getBaseUrl()
-        {
-            return this.baseUrl;
-        }
+        
     }
 }

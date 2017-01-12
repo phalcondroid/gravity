@@ -111,82 +111,86 @@ namespace Criteria
 
             for (var key in params) {
 
-                if (key == Operator.CONDITIONAL) {
+                switch (key) {
 
-                    let conditional = params[key];
+                    case Operator.CONDITIONAL:
 
-                    for (var keyConditional in conditional) {
+                        let conditional = params[key];
 
-                        switch (keyConditional) {
-                            case Operator.AND:
+                        for (var keyConditional in conditional) {
 
-                                let iAnd = 1;
-                                let andContent = conditional[keyConditional];
-                                let andLength  = Object.keys(andContent).length;
+                            switch (keyConditional) {
+                                case Operator.AND:
 
-                                for (let keyAnd in andContent) {
-                                    this.getExpression(
-                                        keyAnd,
-                                        andContent[keyAnd],
-                                        Native.AND,
-                                        iAnd,
-                                        andLength
-                                    );
-                                    iAnd++;
-                                }
+                                    let iAnd = 1;
+                                    let andContent = conditional[keyConditional];
+                                    let andLength  = Object.keys(andContent).length;
 
-                                break;
-                            case Operator.OR:
-
-                                    let iOr = 1;
-                                    let orContent = conditional[keyConditional];
-                                    let orLength  = Object.keys(orContent).length;
-
-                                    for (let keyOr in orContent) {
+                                    for (let keyAnd in andContent) {
                                         this.getExpression(
-                                            keyOr,
-                                            orContent[keyOr],
-                                            Native.OR,
-                                            iOr,
-                                            orLength
+                                            keyAnd,
+                                            andContent[keyAnd],
+                                            Native.AND,
+                                            iAnd,
+                                            andLength
                                         );
-                                        iOr++;
+                                        iAnd++;
                                     }
-                                break;
-                            case Operator.SORT:
-                                    this.getSort(
-                                        conditional[keyConditional]
-                                    );
-                                break;
-                            case Operator.LIMIT:
-                                    this.getLimit(
-                                        conditional[keyConditional]
-                                    );
-                                break;
-                            case Operator.COLUMNS:
-                                    this.columns = conditional[keyConditional];
-                                    if (typeof conditional[keyConditional] != "object") {
-                                        throw Errors.Message.getCodeMessage(
-                                            Errors.MessageCode.NOT_VALID_OBJECT,
-                                            "$columns option"
-                                        );
-                                    }
-                                break;
-                            default:
 
-                                break;
+                                    break;
+                                case Operator.OR:
+
+                                        let iOr = 1;
+                                        let orContent = conditional[keyConditional];
+                                        let orLength  = Object.keys(orContent).length;
+
+                                        for (let keyOr in orContent) {
+                                            this.getExpression(
+                                                keyOr,
+                                                orContent[keyOr],
+                                                Native.OR,
+                                                iOr,
+                                                orLength
+                                            );
+                                            iOr++;
+                                        }
+                                    break;
+                                default:
+
+                                    break;
+                            }
                         }
-                    }
+                        break;
 
-                } else {
-                    this.getExpression(
-                        key,
-                        params[key],
-                        Native.AND,
-                        index,
-                        length
-                    );
-                    index++;
+                    case Operator.SORT:
+                            this.getSort(
+                                params[key]
+                            );
+                        break;
+                    case Operator.LIMIT:
+                            this.getLimit(
+                                params[key]
+                            );
+                        break;
+                    case Operator.COLUMNS:
+                            this.columns = params[key];
+                            if (typeof params[key] != "object") {
+                                throw Errors.Message.getCodeMessage(
+                                    Errors.MessageCode.NOT_VALID_OBJECT,
+                                    "$columns option"
+                                );
+                            }
+                        break;
+                    default:
+                        this.getExpression(
+                            key,
+                            params[key],
+                            Native.AND,
+                            index,
+                            length
+                        );
+                        index++;
+                        break;
                 }
             }
         }
@@ -286,29 +290,38 @@ namespace Criteria
                 this.first = "true";
             }
 
-            var conditions = this.first;
             var data = new Array();
-            var evalValue = "if (" + conditions + ") { data.push(this.getColumns(row)); }";
 
-            for (let key in response) {
-                let row = response[key];
-                eval(
-                    evalValue
-                );
-            }
+            if (Array.isArray(response)) {
 
-            if (this.sort.length > 0) {
-                var i = 0;
-                for (let key in this.sort) {
-                    eval(this.sort[key]);
-                    i++;
+                var conditions = this.first;
+                var evalValue = "if (" + conditions + ") { data.push(this.getColumns(row)); }";
+
+                for (let key in response) {
+                    let row = response[key];
+                    eval(
+                        evalValue
+                    );
+                }
+
+                if (this.sort.length > 0) {
+                    var i = 0;
+                    for (let key in this.sort) {
+                        eval(this.sort[key]);
+                        i++;
+                    }
+                }
+
+                if (this.limit != null) {
+                    eval(this.limit);
+                }
+            } else {
+                if (typeof response == "object") {
+                    data.push(this.getColumns(response));
+                } else {
+                    console.log("Response is not an object");
                 }
             }
-
-            if (this.limit != null) {
-                eval(this.limit);
-            }
-
             return data;
         }
 
