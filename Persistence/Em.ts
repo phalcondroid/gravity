@@ -13,9 +13,9 @@ namespace Em
     {
         di                 : Service.Container;
         uow                : UnitOfWork.UnitOfWork;
-        private container  : Service.Container = null;
-        private ajax       : Network.Ajax      = null;
-        private hydrator   : Hydrator.Hydrator = null;
+        private container  : Service.Container   = null;
+        private ajax       : Network.Ajax        = null;
+        private hydrator   : Hydrator.Hydrator   = null;
         private source     : string;
         private model      : Object;
         private fnResponse : Function;
@@ -40,9 +40,10 @@ namespace Em
         /**
          *
          */
-        public find(model : any, params : Object = {})
+        public find(context, model : any, params : Object = {})
         {
             this.ajax = new Network.Ajax();
+            this.ajax.setContext(context);
             this.ajax.setDi(this.getDi());
 
             this.getContainer()
@@ -51,7 +52,7 @@ namespace Em
             this.getContainer()
                 .set("transactionParams", params);
 
-            this.ajax.setContainer(
+            this.ajax.set(
                 "transactionType",
                 "find"
             );
@@ -81,9 +82,10 @@ namespace Em
         /**
          *
          */
-        public findOne(model : any, params : Object = {})
+        public findOne(context, model : any, params : Object = {})
         {
             this.ajax = new Network.Ajax();
+            this.ajax.setContext(context);
             this.ajax.setDi(this.getDi());
 
             this.getContainer()
@@ -92,7 +94,7 @@ namespace Em
             this.getContainer()
                 .set("transactionParams", params);
 
-            this.ajax.setContainer(
+            this.ajax.set(
                 "transactionType",
                 "findOne"
             );
@@ -150,9 +152,10 @@ namespace Em
         /**
          *
          */
-        public save(model : any)
+        public save(context, model : any)
         {
             this.ajax = new Network.Ajax();
+            this.ajax.setContext(context);
             this.ajax.setDi(this.getDi());
 
             this.getContainer()
@@ -161,7 +164,7 @@ namespace Em
             this.getContainer()
                 .set("transactionObjectModel", model);
 
-            this.ajax.setContainer(
+            this.ajax.set(
                 "transactionType",
                 "save"
             );
@@ -225,7 +228,7 @@ namespace Em
             var model  = this.getContainer()
                 .get("transactionModel");
 
-            var type = this.ajax.getContainer("transactionType");
+            var type = this.ajax.get("transactionType");
 
             if (type == "find" || type == "findOne") {
                 var params = this.getContainer()
@@ -351,13 +354,13 @@ namespace Em
     {
         uow : Object;
 
-        find(model     : Data.ModelAjax, params : Object);
-        findOne(model  : Data.ModelAjax, params : Object);
-        count(model    : Data.ModelAjax, params : Object);
-        distinct(model : Data.ModelAjax, params : Object);
-        group(model    : Data.ModelAjax, params : Object);
-        save(model     : Data.ModelAjax);
-        delete(model   : Data.ModelAjax);
+        find(conext,      model : Data.ModelAjax, params : Object);
+        findOne(context,  model : Data.ModelAjax, params : Object);
+        count(context,    model : Data.ModelAjax, params : Object);
+        distinct(context, model : Data.ModelAjax, params : Object);
+        group(context,    model : Data.ModelAjax, params : Object);
+        save(context,     model : Data.ModelAjax);
+        delete(context,   model : Data.ModelAjax);
         forget();
         flush();
         purge();

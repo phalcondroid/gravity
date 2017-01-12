@@ -6,29 +6,38 @@ namespace View
 {
     export class Component
     {
-        private viewModelFromController : View.Model = null;
+        private viewModel : View.Model = null;
 
+        /**
+         *
+         */
         public constructor(viewModel : View.Model)
         {
-            this.setViewModel(viewModel);
+            this.viewModel = viewModel;
             this.initialize();
         }
 
+        /**
+         *
+         */
         public initialize()
         {
         }
 
-        public setViewModel(viewModel : View.Model)
+        /**
+         *
+         */
+        public getViewModel() : View.Model
         {
-            this.viewModelFromController = viewModel;
+            return this.viewModel;
         }
 
-        public get(key)
+        /**
+         *
+         */
+        public getVar(key)
         {
-            if (typeof this.viewModelFromController == null) {
-                this.viewModelFromController = new View.Model;
-            }
-            this.viewModelFromController.get(key);
+            return this.viewModel.get(key);
         }
     }
 

@@ -5,15 +5,27 @@ namespace Gravity
 {
     export class Application
     {
+        /**
+         *
+         */
+        private config : Object = null;
 
-        private config      : Object = null;
-        private env         : number = Environment.Scope.LOCAL;
+        /**
+         *
+         */
+        private env    : number = Environment.Scope.LOCAL;
 
+        /**
+         *
+         */
         public constructor()
         {
 
         }
 
+        /**
+         *
+         */
         public setScope(env : number)
         {
             this.env = env;
@@ -22,9 +34,9 @@ namespace Gravity
         /**
          *
          */
-        public setConfig(config : Object)
+        public setConfig(config : Environment.Config)
         {
-            this.config = config;
+            this.config = config.getConfig(this.env);
         }
 
         /**
@@ -32,34 +44,42 @@ namespace Gravity
          */
         private resolveConfig(di)
         {
+            var positionArray = new Array();
 
-            if (typeof this.config[this.env] != "undefined") {
-                for (let key in this.config) {
-                    switch (key) {
-                        case "url":
-                                this.resolveBaseUrl(
-                                    di,
-                                    this.config[key]
-                                );
-                            break;
-                        case "controllers":
-                                this.resolveControllers(
-                                    di,
-                                    this.config[key]
-                                )
-                            break;
-                        case "services":
-                                this.resolveServices(
-                                    di,
-                                    this.config[key]
-                                );
-                            break;
-                    }
+            var configData = this.config;
+
+            for (let key in configData) {
+                switch (key) {
+                    case "urls":
+                            this.resolveUrl(
+                                di,
+                                configData[key]
+                            );
+                        break;
+                    case "services":
+                            this.resolveServices(
+                                di,
+                                configData[key]
+                            );
+                        break;
                 }
+            }
+
+            //controllers executed in the final section
+            if (configData.hasOwnProperty("controllers")) {
+                this.resolveControllers(
+                    di,
+                    configData["controllers"]
+                );
+            } else {
+                throw "Config must have controllers item attached"
             }
         }
 
-        private resolveBaseUrl(di, urls)
+        /**
+         *
+         */
+        private resolveUrl(di, urls)
         {
             var url = new Url.Url();
 
@@ -68,7 +88,7 @@ namespace Gravity
                     if (typeof urls[key] == "string") {
                         url.set(
                             key,
-                            this.config[key]
+                            urls[key]
                         );
                     } else {
                         throw "Url must be string : " + urls[key];
@@ -76,11 +96,17 @@ namespace Gravity
                 }
             } else if(typeof url == "object") {
                 let urlKey = Object.keys(urls)[0];
-                url.set(urlKey, urls[urlKey]);
+                url.set(
+                    urlKey,
+                    urls[urlKey]
+                );
             } else {
                 throw "Url data unrecognized"
             }
-            di.set("url", url);
+            di.set(
+                "url",
+                url
+            );
         }
 
         /**
@@ -120,11 +146,15 @@ namespace Gravity
             }
         }
 
+        /**
+         *
+         */
         private resolveViews(controller : Logic.Controller , views : any[])
         {
             if (typeof views != "undefined") {
                 if (Array.isArray(views)) {
                     for (let key in views) {
+
                         let tempView = new views[key](
                             controller.getViewModel()
                         );
@@ -138,6 +168,9 @@ namespace Gravity
             }
         }
 
+        /**
+         *
+         */
         private resolveServices(di, service)
         {
             new service(di);

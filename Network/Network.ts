@@ -1,10 +1,22 @@
 
+/// <reference path='../Definitions/promise-polyfill.d.ts' />
+
 namespace Network
 {
+
+    export class MethodType
+    {
+        public static POST = "POST";
+        public static GET  = "GET";
+        public static PUT  = "PUT";
+        public static DELETE = "DELETE"
+    }
+
     export class Ajax implements Service.InjectionAwareInterface
     {
         di                  : Service.Container;
-        private httpRequest;
+        private httpRequest : any;
+        private context     : Object = {};
         private method      : string = "POST";
         private parameters  : string = "";
         private error       : any;
@@ -19,6 +31,22 @@ namespace Network
         public constructor()
         {
             this.httpRequest = new XMLHttpRequest();
+        }
+
+        /**
+         *
+         */
+        public setContext(ctx : Object)
+        {
+            this.context = ctx;
+        }
+
+        /**
+         *
+         */
+        public getContext()
+        {
+            return this.context;
         }
 
         /**
@@ -41,7 +69,7 @@ namespace Network
         /**
          *
          */
-        public setContainer(key, value)
+        public set(key, value)
         {
             this.container[key] = value;
         }
@@ -49,7 +77,7 @@ namespace Network
         /**
          *
          */
-        public getContainer(key)
+        public get(key)
         {
             return this.container[key];
         }
@@ -79,7 +107,7 @@ namespace Network
         /**
          *
          */
-        public post()
+        public POST()
         {
             this.setMethod("POST");
             return this;
@@ -88,7 +116,25 @@ namespace Network
         /**
          *
          */
-        public get()
+        public PUT()
+        {
+            this.setMethod("PUT");
+            return this;
+        }
+
+        /**
+         *
+         */
+        public DELETE()
+        {
+            this.setMethod("DELETE");
+            return this;
+        }
+
+        /**
+         *
+         */
+        public GET()
         {
             this.setMethod("GET");
             return this;
@@ -103,6 +149,14 @@ namespace Network
             return this;
         }
 
+        public addContext()
+        {
+            this.httpRequest.context = this.getContext();
+            this.httpRequest.getContext = function () {
+                return this.context;
+            };
+        }
+
         /**
          *
          */
@@ -111,6 +165,7 @@ namespace Network
             this.responseFn = responseFunction;
             try {
                 this.bfSendFn();
+                this.addContext();
                 this.httpRequest.onreadystatechange = function () {
                     if (this.httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (this.httpRequest.status === 200) {
