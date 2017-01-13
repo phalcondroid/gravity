@@ -27,6 +27,30 @@ namespace View
         /**
          *
          */
+        public getById(id)
+        {
+            return new Html.HtmlElement().byId(id);
+        }
+
+        /**
+         *
+         */
+        public getByClass(cls)
+        {
+            return new Html.HtmlElement().byClass(cls);
+        }
+
+        /**
+         *
+         */
+        public getByTag(tag)
+        {
+            return new Html.HtmlElement().byTag(tag);
+        }
+
+        /**
+         *
+         */
         public getViewModel() : View.Model
         {
             return this.viewModel;
