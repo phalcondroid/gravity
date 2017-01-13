@@ -1,6 +1,4 @@
 
-/// <reference path='../Definitions/promise-polyfill.d.ts' />
-
 namespace Network
 {
 

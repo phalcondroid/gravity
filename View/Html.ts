@@ -7,7 +7,6 @@
  */
 namespace Html
 {
-
     /**
      * [Html description]
      * @type {[type]}
@@ -59,6 +58,12 @@ namespace Html
             return this;
         }
 
+        public setElement(element)
+        {
+            this.element = element;
+            return this;
+        }
+
         /**
          *
          */
@@ -73,10 +78,20 @@ namespace Html
          */
         public byTag(name : string)
         {
-            this.element = document.getElementsByTagName(
+            var elements = document.getElementsByTagName(
                 name
             );
-            return this;
+            var result = new Array();
+            for (let key in elements) {
+                result.push(
+                    new Html.HtmlElement().setElement(elements[key])
+                );
+            }
+
+            if (result.length == 1) {
+                return result[0];
+            }
+            return result;
         }
 
         /**
@@ -84,9 +99,19 @@ namespace Html
          */
         public byClass(name : string)
         {
-            this.element = document.getElementsByClassName(
+            var elements = document.getElementsByClassName(
                 name
             );
+            var result = new Array();
+            for (let key in elements) {
+                result.push(
+                    new Html.HtmlElement().setElement(elements[key])
+                );
+            }
+
+            if (result.length == 1) {
+                return result[0];
+            }
             return this;
         }
 
@@ -108,7 +133,6 @@ namespace Html
          */
         public init(element: string, name: string)
         {
-
             this.className = element;
             let docElement = document.createElement(element);
 
@@ -266,7 +290,7 @@ namespace Html
          */
         public append(append)
         {
-            if (Array.isArray(append)) {
+            if (Array.isArray(append) || (append instanceof HTMLCollection)) {
                 for (let key in append) {
                     this.checkAppendValue(
                         append[key]
@@ -301,19 +325,17 @@ namespace Html
                     break;
                 case "object":
                         if (append instanceof Html.HtmlElement) {
-                            this.element.appendChild(
+                            this.verifyElement(
                                 append.getElement()
                             );
                         } else {
-                            this.element.appendChild(
+                            this.verifyElement(
                                 append
                             );
                         }
                     break;
                 default:
-                        this.element.appendChild(
-                            append
-                        );
+
                     break;
             }
         }
@@ -325,19 +347,59 @@ namespace Html
          */
         public html(html: any = null) {
             if (html != null) {
-                this.getElement().innerHTML = html;
+                this.removeChildNodes();
+                this.append(html);
                 return this;
             } else {
                 return this.element.innerHTML;
             }
         }
 
-        /**
-         *
-         */
-        public getHtml()
+        public verifyElement(append, type : string = "append")
         {
-            return this.element.innerHtml;
+            if (this.element instanceof HTMLCollection) {
+                for (var key in this.element) {
+                    if (typeof this.element[key].nodeType != "undefined") {
+                        if (this.element[key].nodeType == 1) {
+                            this.element[key].appendChild(
+                                append
+                            );
+                        }
+                    }
+                }
+            } else {
+                this.element.appendChild(
+                    append
+                );
+            }
+        }
+
+        private removeChildNodes()
+        {
+            if (this.element instanceof HTMLCollection) {
+                for (let key in this.element) {
+                    this.removeChilds(
+                        this.element[key],
+                        this.element[key].childNodes
+                    );
+                }
+            } else {
+                this.removeChilds(
+                    this.element,
+                    this.element.childNodes
+                );
+            }
+        }
+
+        private removeChilds(element, childs)
+        {
+            for (let key in childs) {
+                if (typeof this.element[key].nodeType != "undefined") {
+                    if (this.element[key].nodeType == 1) {
+                        this.element[key].removeChild(childs[key])
+                    }
+                }
+            }
         }
 
         /**
@@ -475,7 +537,7 @@ namespace Html
 
         public empty()
         {
-            this.element.innerHtml = "";
+            this.removeChildNodes();
         }
     }
 
@@ -600,6 +662,11 @@ namespace Html
      */
     export class Body extends HtmlElement
     {
+        public constructor()
+        {
+            super();
+            this.element = document.body;
+        }
     }
 
     /**
