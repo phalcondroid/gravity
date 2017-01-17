@@ -1,10 +1,12 @@
 
-/// <reference path="./UnitOfWork" />
 /// <reference path="../Reflection/Reflection" />
+/// <reference path="../Model/RawModel" />
+/// <reference path="./UnitOfWork" />
 
-namespace Hydrator {
-
-    export class Hydrator {
+namespace Persistence
+{
+    export class Hydrator
+    {
 
         private reflector : Reflection.Reflection;
 
@@ -15,13 +17,13 @@ namespace Hydrator {
         public hydrate(model : any, data)
         {
             var newModel = new model();
-            newModel.state = UnitOfWork.UnitOfWork.CREATED;
+            newModel.state = Persistence.UnitOfWork.CREATED;
 
             for (let key in data) {
                 switch (typeof newModel[key]) {
                     case "function":
                         var auxPropNested = new newModel[key];
-                        if (auxPropNested instanceof Data.RawModel) {
+                        if (auxPropNested instanceof Model.RawModel) {
                             newModel[key] = this.hydrate(newModel[key], data[key]);
                         } else {
                             newModel[key] = data[key];

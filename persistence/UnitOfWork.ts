@@ -1,5 +1,6 @@
 
-namespace UnitOfWork {
+namespace Persistence
+{
     export class UnitOfWork
     {
         public static NEW = 1;

@@ -1,3 +1,6 @@
+/// <reference path="../Model/RawModel" />
+/// <reference path="../Model/Deny" />
+
 namespace Reflection
 {
     export class Reflection
@@ -78,14 +81,14 @@ namespace Reflection
                         break;
 
                     case 'object':
-                        if (propValue instanceof Data.RawModel) {
+                        if (propValue instanceof Model.RawModel) {
                             tempObj[propName] = this.getAtttributeAsObjects(propValue);
                             attributes.push(tempObj);
                         }
                         break;
 
                     default:
-                        var deny = Data.Deny.getDeny();
+                        var deny = Model.Deny.getDeny();
                         if (deny.indexOf(propName) == -1) {
                             tempObj[propName] = propValue;
                             attributes.push(tempObj);

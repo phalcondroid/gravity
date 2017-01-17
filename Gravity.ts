@@ -1,5 +1,6 @@
 
-///<reference path="./Environment/Environment"/>
+///<reference path="./Environment/Scope"/>
+///<reference path="./Environment/Config"/>
 
 namespace Gravity
 {

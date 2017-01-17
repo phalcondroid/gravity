@@ -1,9 +1,8 @@
-
 /// <reference path="../Service/Container" />
 
-namespace Url
+namespace View
 {
-    export class Url extends Service.Container
+    export class Model extends Service.Container
     {
 
     }
