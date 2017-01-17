@@ -5,13 +5,13 @@
  * [Html description]
  * @type {[type]}
  */
-namespace Html
+namespace View
 {
     /**
      * [Html description]
      * @type {[type]}
      */
-    export class HtmlElement
+    export class ViewElement
     {
 
         /**
@@ -67,7 +67,7 @@ namespace Html
         /**
          *
          */
-        public byId(id : string)
+        public getById(id : string)
         {
             this.element = document.getElementById(id);
             return this;
@@ -76,7 +76,7 @@ namespace Html
         /**
          *
          */
-        public byTag(name : string)
+        public getByTag(name : string)
         {
             var elements = document.getElementsByTagName(
                 name
@@ -84,7 +84,7 @@ namespace Html
             var result = new Array();
             for (let key in elements) {
                 result.push(
-                    new Html.HtmlElement().setElement(elements[key])
+                    new View.ViewElement().setElement(elements[key])
                 );
             }
 
@@ -97,7 +97,7 @@ namespace Html
         /**
          *
          */
-        public byClass(name : string)
+        public getByClass(name : string)
         {
             var elements = document.getElementsByClassName(
                 name
@@ -105,7 +105,7 @@ namespace Html
             var result = new Array();
             for (let key in elements) {
                 result.push(
-                    new Html.HtmlElement().setElement(elements[key])
+                    new View.ViewElement().setElement(elements[key])
                 );
             }
 
@@ -129,7 +129,7 @@ namespace Html
          *
          * @param  {string} element [description]
          * @param  {string} name    [description]
-         * @return HTMLElement
+         * @return ViewElement
          */
         public init(element: string, name: string)
         {
@@ -324,7 +324,7 @@ namespace Html
                         );
                     break;
                 case "object":
-                        if (append instanceof Html.HtmlElement) {
+                        if (append instanceof View.ViewElement) {
                             this.verifyElement(
                                 append.getElement()
                             );
@@ -393,10 +393,12 @@ namespace Html
 
         private removeChilds(element, childs)
         {
-            for (let key in childs) {
-                if (typeof this.element[key].nodeType != "undefined") {
-                    if (this.element[key].nodeType == 1) {
-                        this.element[key].removeChild(childs[key])
+            if (childs.length > 0) {
+                for (let key in childs) {
+                    if (typeof this.element[key].nodeType != "undefined") {
+                        if (this.element[key].nodeType == 1) {
+                            this.element[key].removeChild(childs[key])
+                        }
                     }
                 }
             }
@@ -489,7 +491,7 @@ namespace Html
          */
         public clone(newIdentify = "") {
             let newElement = this.element.clone();
-            return new HtmlElement(newIdentify, newElement[0]);
+            return new ViewElement(newIdentify, newElement[0]);
         }
 
         /**
@@ -544,14 +546,14 @@ namespace Html
     /**
      *
      */
-    export class A extends HtmlElement {
+    export class A extends ViewElement {
 
         /**
          * [favIcon description]
          * @return {[type]} [description]
          */
         public favIcon(favIcon) {
-            let icon = new Html.I("favIcon" + this.id)
+            let icon = new View.I("favIcon" + this.id)
             .class(favIcon);
             this.append(icon.getElement());
             return this;
@@ -569,98 +571,98 @@ namespace Html
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Abbr extends HtmlElement
+    export class Abbr extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Address extends HtmlElement
+    export class Address extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Area extends HtmlElement
+    export class Area extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Article extends HtmlElement
+    export class Article extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Aside extends HtmlElement
+    export class Aside extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Audio extends HtmlElement
+    export class Audio extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class B extends HtmlElement
+    export class B extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Base extends HtmlElement
+    export class Base extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Bdi extends HtmlElement
+    export class Bdi extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Bdo extends HtmlElement
+    export class Bdo extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Blockquote extends HtmlElement
+    export class Blockquote extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Body extends HtmlElement
+    export class Body extends ViewElement
     {
         public constructor()
         {
@@ -670,17 +672,17 @@ namespace Html
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Br extends HtmlElement
+    export class Br extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Button extends HtmlElement {
+    export class Button extends ViewElement {
 
         /**
          * [type description]
@@ -698,9 +700,9 @@ namespace Html
          */
         public favIcon(favIcon)
         {
-            let icon = new Html.I("favIcon" + this.id)
+            let icon = new View.I("favIcon" + this.id)
             .class(favIcon);
-            this.append(icon.getElement());
+            this.append(icon);
             return this;
         }
 
@@ -710,7 +712,7 @@ namespace Html
          */
         public success()
         {
-            this.element.addClass("btn btn-success");
+            this.addClass("btn btn-success");
             return this;
         }
 
@@ -720,7 +722,27 @@ namespace Html
          */
         public notice()
         {
-            this.element.addClass("btn btn-notice");
+            this.addClass("btn btn-notice");
+            return this;
+        }
+
+        /**
+         * [notice description]
+         * @return {[type]} [description]
+         */
+        public default()
+        {
+            this.addClass("btn btn-default");
+            return this;
+        }
+
+        /**
+         * [notice description]
+         * @return {[type]} [description]
+         */
+        public primary()
+        {
+            this.addClass("btn btn-primary");
             return this;
         }
 
@@ -730,7 +752,7 @@ namespace Html
          */
         public warning()
         {
-            this.element.addClass("btn btn-warning");
+            this.addClass("btn btn-warning");
             return this;
         }
 
@@ -740,236 +762,236 @@ namespace Html
          */
         public danger()
         {
-            this.element.addClass("btn btn-danger");
+            this.addClass("btn btn-danger");
             return this;
         }
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Canvas extends HtmlElement
+    export class Canvas extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Caption extends HtmlElement
+    export class Caption extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Cite extends HtmlElement
+    export class Cite extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Code extends HtmlElement
+    export class Code extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Col extends HtmlElement
+    export class Col extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class ColGroup extends HtmlElement
+    export class ColGroup extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Datalist extends HtmlElement
+    export class Datalist extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Dd extends HtmlElement
+    export class Dd extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Del extends HtmlElement
+    export class Del extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Details extends HtmlElement
+    export class Details extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Dfn extends HtmlElement
+    export class Dfn extends ViewElement
     {
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Dialog extends HtmlElement
+    export class Dialog extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Div extends HtmlElement
+    export class Div extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Dl extends HtmlElement
+    export class Dl extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Dt extends HtmlElement
+    export class Dt extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Em extends HtmlElement
+    export class Em extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Embed extends HtmlElement
+    export class Embed extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Fieldset extends HtmlElement
+    export class Fieldset extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Figcaption extends HtmlElement
+    export class Figcaption extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Figure extends HtmlElement
+    export class Figure extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Footer extends HtmlElement
+    export class Footer extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Form extends HtmlElement
+    export class Form extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class H1 extends HtmlElement
+    export class H1 extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class H2 extends HtmlElement
+    export class H2 extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class H3 extends HtmlElement
+    export class H3 extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class H4 extends HtmlElement
+    export class H4 extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class H5 extends HtmlElement
+    export class H5 extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class H6 extends HtmlElement
+    export class H6 extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Head extends HtmlElement
+    export class Head extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Header extends HtmlElement
+    export class Header extends ViewElement
     {
     }
 
     /**
      *Ttpt
-    export class Html extends HtmlElement
+    export class Html extends ViewElement
     {
     }
     */
@@ -977,18 +999,18 @@ namespace Html
     /**
      *
      */
-    export class I extends HtmlElement
+    export class I extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Iframe extends HtmlElement
+    export class Iframe extends ViewElement
     {
     }
 
-    export class Img extends HtmlElement
+    export class Img extends ViewElement
     {
         public src(src)
         {
@@ -1001,7 +1023,7 @@ namespace Html
      * [Input description]
      * @type {[type]}
      */
-    export class Input extends HtmlElement
+    export class Input extends ViewElement
     {
 
         /**
@@ -1033,228 +1055,228 @@ namespace Html
     /**
      *
      */
-    export class Ins extends HtmlElement
+    export class Ins extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Kbd extends HtmlElement
+    export class Kbd extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Keygen extends HtmlElement
+    export class Keygen extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Label extends HtmlElement
+    export class Label extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Leyend extends HtmlElement
+    export class Leyend extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Li extends HtmlElement
+    export class Li extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Link extends HtmlElement
+    export class Link extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Main extends HtmlElement
+    export class Main extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Map extends HtmlElement
+    export class Map extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Menu extends HtmlElement
+    export class Menu extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class MenuItem extends HtmlElement
+    export class MenuItem extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Meta extends HtmlElement
+    export class Meta extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Meter extends HtmlElement
+    export class Meter extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Nav extends HtmlElement
+    export class Nav extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Noscrip extends HtmlElement
+    export class Noscrip extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Object extends HtmlElement
+    export class Object extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Ol extends HtmlElement
+    export class Ol extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Optgroup extends HtmlElement
+    export class Optgroup extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Option extends HtmlElement
+    export class Option extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Output extends HtmlElement
+    export class Output extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class P extends HtmlElement
+    export class P extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Param extends HtmlElement
+    export class Param extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Pre extends HtmlElement
+    export class Pre extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Progress extends HtmlElement
+    export class Progress extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Q extends HtmlElement
+    export class Q extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Rp extends HtmlElement
+    export class Rp extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Rt extends HtmlElement
+    export class Rt extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Ruby extends HtmlElement
+    export class Ruby extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class S extends HtmlElement
+    export class S extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Samp extends HtmlElement
+    export class Samp extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Script extends HtmlElement
+    export class Script extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Section extends HtmlElement
+    export class Section extends ViewElement
     {
     }
 
-    export class Select extends HtmlElement
+    export class Select extends ViewElement
     {
 
         public getSelected()
@@ -1262,7 +1284,7 @@ namespace Html
             var childs = this.getElement().childNodes;
             for (var key in childs) {
                 if (childs[key].getAttribute("selected") !== null) {
-                    return new Html.HtmlElement(childs[key]);
+                    return new View.ViewElement(childs[key]);
                 }
             }
             return null;
@@ -1288,7 +1310,7 @@ namespace Html
             this.empty();
 
             for (let key in content) {
-                let option = new Html.Option();
+                let option = new View.Option();
                 option.attr({
                     "value" : content[key],
                 });
@@ -1305,56 +1327,56 @@ namespace Html
     /**
      *
      */
-    export class Small extends HtmlElement
+    export class Small extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Source extends HtmlElement
+    export class Source extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Span extends HtmlElement
+    export class Span extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Strong extends HtmlElement
+    export class Strong extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Style extends HtmlElement
+    export class Style extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Sub extends HtmlElement
+    export class Sub extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Summary extends HtmlElement
+    export class Summary extends ViewElement
     {
     }
 
     /**
      *
      */
-    export class Sup extends HtmlElement
+    export class Sup extends ViewElement
     {
     }
 
@@ -1362,7 +1384,7 @@ namespace Html
      * [Table description]
      * @type {[type]}
      */
-    export class Table extends HtmlElement
+    export class Table extends ViewElement
     {
 
         private tblElements;
@@ -1384,13 +1406,13 @@ namespace Html
         {
 
             this.header = true;
-            this.thead  = new Html.Thead("thead" + this.id);
-            this.tr     = new Html.Tr("trHeader" + this.id);
+            this.thead  = new View.Thead("thead" + this.id);
+            this.tr     = new View.Tr("trHeader" + this.id);
 
             let i = 0;
             for (let key in columns) {
 
-                let th = new Html.Th("TheadTh" + key + this.id);
+                let th = new View.Th("TheadTh" + key + this.id);
 
                 if (typeof columns[key] == "object") {
                     th.append(
@@ -1444,15 +1466,15 @@ namespace Html
         {
 
             this.system = ["click", "customize"];
-            this.tbody = new Html.Tbody("tbody" + this.id);
+            this.tbody = new View.Tbody("tbody" + this.id);
 
-            var html = new Html.HtmlElement();
+            var html = new View.ViewElement();
             var i = 0;
 
             for (var key in content) {
 
                 var trIdentify = Helper.StringHelper.sanitizeString(key) + this.id;
-                var tr = new Html.Tr("TbodyTr" + trIdentify);
+                var tr = new View.Tr("TbodyTr" + trIdentify);
 
                 var header = new Array();
                 var j = 0;
@@ -1461,14 +1483,14 @@ namespace Html
 
                     header[j] = row;
                     var trIdentify2 = Helper.StringHelper.sanitizeString(key) + Helper.StringHelper.sanitizeString(row) + this.id;
-                    var td = new Html.Td("TbodyTd" + trIdentify2);
+                    var td = new View.Td("TbodyTd" + trIdentify2);
 
                     if (!this.validateSystemKeys(row)) {
 
                         var contentRow = content[key][row];
                         var finalContent;
 
-                        if (contentRow instanceof Html.HtmlElement) {
+                        if (contentRow instanceof View.ViewElement) {
                             finalContent = contentRow.getElement();
                         } else if(typeof contentRow == "object") {
 
@@ -1572,37 +1594,37 @@ namespace Html
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Thead extends HtmlElement
+    export class Thead extends ViewElement
     {
 
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Tbody extends HtmlElement
+    export class Tbody extends ViewElement
     {
 
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Tr extends HtmlElement
+    export class Tr extends ViewElement
     {
 
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Td extends HtmlElement
+    export class Td extends ViewElement
     {
 
         /**
@@ -1631,10 +1653,10 @@ namespace Html
     }
 
     /**
-     * [HtmlElement description]
+     * [ViewElement description]
      * @type {[type]}
      */
-    export class Th extends HtmlElement
+    export class Th extends ViewElement
     {
         /*
          *
@@ -1662,7 +1684,7 @@ namespace Html
     /**
      *
      */
-    export class Tfoot extends HtmlElement
+    export class Tfoot extends ViewElement
     {
 
     }
@@ -1670,7 +1692,7 @@ namespace Html
     /**
      *
      */
-    export class Time extends HtmlElement
+    export class Time extends ViewElement
     {
 
     }
@@ -1678,7 +1700,7 @@ namespace Html
     /**
      *
      */
-    export class Textarea extends HtmlElement
+    export class Textarea extends ViewElement
     {
 
     }
@@ -1686,7 +1708,7 @@ namespace Html
     /**
      *
      */
-    export class Title extends HtmlElement
+    export class Title extends ViewElement
     {
 
     }
@@ -1694,7 +1716,7 @@ namespace Html
     /**
      *
      */
-    export class Track extends HtmlElement
+    export class Track extends ViewElement
     {
 
     }
@@ -1702,7 +1724,7 @@ namespace Html
     /**
      *
      */
-    export class U extends HtmlElement
+    export class U extends ViewElement
     {
 
     }
@@ -1711,7 +1733,7 @@ namespace Html
      *
      * @type {[type]}
      */
-    export class Ul extends HtmlElement
+    export class Ul extends ViewElement
     {
 
         /**
@@ -1725,7 +1747,7 @@ namespace Html
 
             for (var i = 0; i < config.content.length; i++) {
 
-                var li = new Html.Li(config.name + i);
+                var li = new View.Li(config.name + i);
                 if (typeof config.content !== "undefined") {
 
                 }
@@ -1751,7 +1773,7 @@ namespace Html
     /**
      *
      */
-    export class Var extends HtmlElement
+    export class Var extends ViewElement
     {
 
     }
@@ -1759,7 +1781,7 @@ namespace Html
     /**
      *
      */
-    export class Video extends HtmlElement
+    export class Video extends ViewElement
     {
 
     }
@@ -1767,7 +1789,7 @@ namespace Html
     /**
      *
      */
-    export class Wbr extends HtmlElement
+    export class Wbr extends ViewElement
     {
 
     }

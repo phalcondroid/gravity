@@ -29,7 +29,9 @@ namespace View
          */
         public getById(id)
         {
-            return new Html.HtmlElement().byId(id);
+            let element = new View.ViewElement();
+            element.getById(id);
+            return element;
         }
 
         /**
@@ -37,7 +39,9 @@ namespace View
          */
         public getByClass(cls)
         {
-            return new Html.HtmlElement().byClass(cls);
+            let element = new View.ViewElement();
+            let result  = element.getByClass(cls);
+            return result;
         }
 
         /**
@@ -45,7 +49,9 @@ namespace View
          */
         public getByTag(tag)
         {
-            return new Html.HtmlElement().byTag(tag);
+            let element = new View.ViewElement();
+            let result  = element.getByTag(tag);
+            return result;
         }
 
         /**
