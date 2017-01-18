@@ -14,8 +14,9 @@ namespace View {
         {
             super();
             this.context = ctx;
+            this.initialize();
         }
-        
+
         /*
          *
          * @param  {[type]} num [description]

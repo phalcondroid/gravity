@@ -16,6 +16,7 @@ namespace View {
         {
             super("");
             this.context = ctx;
+            this.initialize();
         }
 
         /**

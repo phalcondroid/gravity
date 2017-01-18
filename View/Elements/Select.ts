@@ -10,8 +10,9 @@ namespace View {
          */
         public constructor(ctx)
         {
-            super();
+            super("");
             this.context = ctx;
+            this.initialize();
         }
 
         public getSelected()

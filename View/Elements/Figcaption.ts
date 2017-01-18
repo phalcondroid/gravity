@@ -1,6 +1,7 @@
 ///<reference path="../ViewElement"/>
 
-namespace View {
+namespace View
+{
     /**
      * [ViewElement description]
      * @type {[type]}
@@ -14,6 +15,7 @@ namespace View {
         {
             super();
             this.context = ctx;
+            this.initialize();
         }
     }
 }

@@ -13,5 +13,6 @@ export class Area extends View.ViewElement
     {
         super();
         this.context = ctx;
+        this.initialize();
     }
 }
