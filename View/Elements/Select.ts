@@ -5,6 +5,15 @@ namespace View {
     export class Select extends ViewElement
     {
 
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.context = ctx;
+        }
+
         public getSelected()
         {
             var childs = this.getElement().childNodes;
@@ -36,7 +45,9 @@ namespace View {
             this.empty();
 
             for (let key in content) {
-                let option = new View.Option();
+                let option = new View.Option(
+                    this.context
+                );
                 option.attr({
                     "value" : content[key],
                 });

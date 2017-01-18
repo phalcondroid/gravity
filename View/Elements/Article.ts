@@ -8,5 +8,13 @@ namespace View
      */
     export class Article extends ViewElement
     {
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.context = ctx;
+        }
     }
 }

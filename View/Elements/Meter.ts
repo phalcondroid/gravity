@@ -7,5 +7,13 @@ namespace View {
      */
     export class Meter extends ViewElement
     {
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.context = ctx;
+        }
     }
 }

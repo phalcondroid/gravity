@@ -9,6 +9,15 @@ namespace View {
     {
         /**
          *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.context = ctx;
+        }
+        
+        /**
+         *
          * @param  {[type]} num [description]
          * @return {[type]}     [description]
          */

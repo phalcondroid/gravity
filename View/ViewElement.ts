@@ -3,7 +3,7 @@ namespace View
 {
     /**
      *
-     * @type {[type]}
+     * @type 
      */
     export class ViewElement
     {

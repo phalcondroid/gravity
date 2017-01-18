@@ -7,9 +7,10 @@ namespace View {
      */
     export class Body extends ViewElement
     {
-        public constructor()
+        public constructor(ctx)
         {
             super();
+            this.context = ctx;
             this.element = document.body;
         }
     }

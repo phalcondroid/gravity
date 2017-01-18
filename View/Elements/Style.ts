@@ -8,5 +8,13 @@ namespace View
      */
     export class Style extends ViewElement
     {
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.context = ctx;
+        }
     }
 }

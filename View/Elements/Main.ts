@@ -7,5 +7,13 @@ namespace View {
      */
     export class Main extends ViewElement
     {
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.context = ctx;
+        }
     }
 }

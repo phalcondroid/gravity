@@ -6,7 +6,17 @@ namespace View {
     /**
      *
      */
-    export class A extends ViewElement {
+    export class A extends ViewElement
+    {
+
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super("");
+            this.context = ctx;
+        }
 
         /**
          * [favIcon description]

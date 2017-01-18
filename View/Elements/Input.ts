@@ -8,6 +8,14 @@ namespace View
      */
     export class Input extends ViewElement
     {
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.context = ctx;
+        }
 
         /**
          * [type description]

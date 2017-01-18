@@ -7,5 +7,13 @@ namespace View {
      */
     export class Var extends ViewElement
     {
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.context = ctx;
+        }
     }
 }

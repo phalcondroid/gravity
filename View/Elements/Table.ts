@@ -33,15 +33,21 @@ namespace View
          */
         public setHeader(columns)
         {
-
             this.header = true;
-            this.thead  = new View.Thead("thead" + this.id);
-            this.tr     = new View.Tr("trHeader" + this.id);
+            this.thead  = new View.Thead(
+                this.context
+            );
+
+            this.tr     = new View.Tr(
+                this.context
+            );
 
             let i = 0;
             for (let key in columns) {
 
-                let th = new View.Th("TheadTh" + key + this.id);
+                let th = new View.Th(
+                    this.context
+                );
 
                 if (typeof columns[key] == "object") {
                     th.append(

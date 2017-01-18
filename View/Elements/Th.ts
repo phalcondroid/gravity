@@ -7,6 +7,15 @@ namespace View {
      */
     export class Th extends ViewElement
     {
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.context = ctx;
+        }
+        
         /*
          *
          * @param  {[type]} num [description]

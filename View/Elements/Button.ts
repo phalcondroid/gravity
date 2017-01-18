@@ -1,11 +1,21 @@
 ///<reference path="../ViewElement"/>
 
 namespace View {
-    
+
     /**
      *
      */
-    export class Button extends ViewElement {
+    export class Button extends ViewElement
+    {
+
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.context = ctx;
+        }
 
         /**
          *
