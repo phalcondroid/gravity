@@ -10,10 +10,11 @@ namespace View {
         public constructor(ctx)
         {
             super();
-            this.context = ctx;
+            this.setContext(ctx);
+            this.setDi(ctx.getDi());
             this.element = document.body;
             this.initialize();
-            
+
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Persistence
             newModel.state = Persistence.UnitOfWork.CREATED;
 
             for (let key in data) {
+
                 switch (typeof newModel[key]) {
                     case "function":
                         var auxPropNested = new newModel[key];

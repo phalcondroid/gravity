@@ -123,23 +123,30 @@ namespace Gravity
                 let i = 1;
                 for (let key in controllers) {
                     if (typeof controllers[key].name != "undefined") {
+
                         var temp = new controllers[key].name;
-                        if (temp instanceof Logic.Controller) {
+
+                        if (temp instanceof View.Controller) {
+
                             temp.setDi(di);
-                            temp.onConstruct();
                             temp.initialize();
+
                             if (typeof controllers[key].views != "undefined") {
                                 this.resolveViews(
                                     temp,
-                                    controllers[key].views
+                                    controllers[key].views,
+                                    di
                                 );
                             }
+
                         } else {
-                            throw "Controller #" + i + " must be extend from Logic.Controller class";
+                            throw "Controller #" + i + " must be extend from View.Controller class";
                         }
+
                         i++;
+
                     } else {
-                        throw "Config => Controller => 'name' must be initialized with Logic.Controller class"
+                        throw "Config => Controller => 'name' must be initialized with View.Controller class"
                     }
                 }
             } else {
@@ -150,22 +157,31 @@ namespace Gravity
         /**
          *
          */
-        private resolveViews(controller : Logic.Controller , views : any[])
+        private resolveViews(controller : View.Controller , views : any[], di)
         {
             if (typeof views != "undefined") {
+                /*
                 if (Array.isArray(views)) {
-                    for (let key in views) {
 
-                        let tempView = new views[key](
-                            controller.getViewModel()
-                        );
-                        if (!(tempView instanceof View.Component)) {
-                            throw "View component must be an instance of View.Component"
+                    if (views.length == 0) {
+                        for (let key in views) {
+
+                            let tempView = new views[key](
+                                controller.getViewModel()
+                            );
+
+                            tempView.setDi(di);
+
+                            if (!(tempView instanceof View.Controller)) {
+                                throw "View component must be an instance of View.Component"
+                            }
                         }
                     }
+
                 } else {
                     throw "Config => Controllers => views must be array"
                 }
+                */
             }
         }
 

@@ -156,7 +156,7 @@ namespace Network
                 this.bfSendFn();
                 this.addContext();
                 this.httpRequest.onreadystatechange = function () {
-                    if (this.httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (this.httpRequest.readyState === this.httpRequest.DONE) {
                         if (this.httpRequest.status === 200) {
                             if (typeof this.httpRequest.response != "undefined") {
                                 if (typeof this.responseFn != "undefined") {

@@ -13,7 +13,8 @@ namespace View {
         public constructor(ctx)
         {
             super();
-            this.context = ctx;
+            this.create("label");
+            this.setDi(ctx.getDi());
             this.initialize();
         }
     }

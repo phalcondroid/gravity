@@ -14,7 +14,9 @@ namespace View {
         public constructor(ctx)
         {
             super();
-            this.context = ctx;
+            this.create("ul");
+            this.setContext(ctx);
+            this.setDi(ctx.getDi());
             this.initialize();
         }
 

@@ -41,41 +41,52 @@ namespace Persistence
         /**
          *
          */
-        public find(context, model : any, params : Object = {})
+        public find(model : any, params : Object = {})
         {
-            this.ajax = new Network.Ajax();
-            this.ajax.setContext(context);
-            this.ajax.setDi(this.getDi());
+            let objModel = new model();
 
             this.getContainer()
                 .set("transactionModel", model);
 
             this.getContainer()
+                .set("transactionObjModel", objModel);
+
+            this.getContainer()
                 .set("transactionParams", params);
 
-            this.ajax.set(
+            this.getContainer()
+                .set(
                 "transactionType",
                 "find"
             );
 
-            let objModel = new model();
-            var url = objModel.getFindUrl();
-            if (url == null) {
-                url = this.getDi().get("url").get("baseUrl") +
-                objModel.getClassName() +
-                "/find";
+            if (objModel instanceof Model.RawModel) {
+
+                if (objModel instanceof Model.AjaxModel) {
+
+                    this.ajax = new Network.Ajax();
+                    this.ajax.setDi(this.getDi());
+
+                    var url = objModel.getFindUrl();
+                    if (url == null) {
+                        url = this.getDi().get("url").get("baseUrl") +
+                        objModel.getClassName() +
+                        "Find";
+                    }
+                    this.ajax.setUrl(
+                        url
+                    );
+
+                    this.ajax.setParams(
+                        params
+                    );
+
+                    this.ajax.setMethod(
+                        objModel.getMethod()
+                    );
+
+                }
             }
-            this.ajax.setUrl(
-                url
-            );
-
-            this.ajax.setParams(
-                params
-            );
-
-            this.ajax.setMethod(
-                objModel.getMethod()
-            );
 
             return this;
         }
@@ -83,41 +94,59 @@ namespace Persistence
         /**
          *
          */
-        public findOne(context, model : any, params : Object = {})
+        public findOne(model : any, params : Object = {})
         {
-            this.ajax = new Network.Ajax();
-            this.ajax.setContext(context);
-            this.ajax.setDi(this.getDi());
+
+            let objModel = new model();
 
             this.getContainer()
                 .set("transactionModel", model);
 
             this.getContainer()
+                .set("transactionObjModel", objModel);
+
+            this.getContainer()
                 .set("transactionParams", params);
 
-            this.ajax.set(
+            this.getContainer().set(
                 "transactionType",
                 "findOne"
             );
 
-            let objModel = new model();
+            if (objModel instanceof Model.RawModel) {
 
-            var url = objModel.getFindUrl();
-            if (url == null) {
-                url = this.getDi().get("url").get("baseUrl") +
-                objModel.getClassName() +
-                "/findOne";
+                if (objModel instanceof Model.AjaxModel) {
+
+                    this.ajax = new Network.Ajax();
+                    this.ajax.setDi(this.getDi());
+
+                    var url = objModel.getFindUrl();
+                    if (url == null) {
+                        url = this.getDi().get("url").get("baseUrl") +
+                        objModel.getClassName() +
+                        "FindOne";
+                    }
+                    this.ajax.setUrl(
+                        url
+                    );
+                    this.ajax.setParams(
+                        params
+                    );
+                    this.ajax.setMethod(
+                        objModel.getMethod()
+                    );
+                    this.ajax.set(
+                        "transactionType",
+                        "findOne"
+                    );
+
+                } else if (objModel instanceof Model.SimpleModel) {
+
+                }
+
+            } else {
+                throw "Not valid model";
             }
-            this.ajax.setUrl(
-                url
-            );
-            this.ajax.setParams(
-                params
-            );
-            this.ajax.setMethod(
-                objModel.getMethod()
-            );
-
             return this;
         }
 
@@ -153,62 +182,74 @@ namespace Persistence
         /**
          *
          */
-        public save(context, model : any)
+        public save(model : any)
         {
-            this.ajax = new Network.Ajax();
-            this.ajax.setContext(context);
-            this.ajax.setDi(this.getDi());
+            this.getContainer()
+                .set(
+                    "transactionModel",
+                    model
+                );
 
             this.getContainer()
-                .set("transactionModel", model);
+                .set(
+                    "transactionObjectModel",
+                    model
+                );
 
             this.getContainer()
-                .set("transactionObjectModel", model);
+                .set(
+                    "transactionType",
+                    "save"
+                );
 
-            this.ajax.set(
-                "transactionType",
-                "save"
-            );
+            if (model instanceof Model.AjaxModel) {
 
-            var modelName = model.getClassName();
+                this.ajax = new Network.Ajax();
+                this.ajax.setDi(this.getDi());
 
-            switch (model.state) {
-                case UnitOfWork.NEW:
-                        var url = model.getInsertUrl();
-                        if (url == null) {
-                            url = this.getDi().get("url").get("baseUrl")+
-                            modelName +
-                            "/insert";
-                        }
-                        this.ajax.setUrl(
-                            url
-                        );
-                    break;
-                case UnitOfWork.CREATED:
-                        var url = model.getUpdateUrl();
-                        if (url == null) {
-                            url = this.getDi().get("url").get("baseUrl") +
-                            modelName +
-                            "/update";
-                        }
-                        this.ajax.setUrl(
-                            url
-                        );
-                    break;
+                var modelName = model.getClassName();
+
+                switch (model.state) {
+                    case UnitOfWork.NEW:
+                            var url = model.getInsertUrl();
+                            if (url == null) {
+                                url = this.getDi().get("url").get("baseUrl")+
+                                modelName +
+                                "Insert";
+                            }
+                            this.ajax.setUrl(
+                                url
+                            );
+                        break;
+                    case UnitOfWork.CREATED:
+                            var url = model.getUpdateUrl();
+                            if (url == null) {
+                                url = this.getDi().get("url").get("baseUrl") +
+                                modelName +
+                                "Update";
+                            }
+                            this.ajax.setUrl(
+                                url
+                            );
+                        break;
+                }
+
+                var reflection = new Reflection.Reflection();
+                var attrsAsString = JSON.stringify(
+                    reflection.getAtttributeAsObjects(model)
+                );
+                var objParams = {};
+                objParams[modelName] = attrsAsString;
+
+                this.ajax.setParams(objParams);
+
+                this.ajax.setMethod(
+                    model.getMethod()
+                );
+
+            } else {
+
             }
-
-            var reflection = new Reflection.Reflection();
-            var attrsAsString = JSON.stringify(
-                reflection.getAtttributeAsObjects(model)
-            );
-            var objParams = {};
-            objParams[modelName] = attrsAsString;
-
-            this.ajax.setParams(objParams);
-
-            this.ajax.setMethod(
-                model.getMethod()
-            );
 
             return this;
         }
@@ -229,47 +270,73 @@ namespace Persistence
             var model  = this.getContainer()
                 .get("transactionModel");
 
-            var type = this.ajax.get("transactionType");
+            var objModel  = this.getContainer()
+                .get("transactionObjModel");
+
+            var type =  this.getContainer()
+                .get("transactionType");
 
             if (type == "find" || type == "findOne") {
                 var params = this.getContainer()
                     .get("transactionParams");
             }
 
-            this.ajax.response(function (response) {
+            if (objModel instanceof Model.AjaxModel) {
 
-                    let resultSet : any = new Array();
+                this.ajax.response(function (response) {
 
-                    switch (type) {
-                        case "findOne":
-                                resultSet = this.getResultSet(
-                                    response,
-                                    params,
-                                    model
-                                );
-                                if (resultSet != false) {
-                                    resultSet = resultSet[0];
-                                }
-                            break;
-                        case "find":
-                                resultSet = this.getResultSet(
-                                    response,
-                                    params,
-                                    model
-                                );
-                            break;
-                        case "save":
-                                resultSet = response;
-                            break;
-                    }
+                    return fn(this.setResponse(
+                        response,
+                        type,
+                        model,
+                        params
+                    ));
 
-                    return fn(resultSet);
+                }.bind(this));
 
-            }.bind(this));
+                this.ajax.send();
 
-            this.ajax.send();
+            } else {
+                if (objModel instanceof Model.SimpleModel) {
+                    return fn(this.setResponse(
+                        model.getData(),
+                        type,
+                        model,
+                        params
+                    ));
+                }
+            }
 
             return this;
+        }
+
+        private setResponse(data, type, model, params)
+        {
+            let resultSet : any = new Array();
+
+            switch (type) {
+                case "findOne":
+                        resultSet = this.getResultSet(
+                            data,
+                            params,
+                            model
+                        );
+                        if (resultSet != false) {
+                            resultSet = resultSet[0];
+                        }
+                    break;
+                case "find":
+                        resultSet = this.getResultSet(
+                            data,
+                            params,
+                            model
+                        );
+                    break;
+                case "save":
+                        resultSet = data;
+                    break;
+            }
+            return resultSet;
         }
 
         /**

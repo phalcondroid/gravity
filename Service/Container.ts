@@ -18,12 +18,17 @@ namespace Service
 
         public setPersistent(serviceName, content)
         {
-            sessionStorage[this.persistent][serviceName][content];
+            sessionStorage.setItem(
+                this.persistent + serviceName,
+                content
+            );
         }
 
         public getPersistent(serviceName)
         {
-            return sessionStorage[this.persistent][serviceName];
+            return sessionStorage.getItem(
+                this.persistent + serviceName
+            );
         }
 
     }

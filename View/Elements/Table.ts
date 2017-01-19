@@ -12,7 +12,9 @@ namespace View
         public constructor(ctx)
         {
             super();
-            this.context = ctx;
+            this.create("table");
+            this.setContext(ctx);
+            this.setDi(ctx.getDi());
             this.initialize();
         }
 
@@ -35,11 +37,11 @@ namespace View
         {
             this.header = true;
             this.thead  = new View.Thead(
-                this.context
+                this.getContext()
             );
 
             this.tr     = new View.Tr(
-                this.context
+                this.getContext()
             );
 
             let i = 0;
@@ -101,7 +103,9 @@ namespace View
         {
 
             this.system = ["click", "customize"];
-            this.tbody = new View.Tbody("tbody" + this.id);
+            this.tbody = new View.Tbody(
+                this.getContext()
+            );
 
             var html = new View.ViewElement();
             var i = 0;
@@ -109,7 +113,9 @@ namespace View
             for (var key in content) {
 
                 var trIdentify = Helper.StringHelper.sanitizeString(key) + this.id;
-                var tr = new View.Tr("TbodyTr" + trIdentify);
+                var tr = new View.Tr(
+                    this.getContext()
+                );
 
                 var header = new Array();
                 var j = 0;
@@ -118,7 +124,9 @@ namespace View
 
                     header[j] = row;
                     var trIdentify2 = Helper.StringHelper.sanitizeString(key) + Helper.StringHelper.sanitizeString(row) + this.id;
-                    var td = new View.Td("TbodyTd" + trIdentify2);
+                    var td = new View.Td(
+                        this.getContext()
+                    );
 
                     if (!this.validateSystemKeys(row)) {
 

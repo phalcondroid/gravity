@@ -1,12 +1,10 @@
 ///<reference path="../Service/InjectionAwareInterface" />
-///<reference path="../View/Model" />
 
 namespace Logic
 {
     export class Controller implements Service.InjectionAwareInterface
     {
         di : Service.Container;
-        private viewModel : View.Model = new View.Model();
 
         /**
          *
@@ -22,22 +20,6 @@ namespace Logic
         public onConstruct()
         {
 
-        }
-
-        /**
-         *
-         */
-        public setVar(key, value)
-        {
-            this.viewModel.set(key, value);
-        }
-
-        /**
-         *
-         */
-        public getViewModel() : View.Model
-        {
-            return this.viewModel;
         }
 
         /**

@@ -1,17 +1,8 @@
 namespace View
 {
-    export class Component
+    export class Controller implements Service.InjectionAwareInterface
     {
-        private viewModel : View.Model = null;
-
-        /**
-         *
-         */
-        public constructor(viewModel : View.Model)
-        {
-            this.viewModel = viewModel;
-            this.initialize();
-        }
+        public di         : Service.Container;
 
         /**
          *
@@ -53,17 +44,17 @@ namespace View
         /**
          *
          */
-        public getViewModel() : View.Model
+        public getDi() : Service.Container
         {
-            return this.viewModel;
+            return this.di;
         }
 
         /**
          *
          */
-        public getVar(key)
+        public setDi(di : Service.Container)
         {
-            return this.viewModel.get(key);
+            this.di = di;
         }
     }
 }

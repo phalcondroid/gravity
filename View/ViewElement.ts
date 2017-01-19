@@ -3,10 +3,11 @@ namespace View
 {
     /**
      *
-     * @type 
+     * @type
      */
-    export class ViewElement
+    export class ViewElement implements Service.InjectionAwareInterface
     {
+        di;
 
         /**
          * Node javascript element
@@ -16,7 +17,7 @@ namespace View
         /**
          * Controller
          */
-        protected context;
+        public context;
 
         /**
          *
@@ -62,6 +63,25 @@ namespace View
 
         }
 
+        /**
+         *
+         */
+        public getContext()
+        {
+            return this.context;
+        }
+
+        /**
+         *
+         */
+        public setContext(ctx)
+        {
+            this.context = ctx;
+        }
+
+        /**
+         *
+         */
         public setElement(element)
         {
             this.element = element;
@@ -415,12 +435,15 @@ namespace View
          */
         public attr(attr, value : any = false)
         {
-            if (typeof attr == "object") {
+            if (typeof attr == "object" && value != false) {
                 for (let key in attr) {
                     this.element.setAttribute(key, attr[key]);
                 }
             } else if (typeof attr == "string" && value != false) {
                 this.element.setAttribute(attr, value);
+            } else if (typeof attr == "string" && value == false) {
+                console.log(this.element, this.element.getAttribute(attr), attr);
+                return this.element.getAttribute(attr);
             }
             return this;
         }
@@ -530,6 +553,16 @@ namespace View
         public empty()
         {
             this.removeChildNodes();
+        }
+
+        public setDi(di)
+        {
+            this.di = di;
+        }
+
+        public getDi()
+        {
+            return this.di;
         }
     }
 }
