@@ -1,7 +1,7 @@
 
 /// <reference path="../Reflection/Reflection" />
 /// <reference path="../Service/Container" />
-/// <reference path="../Model/SimpleModel" />
+/// <reference path="../Model/StaticModel" />
 /// <reference path="../Model/AjaxModel" />
 /// <reference path="../Network/Ajax" />
 /// <reference path="./UnitOfWork" />
@@ -140,7 +140,7 @@ namespace Persistence
                         "findOne"
                     );
 
-                } else if (objModel instanceof Model.SimpleModel) {
+                } else if (objModel instanceof Model.StaticModel) {
 
                 }
 
@@ -162,14 +162,21 @@ namespace Persistence
                 response
             );
 
+            var i = 0;
             for (let key in data) {
                 let newModel = hydrator.hydrate(
                     model,
                     data[key]
                 );
+
+                if (newModel instanceof Model.StaticModel) {
+                    newModel.setIndex(i);
+                }
+
                 resultSet.push(
                     newModel
                 );
+                i++;
             }
 
             if (resultSet.length == 0) {
@@ -247,8 +254,15 @@ namespace Persistence
                     model.getMethod()
                 );
 
-            } else {
+            } else if (model instanceof Model.StaticModel) {
+                switch (model.state) {
+                    case UnitOfWork.NEW:
+                            let tempData = model.getData();
+                        break;
+                    case UnitOfWork.CREATED:
 
+                        break;
+                }
             }
 
             return this;
@@ -297,9 +311,9 @@ namespace Persistence
                 this.ajax.send();
 
             } else {
-                if (objModel instanceof Model.SimpleModel) {
-                    return fn(this.setResponse(
-                        model.getData(),
+                if (objModel instanceof Model.StaticModel) {
+                    fn(this.setResponse(
+                        objModel.getData(),
                         type,
                         model,
                         params
@@ -310,6 +324,9 @@ namespace Persistence
             return this;
         }
 
+        /**
+         *
+         */
         private setResponse(data, type, model, params)
         {
             let resultSet : any = new Array();

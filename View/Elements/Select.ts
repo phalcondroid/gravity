@@ -6,6 +6,8 @@ namespace View {
     export class Select extends ViewElement
     {
 
+        private choose = "Choose...";
+
         /**
          *
          */
@@ -18,15 +20,33 @@ namespace View {
             this.initialize();
         }
 
+        /**
+         *
+         */
         public getSelected()
         {
-            var option = new View.Option(this.getContext());
-            option.setElement(this.getElement().options[
+            var option = new View.Option(
+                this.getContext()
+            );
+            option.setElement(
+                this.getElement().options[
                     this.getElement().selectedIndex
-            ]);
+                ]
+            );
             return option;
         }
 
+        /**
+         *
+         */
+        public setChoose(choose)
+        {
+            this.choose = choose;
+        }
+
+        /**
+         *
+         */
         public select(value)
         {
             var childs = this.getElement().childNodes;
@@ -38,9 +58,9 @@ namespace View {
         }
 
         /**
-         * [build description]
-         * @param  {[type]} content [description]
-         * @return {[type]}         [description]
+         *
+         * @param  content
+         * @return
          */
         public build(content, fields)
         {
@@ -51,7 +71,11 @@ namespace View {
             this.append([
                 new View.Option(
                     this.getContext()
-                ).append("......")
+                ).attr({
+                    "value" : ""
+                }).append(
+                    this.choose
+                )
             ]);
 
             for (let key in content) {
@@ -66,9 +90,11 @@ namespace View {
                         id = content[key][fields[1]];
                     }
                     option.attr({
-                        "value" : id,
+                        "value" : id
                     });
-                    option.append(content[key][fields[1]]);
+                    option.append(
+                        content[key][fields[1]]
+                    );
                 } else {
                     option.attr({
                         "value" : content[key],

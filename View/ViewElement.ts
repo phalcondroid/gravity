@@ -215,7 +215,8 @@ namespace View
          *
          * @return {[type]} [description]
          */
-        public addChild(element) {
+        public addChild(element)
+        {
             this.element.append(element);
             return this;
         }
@@ -225,14 +226,34 @@ namespace View
          * @param  {Function} fn [description]
          * @return {[type]}      [description]
          */
-        public click(fn) {
-            this.element.addEventListener("click", fn);
+        public click(fn)
+        {
+            this.element.addEventListener(
+                "click",
+                fn.bind(this, this)
+            );
             return this;
         }
 
         public doubleClick(fn)
         {
-            this.element.addEventListener("dblclick", fn);
+            this.element.addEventListener(
+                "dblclick",
+                fn.bind(this, this)
+            );
+            return this;
+        }
+
+        /**
+         * 
+         * @return {[type]} [description]
+         */
+        public change(fn)
+        {
+            this.element.addEventListener(
+                "change",
+                fn.bind(this, this)
+            );
             return this;
         }
 
@@ -240,17 +261,12 @@ namespace View
          * [change description]
          * @return {[type]} [description]
          */
-        public change(fn) {
-            this.element.addEventListener("change", fn);
-            return this;
-        }
-
-        /**
-         * [change description]
-         * @return {[type]} [description]
-         */
-        public keypress(fn) {
-            this.element.addEventListener("keypress", fn);
+        public keypress(fn)
+        {
+            this.element.addEventListener(
+                "keypress",
+                fn.bind(this, this)
+            );
             return this;
         }
 
@@ -259,7 +275,10 @@ namespace View
          * @return {[type]} [description]
          */
         public keydown(fn) {
-            this.element.addEventListener("keydown", fn);
+            this.element.addEventListener(
+                "keydown",
+                fn.bind(this, this)
+            );
             return this;
         }
 
@@ -268,7 +287,10 @@ namespace View
          * @return {[type]} [description]
          */
         public keyup(fn) {
-            this.element.addEventListener("keyup", fn);
+            this.element.addEventListener(
+                "keyup",
+                fn.bind(this, this)
+            );
             return this;
         }
 
@@ -278,7 +300,10 @@ namespace View
          */
         public blur(fn)
         {
-            this.element.addEventListener("blur", fn);
+            this.element.addEventListener(
+                "blur",
+                fn.bind(this, this)
+            );
             return this;
         }
 
@@ -288,7 +313,10 @@ namespace View
          */
         public focus(fn)
         {
-            this.element.addEventListener("focus", fn);
+            this.element.addEventListener(
+                "focus",
+                fn.bind(this, this)
+            );
             return this;
         }
 
@@ -435,14 +463,13 @@ namespace View
          */
         public attr(attr, value : any = false)
         {
-            if (typeof attr == "object" && value != false) {
+            if (typeof attr == "object" && value == false) {
                 for (let key in attr) {
                     this.element.setAttribute(key, attr[key]);
                 }
             } else if (typeof attr == "string" && value != false) {
                 this.element.setAttribute(attr, value);
             } else if (typeof attr == "string" && value == false) {
-                console.log(this.element, this.element.getAttribute(attr), attr);
                 return this.element.getAttribute(attr);
             }
             return this;

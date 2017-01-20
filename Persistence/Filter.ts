@@ -71,6 +71,22 @@ namespace Persistence
                                             iOr++;
                                         }
                                     break;
+                                case DatamapperOperators.IS_NOT:
+                                        let iIsNot = 1;
+                                        let isNotContent = conditional[keyConditional];
+                                        let isNotLength  = Object.keys(isNotContent).length;
+                                        for (let keyIsNot in isNotContent) {
+                                            this.getExpression(
+                                                keyIsNot,
+                                                isNotContent[keyIsNot],
+                                                ComparisonOperators.AND,
+                                                iIsNot,
+                                                isNotLength,
+                                                ComparisonOperators.DIFFERENT
+                                            );
+                                            iIsNot++;
+                                        }
+                                    break;
                                 default:
 
                                     break;
@@ -152,7 +168,7 @@ namespace Persistence
             this.limit = "data = data.slice(0, " + limit + ") ";
         }
 
-        public getExpression(key, content, operator, index, length)
+        public getExpression(key, content, operator, index, length, comparison = "==")
         {
             var condition : string = "";
             var finalOperator = "";
@@ -168,13 +184,13 @@ namespace Persistence
                         operatorStr = operator;
                     }
                     let valueByType = DataType.getValueByType(newVal[j]);
-                    condition += "row[\"" + key + "\"] == " + newVal[j] + " " + operatorStr + " ";
+                    condition += "row[\"" + key + "\"] " + comparison + " " + newVal[j] + " " + operatorStr + " ";
                 }
 
             } else {
                 let operatorStr = "";
                 let valueByType = DataType.getValueByType(content);
-                condition += "row[\"" + key + "\"] == " + valueByType + " " + operatorStr + " ";
+                condition += "row[\"" + key + "\"] " + comparison + " " + valueByType + " " + operatorStr + " ";
             }
             this.first += finalOperator + " ( " + condition + " ) ";
             this.init = true;
