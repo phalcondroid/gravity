@@ -245,7 +245,7 @@ namespace View
         }
 
         /**
-         * 
+         *
          * @return {[type]} [description]
          */
         public change(fn)
@@ -445,14 +445,10 @@ namespace View
 
         private removeChilds(element, childs)
         {
-            if (childs.length > 0) {
-                for (let key in childs) {
-                    if (typeof this.element[key].nodeType != "undefined") {
-                        if (this.element[key].nodeType == 1) {
-                            this.element[key].removeChild(childs[key])
-                        }
-                    }
-                }
+            while (element.firstChild) {
+                element.removeChild(
+                    element.firstChild
+                );
             }
         }
 

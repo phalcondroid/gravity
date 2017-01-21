@@ -1,20 +1,23 @@
 ///<reference path="../ViewElement"/>
 
-/**
- * [ViewElement description]
- * @type {[type]}
- */
-export class Area extends View.ViewElement
+namespace View
 {
     /**
-     *
+     * [ViewElement description]
+     * @type {[type]}
      */
-    public constructor(ctx)
+    export class Area extends View.ViewElement
     {
-        super();
-        this.create("area");
-        this.setContext(ctx);
-        this.setDi(ctx.getDi());
-        this.initialize();
+        /**
+         *
+         */
+        public constructor(ctx)
+        {
+            super();
+            this.create("area");
+            this.setContext(ctx);
+            this.setDi(ctx.getDi());
+            this.initialize();
+        }
     }
 }

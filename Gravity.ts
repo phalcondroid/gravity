@@ -190,7 +190,7 @@ namespace Gravity
          */
         private resolveServices(di, service)
         {
-            new service(di);
+            new service().initialize(di);
         }
 
         /**
