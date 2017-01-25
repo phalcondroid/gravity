@@ -17,6 +17,7 @@ namespace View
             this.create("style");
             this.setContext(ctx);
             this.setDi(ctx.getDi());
+            this.em = this.getDi().get("em");
             this.initialize();
         }
     }

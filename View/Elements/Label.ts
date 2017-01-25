@@ -15,6 +15,7 @@ namespace View {
             super();
             this.create("label");
             this.setDi(ctx.getDi());
+            this.em = this.getDi().get("em");
             this.initialize();
         }
     }

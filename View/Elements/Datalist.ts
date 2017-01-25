@@ -16,6 +16,7 @@ namespace View {
             this.create("datalist");
             this.setContext(ctx);
             this.setDi(ctx.getDi());
+            this.em = this.getDi().get("em");
             this.initialize();
         }
     }

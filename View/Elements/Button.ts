@@ -18,6 +18,7 @@ namespace View {
             this.attr("type", "button");
             this.setContext(ctx);
             this.setDi(ctx.getDi());
+            this.em = this.getDi().get("em");
             this.initialize();
         }
 

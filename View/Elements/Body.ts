@@ -12,6 +12,7 @@ namespace View {
             super();
             this.setContext(ctx);
             this.setDi(ctx.getDi());
+            this.em = this.getDi().get("em");
             this.element = document.body;
             this.initialize();
 

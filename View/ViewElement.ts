@@ -8,6 +8,7 @@ namespace View
     export class ViewElement implements Service.InjectionAwareInterface
     {
         di;
+        public em : Persistence.EntityManager;
 
         /**
          * Node javascript element
@@ -484,12 +485,12 @@ namespace View
          * @param  {[type]} css [description]
          * @return {[type]}     [description]
          */
-        public css(css, value = false) {
+        public css(css, value : any = null) {
             if (typeof css == "object") {
                 for (let key in css) {
                     this.element.style.key = css[key];
                 }
-            } else if (typeof css == "string" && value != false) {
+            } else if (typeof css == "string" && value != null) {
                 this.element.style.css = value;
             }
             return this;

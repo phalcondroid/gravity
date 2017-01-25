@@ -15,6 +15,16 @@ namespace View
             this.create("table");
             this.setContext(ctx);
             this.setDi(ctx.getDi());
+            this.em = this.getDi().get("em");
+
+            this.thead  = new View.Thead(
+                this.getContext()
+            );
+
+            this.tbody = new View.Tbody(
+                this.getContext()
+            );
+
             this.initialize();
         }
 
@@ -31,14 +41,75 @@ namespace View
 
         /**
          *
+         */
+        public toHead(component)
+        {
+            this.thead.append(
+                component
+            );
+        }
+
+        /**
+         *
+         */
+        public toHeadTr(component)
+        {
+            let tr = new View.Tr(this.getContext());
+            tr.append(component);
+
+            this.thead.append(
+                tr
+            );
+
+            this.append(
+                this.thead
+            );
+
+            return this;
+        }
+
+        /**
+         *
+         */
+        public toBody(component)
+        {
+            this.tbody.append(
+                component
+            );
+
+            this.append(
+                this.tbody
+            );
+
+            return this;
+        }
+
+        /**
+         *
+         */
+        public toBodyTr(component)
+        {
+            let tr = new View.Tr(this.getContext());
+            tr.append(component);
+
+            this.tbody.append(
+                tr
+            );
+
+            this.append(
+                this.tbody
+            );
+
+            return this;
+        }
+
+        /**
+         *
          *
          */
         public setHeader(columns)
         {
             this.header = true;
-            this.thead  = new View.Thead(
-                this.getContext()
-            );
 
             this.tr     = new View.Tr(
                 this.getContext()
@@ -103,9 +174,6 @@ namespace View
         {
 
             this.system = ["click", "customize"];
-            this.tbody = new View.Tbody(
-                this.getContext()
-            );
 
             var html = new View.ViewElement();
             var i = 0;
@@ -135,7 +203,7 @@ namespace View
 
                         if (contentRow instanceof View.ViewElement) {
                             finalContent = contentRow.getElement();
-                        } else if(typeof contentRow == "object") {
+                        } else if(typeof contentRow == "object" && contentRow != null) {
 
                             if (contentRow.hasOwnProperty("content")) {
                                 finalContent = contentRow.content

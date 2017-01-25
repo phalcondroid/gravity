@@ -150,6 +150,9 @@ namespace Persistence
             return this;
         }
 
+        /**
+         *
+         */
         private getResultSet(response, params, model)
         {
             let resultSet : any = new Array();
@@ -164,6 +167,7 @@ namespace Persistence
 
             var i = 0;
             for (let key in data) {
+
                 let newModel = hydrator.hydrate(
                     model,
                     data[key]
@@ -296,6 +300,7 @@ namespace Persistence
             }
 
             if (objModel instanceof Model.AjaxModel) {
+
 
                 this.ajax.response(function (response) {
 
