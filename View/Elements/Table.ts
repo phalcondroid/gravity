@@ -8,11 +8,28 @@ namespace View
      */
     export class Table extends ViewElement
     {
+        private tblElements;
+        private thead;
+        private tbody;
+        private tfoot;
+        private tr;
+        private th;
+        private td;
+        private system;
+        private header = false;
+        private fnCHeader;
+        private fnCContent;
 
+        /**
+         *
+         */
         public constructor(ctx)
         {
             super();
             this.create("table");
+            if (!(ctx instanceof View.Controller)) {
+                throw "context must be instance of View.Controller to " + this.getClassName();
+            }
             this.setContext(ctx);
             this.setDi(ctx.getDi());
             this.em = this.getDi().get("em");
@@ -25,19 +42,28 @@ namespace View
                 this.getContext()
             );
 
+            this.tfoot = new View.Tfoot(
+                this.getContext()
+            );
+
             this.initialize();
         }
 
-        private tblElements;
-        private thead;
-        private tbody;
-        private tr;
-        private th;
-        private td;
-        private system;
-        private header = false;
-        private fnCHeader;
-        private fnCContent;
+        /**
+         *
+         */
+        public getThead()
+        {
+            return this.thead;
+        }
+
+        /**
+         *
+         */
+        public getTbody()
+        {
+            return this.tbody;
+        }
 
         /**
          *
@@ -87,6 +113,22 @@ namespace View
         /**
          *
          */
+        public toFoot(component)
+        {
+            this.tfoot.append(
+                component
+            );
+
+            this.append(
+                this.tfoot
+            );
+
+            return this;
+        }
+
+        /**
+         *
+         */
         public toBodyTr(component)
         {
             let tr = new View.Tr(this.getContext());
@@ -98,6 +140,25 @@ namespace View
 
             this.append(
                 this.tbody
+            );
+
+            return this;
+        }
+
+        /**
+         *
+         */
+        public toFootTr(component)
+        {
+            let tr = new View.Tr(this.getContext());
+            tr.append(component);
+
+            this.tfoot.append(
+                tr
+            );
+
+            this.append(
+                this.tfoot
             );
 
             return this;

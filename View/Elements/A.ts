@@ -16,6 +16,9 @@ namespace View {
         {
             super();
             this.create("a");
+            if (!(ctx instanceof View.Controller)) {
+                throw "context must be instance of View.Controller to " + this.getClassName();
+            }
             this.setContext(ctx);
             this.setDi(ctx.getDi());
             this.em = this.getDi().get("em");
@@ -27,7 +30,7 @@ namespace View {
          * @return {[type]} [description]
          */
         public favIcon(favIcon) {
-            let icon = new View.I("favIcon" + this.id)
+            let icon = new View.I(this.getContext())
             .class(favIcon);
             this.append(icon.getElement());
             return this;

@@ -15,6 +15,9 @@ namespace View {
         {
             super("");
             this.create("select");
+            if (!(ctx instanceof View.Controller)) {
+                throw "context must be instance of View.Controller to " + this.getClassName();
+            }
             this.setContext(ctx);
             this.setDi(ctx.getDi());
             this.em = this.getDi().get("em");
@@ -65,20 +68,7 @@ namespace View {
          */
         public build(content, fields)
         {
-            this.empty();
-
             var i = 0;
-
-            this.append([
-                new View.Option(
-                    this.getContext()
-                ).attr({
-                    "value" : ""
-                }).append(
-                    this.choose
-                )
-            ]);
-
             for (let key in content) {
 
                 let option = new View.Option(

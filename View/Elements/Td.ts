@@ -14,6 +14,9 @@ namespace View {
         {
             super();
             this.create("td");
+            if (!(ctx instanceof View.Controller)) {
+                throw "context must be instance of View.Controller to " + this.getClassName();
+            }
             this.setContext(ctx);
             this.setDi(ctx.getDi());
             this.em = this.getDi().get("em");
@@ -30,6 +33,7 @@ namespace View {
             this.attr({
                 "colspan" : cols
             });
+            return this;
         }
 
         /**
@@ -42,6 +46,7 @@ namespace View {
             this.attr({
                 "rowspan" : rows
             });
+            return this;
         }
     }
 }

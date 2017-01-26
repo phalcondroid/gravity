@@ -1,3 +1,5 @@
+///<reference path="./ViewAdapter"/>
+
 namespace View
 {
     export class Controller implements Service.InjectionAwareInterface
@@ -14,31 +16,58 @@ namespace View
         /**
          *
          */
-        public getById(id)
+        public getById(id : string)
         {
-            let element = new View.ViewElement();
-            element.getById(id);
-            return element;
+            let adapter = new View.ViewAdapter(document.getElementById(id));
+            return adapter.get(this);
         }
 
         /**
          *
          */
-        public getByClass(cls)
+        public getByTag(name : string)
         {
-            let element = new View.ViewElement();
-            let result  = element.getByClass(cls);
+            var elements = document.getElementsByTagName(
+                name
+            );
+            var result = new Array();
+            for (let key in elements) {
+                let adapter = new View.ViewAdapter(elements[key]);
+                result.push(
+                    adapter.get(
+                        this
+                    )
+                );
+            }
+
+            if (result.length == 1) {
+                return result[0];
+            }
             return result;
         }
 
         /**
          *
          */
-        public getByTag(tag)
+        public getByClass(name : string)
         {
-            let element = new View.ViewElement();
-            let result  = element.getByTag(tag);
-            return result;
+            var elements = document.getElementsByClassName(
+                name
+            );
+            var result = new Array();
+            for (let key in elements) {
+                let adapter = new View.ViewAdapter(elements[key]);
+                result.push(
+                    adapter.get(
+                        this
+                    )
+                );
+            }
+
+            if (result.length == 1) {
+                return result[0];
+            }
+            return this;
         }
 
         /**

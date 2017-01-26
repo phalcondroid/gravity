@@ -1,4 +1,6 @@
 
+///<reference path="./ViewAdapter"/>
+
 namespace View
 {
     /**
@@ -94,8 +96,10 @@ namespace View
          */
         public getById(id : string)
         {
-            this.element = document.getElementById(id);
-            return this;
+            let adapter = new View.ViewAdapter(document.getElementById(id));
+            return adapter.get(
+                this.getContext()
+            );
         }
 
         /**
@@ -108,8 +112,11 @@ namespace View
             );
             var result = new Array();
             for (let key in elements) {
+                let adapter = new View.ViewAdapter(elements[key]);
                 result.push(
-                    new View.ViewElement().setElement(elements[key])
+                    adapter.get(
+                        this.getContext()
+                    )
                 );
             }
 
@@ -129,8 +136,11 @@ namespace View
             );
             var result = new Array();
             for (let key in elements) {
+                let adapter = new View.ViewAdapter(elements[key]);
                 result.push(
-                    new View.ViewElement().setElement(elements[key])
+                    adapter.get(
+                        this.getContext()
+                    )
                 );
             }
 
@@ -546,11 +556,11 @@ namespace View
         }
 
         /**
-         * zzzz
+         *
          * @param  {any = null}        val [description]
          * @return {[type]}   [description]
          */
-        public val(val: any = null)
+        public val(val: any = false)
         {
             if (val) {
                 this.element.value = val;
@@ -565,7 +575,7 @@ namespace View
          * @param  {any = null}        text [description]
          * @return {[type]}   [description]
          */
-        public text(text: any = null) {
+        public text(text: any = false) {
             if (text) {
                 this.element.innerHtml = text;
                 return this;

@@ -120,8 +120,11 @@ namespace Gravity
             }
 
             if (Array.isArray(controllers)) {
+
                 let i = 1;
+
                 for (let key in controllers) {
+                    
                     if (typeof controllers[key].name != "undefined") {
 
                         var temp = new controllers[key].name;
@@ -130,14 +133,6 @@ namespace Gravity
 
                             temp.setDi(di);
                             temp.initialize();
-
-                            if (typeof controllers[key].views != "undefined") {
-                                this.resolveViews(
-                                    temp,
-                                    controllers[key].views,
-                                    di
-                                );
-                            }
 
                         } else {
                             throw "Controller #" + i + " must be extend from View.Controller class";
@@ -151,37 +146,6 @@ namespace Gravity
                 }
             } else {
                 throw "Config => controllers must be array"
-            }
-        }
-
-        /**
-         *
-         */
-        private resolveViews(controller : View.Controller , views : any[], di)
-        {
-            if (typeof views != "undefined") {
-                /*
-                if (Array.isArray(views)) {
-
-                    if (views.length == 0) {
-                        for (let key in views) {
-
-                            let tempView = new views[key](
-                                controller.getViewModel()
-                            );
-
-                            tempView.setDi(di);
-
-                            if (!(tempView instanceof View.Controller)) {
-                                throw "View component must be an instance of View.Component"
-                            }
-                        }
-                    }
-
-                } else {
-                    throw "Config => Controllers => views must be array"
-                }
-                */
             }
         }
 
