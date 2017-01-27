@@ -584,9 +584,100 @@ namespace View
             }
         }
 
+        /**
+         *
+         */
         public empty()
         {
             this.removeChildNodes();
+        }
+
+        /**
+         *
+         */
+        public getChilds()
+        {
+            var childNodes = this.element.childNodes;
+            var childs = new Array();
+            for (let key in childNodes) {
+                if (childNodes[key].nodeType == 1) {
+                    let adapter = new View.ViewAdapter(
+                        childNodes[key]
+                    );
+                    childs.push(
+                        adapter.get(
+                            this.getContext()
+                        )
+                    );
+                }
+            }
+            return childs;
+        }
+
+        /**
+         *
+         */
+        public getAsObject() : any[]
+        {
+            var childs = this.element.childNodes;
+            var obj    = new Array();
+
+            if (childs instanceof NodeList) {
+                for (let key in childs) {
+                    if (typeof childs[key].nodeType != "undefined") {
+                        switch (childs[key].nodeType) {
+                            case Node.ELEMENT_NODE:
+                                    let adapter = new View.ViewAdapter(
+                                        childs[key]
+                                    );
+                                    let auxElement = adapter.get(
+                                        this.getContext()
+                                    );
+                                    let finalObj  = {};
+                                    let auxObject = auxElement.getAsObject();
+                                    finalObj[auxElement.getClassName()] = auxObject;
+
+                                    if (auxObject.length > 0) {
+                                        obj.push(finalObj);
+                                    }
+                                break;
+                            case Node.TEXT_NODE:
+                                    obj.push(
+                                        childs[key].nodeValue
+                                    );
+                                break;
+                        }
+                    }
+                }
+            }
+            return obj;
+        }
+
+        /**
+         *
+         */
+        public getAsJson()
+        {
+            let objects = this.getAsObject();
+            return JSON.stringify(
+                objects
+            );
+        }
+
+        /**
+         *
+         */
+        public remove(element = false)
+        {
+            if (element) {
+                this.getElement().removeChild(
+                    element
+                );
+            } else {
+                this.getElement().parentElement.removeChild(
+                    this.getElement()
+                );
+            }
         }
 
         public setDi(di)
