@@ -5,9 +5,9 @@
 
 namespace Persistence
 {
-    export class Hydrator
+    export class Hydrator implements Service.InjectionAwareInterface
     {
-
+        di : Service.Container;
         private reflector : Reflection.Reflection;
 
         public constructor()
@@ -16,7 +16,9 @@ namespace Persistence
 
         public hydrate(model : any, data)
         {
-            var newModel = new model();
+            var newModel = new model(
+                this.getDi()
+            );
             newModel.state = Persistence.UnitOfWork.CREATED;
 
             for (let key in data) {
@@ -36,6 +38,22 @@ namespace Persistence
                 }
             }
             return newModel;
+        }
+
+        /**
+         *
+         */
+        public setDi(di : Service.Container)
+        {
+            this.di = di;
+        }
+
+        /**
+         *
+         */
+        public getDi()
+        {
+            return this.di;
         }
     }
 }

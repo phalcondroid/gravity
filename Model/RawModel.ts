@@ -1,4 +1,5 @@
 /// <reference path="../Helper/Uuid" />
+/// <reference path="../Metadata/Metadata" />
 
 namespace Model
 {
@@ -7,11 +8,6 @@ namespace Model
         state         : number = 1;
         di            : Service.Container;
         identify      = Helper.Uuid.get();
-        
-        public constructor(di : Service.Container)
-        {
-            this.setDi(di);
-        }
 
         public initialize()
         {
@@ -48,7 +44,7 @@ namespace Model
          */
         public getIdentify()
         {
-            return this.identify;
+            return this["constructor"].toString();
         }
 
         /**
@@ -73,6 +69,8 @@ namespace Model
                 this.getIdentify()
             );
         }
+
+
 
         /**
          *

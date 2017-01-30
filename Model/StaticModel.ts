@@ -12,9 +12,10 @@ namespace Model
         /**
          *
          */
-        public constructor(di : Service.Container)
+        public constructor(di : Service.Container = new Service.Container)
         {
-            super(di);
+            super();
+            this.setDi(di);
             this.initialize();
         }
 

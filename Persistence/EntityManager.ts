@@ -162,7 +162,12 @@ namespace Persistence
             filters.buildCondition(params);
 
             let withConditions = true;
-            if (new model instanceof Model.AjaxModel) {
+            let modelObj = new model(this.getDi());
+            
+            if (modelObj instanceof Model.AjaxModel) {
+                if (modelObj.getPersistent()) {
+                    modelObj.setData(response);
+                }
                 withConditions = false;
             }
 
@@ -170,7 +175,6 @@ namespace Persistence
                 response,
                 withConditions
             );
-
 
             var i = 0;
             for (let key in data) {
