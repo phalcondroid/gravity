@@ -161,9 +161,16 @@ namespace Persistence
             let filters  = new Filter;
             filters.buildCondition(params);
 
+            let withConditions = true;
+            if (new model instanceof Model.AjaxModel) {
+                withConditions = false;
+            }
+
             let data = filters.getMultipleRowValues(
-                response
+                response,
+                withConditions
             );
+
 
             var i = 0;
             for (let key in data) {

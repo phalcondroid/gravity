@@ -15,9 +15,9 @@ namespace Model
         internalId    : string;
         method        : string = "POST";
 
-        public constructor()
+        public constructor(di : Service.Container)
         {
-            super();
+            super(di);
             this.initialize();
         }
 
