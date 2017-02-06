@@ -96,10 +96,16 @@ namespace View
          */
         public getById(id : string)
         {
-            let adapter = new View.ViewAdapter(document.getElementById(id));
-            return adapter.get(
-                this.getContext()
-            );
+            if (document.getElementById(id)) {
+                let adapter = new View.ViewAdapter(
+                    document.getElementById(id)
+                );
+                return adapter.get(
+                    this.getContext()
+                );
+            } else {
+                return false;
+            }
         }
 
         /**
@@ -365,6 +371,24 @@ namespace View
                 );
             }
 
+            return this;
+        }
+
+        /**
+         *
+         */
+        public data(key, value = false)
+        {
+            if (value) {
+                this.getElement().data(
+                    key,
+                    value
+                );
+            } else {
+                this.getElement().data(
+                    key
+                );
+            }
             return this;
         }
 
