@@ -12,11 +12,34 @@ namespace Model
         /**
          *
          */
-        public constructor(di : Service.Container = new Service.Container)
+        public constructor(di : Service.Container)
         {
             super();
-            this.setDi(di);
+            this.setDi(new Service.Container());
             this.initialize();
+        }
+
+        /**
+         *
+         */
+        public setData(data)
+        {
+            this.getDi().setPersistent(
+                this.getIdentify(),
+                JSON.stringify(
+                    data
+                )
+            );
+        }
+
+        /**
+         *
+         */
+        public getData()
+        {
+            return this.getDi().getPersistent(
+                this.getIdentify()
+            );
         }
 
         /**
@@ -29,6 +52,22 @@ namespace Model
                     this.getIdentify()
                 )
             );
+        }
+
+        /**
+         *
+         */
+        public setDi(di : Service.Container)
+        {
+            this.di = di;
+        }
+
+        /**
+         *
+         */
+        public getDi()
+        {
+            return this.di;
         }
 
         /**
@@ -52,7 +91,7 @@ namespace Model
          */
         public getSerialized()
         {
-
+            
         }
     }
 }

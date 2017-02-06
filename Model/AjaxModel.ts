@@ -7,19 +7,17 @@ namespace Model
     {
 
         source        : string;
-        insertUrl     : string  = null;
-        deleteUrl     : string  = null;
-        updateUrl     : string  = null;
-        findUrl       : string  = null;
+        insertUrl     : string = null;
+        deleteUrl     : string = null;
+        updateUrl     : string = null;
+        findUrl       : string = null;
         params        : Object;
         internalId    : string;
-        method        : string  = "POST";
-        persistent    : boolean = true;
+        method        : string = "POST";
 
-        public constructor(di : Service.Container = new Service.Container)
+        public constructor()
         {
             super();
-            this.setDi(di);
             this.initialize();
         }
 
@@ -95,16 +93,6 @@ namespace Model
         public getMethod()
         {
             return this.method;
-        }
-
-        public setPersistent(persistent : boolean)
-        {
-            this.persistent = persistent;
-        }
-
-        public getPersistent()
-        {
-            return this.persistent;
         }
     }
 }

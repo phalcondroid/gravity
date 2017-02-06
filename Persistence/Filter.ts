@@ -215,7 +215,7 @@ namespace Persistence
         /**
          *
          */
-        public getMultipleRowValues(response, withConditions : boolean = true)
+        public getMultipleRowValues(response, conds = true)
         {
             response = JSON.parse(response);
             if (this.first == "") {
@@ -227,12 +227,11 @@ namespace Persistence
             if (Array.isArray(response)) {
 
                 var conditions = this.first;
-                var evalValue  = "";
+                var evalValue = "if (" + conditions + ") { data.push(this.getColumns(row)); }";
 
                 for (let key in response) {
                     let row = response[key];
-                    if (withConditions) {
-                        evalValue = "if (" + conditions + ") { data.push(this.getColumns(row)); }";
+                    if (conds) {
                         eval(
                             evalValue
                         );

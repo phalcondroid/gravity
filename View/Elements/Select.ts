@@ -68,6 +68,11 @@ namespace View {
          */
         public build(content, fields)
         {
+
+            if (content instanceof Model.StaticModel) {
+                content = JSON.parse(content.getData());
+            }
+
             var i = 0;
             for (let key in content) {
 
@@ -87,10 +92,16 @@ namespace View {
                         content[key][fields[1]]
                     );
                 } else {
+                    let id = content[key][fields[0]];
+                    if (id == "") {
+                        id = content[key][fields[1]];
+                    }
                     option.attr({
-                        "value" : content[key],
+                        "value" : id
                     });
-                    option.text(content[key]);
+                    option.append(
+                        content[key][fields[1]]
+                    );
                 }
 
                 this.append([

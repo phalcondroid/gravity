@@ -1,12 +1,10 @@
 /// <reference path="../Helper/Uuid" />
-/// <reference path="../Metadata/Metadata" />
 
 namespace Model
 {
     export class RawModel
     {
         state         : number = 1;
-        di            : Service.Container;
         identify      = Helper.Uuid.get();
 
         public initialize()
@@ -44,48 +42,7 @@ namespace Model
          */
         public getIdentify()
         {
-            return this["constructor"].toString();
-        }
-
-        /**
-         *
-         */
-        public setData(data)
-        {
-            this.getDi().setPersistent(
-                this.getIdentify(),
-                JSON.stringify(
-                    data
-                )
-            );
-        }
-
-        /**
-         *
-         */
-        public getData()
-        {
-            return this.getDi().getPersistent(
-                this.getIdentify()
-            );
-        }
-
-
-
-        /**
-         *
-         */
-        public setDi(di : Service.Container)
-        {
-            this.di = di;
-        }
-
-        /**
-         *
-         */
-        public getDi()
-        {
-            return this.di;
+            return this.identify;
         }
     }
 }

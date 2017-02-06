@@ -667,6 +667,15 @@ namespace View
         /**
          *
          */
+        public getRandomString()
+        {
+            var randomStr = Helper.MathHelper.getUUID();
+            return btoa(randomStr);
+        }
+
+        /**
+         *
+         */
         public remove(element = false)
         {
             if (element) {

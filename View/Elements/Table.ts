@@ -73,6 +73,10 @@ namespace View
             this.thead.append(
                 component
             );
+            this.append(
+                this.thead
+            );
+            return this;
         }
 
         /**
