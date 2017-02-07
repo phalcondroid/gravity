@@ -94,6 +94,30 @@ namespace View
         /**
          *
          */
+        public show()
+        {
+            this.attr(
+                "display",
+                "block"
+            );
+            return this;
+        }
+
+        /**
+         *
+         */
+        public hide()
+        {
+            this.attr(
+                "display",
+                "none"
+            );
+            return this;
+        }
+
+        /**
+         *
+         */
         public getById(id : string)
         {
             if (document.getElementById(id)) {
