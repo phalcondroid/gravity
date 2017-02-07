@@ -51,9 +51,9 @@ namespace Persistence
                                                 }
                                             }
                                         break;
-                                }
-                                if (newModel[key][0]) {
-
+                                    default:
+                                            newModel[key] = data[key];
+                                        break;
                                 }
                             } else {
                                 newModel[key] = data[key];

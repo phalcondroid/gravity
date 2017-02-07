@@ -96,10 +96,7 @@ namespace View
          */
         public show()
         {
-            this.attr(
-                "display",
-                "block"
-            );
+            this.element.style.display = "block";
             return this;
         }
 
@@ -108,10 +105,7 @@ namespace View
          */
         public hide()
         {
-            this.attr(
-                "display",
-                "none"
-            );
+            this.element.style.display = "none";
             return this;
         }
 
