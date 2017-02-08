@@ -60,6 +60,11 @@ namespace Persistence
                             }
                         break;
                 }
+                if (Array.isArray(newModel[key])) {
+                    if (typeof newModel[key][0] == "function") {
+                        newModel[key] = new Array();
+                    }
+                }
             }
             return newModel;
         }
