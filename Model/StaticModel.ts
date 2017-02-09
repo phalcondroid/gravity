@@ -1,7 +1,7 @@
 
 /// <reference path="./RawModel"/>
 
-namespace Model
+namespace ModelData
 {
     export class StaticModel extends RawModel implements Service.InjectionAwareInterface
     {
@@ -91,7 +91,7 @@ namespace Model
          */
         public getSerialized()
         {
-            
+
         }
     }
 }

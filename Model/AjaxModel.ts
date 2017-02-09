@@ -1,7 +1,7 @@
 
 /// <reference path="./RawModel"/>
 
-namespace Model
+namespace ModelData
 {
     export class AjaxModel extends RawModel implements ModelInterface
     {

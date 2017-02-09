@@ -69,7 +69,7 @@ namespace View {
         public build(content, fields)
         {
 
-            if (content instanceof Model.StaticModel) {
+            if (content instanceof ModelData.StaticModel) {
                 content = JSON.parse(content.getData());
             }
 
@@ -80,7 +80,7 @@ namespace View {
                     this.getContext()
                 );
 
-                if (content[key] instanceof Model.RawModel) {
+                if (content[key] instanceof ModelData.RawModel) {
                     let id = content[key][fields[0]];
                     if (id == "") {
                         id = content[key][fields[1]];

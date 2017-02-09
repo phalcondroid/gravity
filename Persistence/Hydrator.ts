@@ -23,7 +23,7 @@ namespace Persistence
                 switch (typeof newModel[key]) {
                     case "function":
                         var auxPropNested = new newModel[key];
-                        if (auxPropNested instanceof Model.RawModel) {
+                        if (auxPropNested instanceof ModelData.RawModel) {
                             newModel[key] = this.hydrate(newModel[key], data[key]);
                         } else {
                             newModel[key] = data[key];
@@ -40,7 +40,7 @@ namespace Persistence
                                                     var auxSubModel = new newModel[key][0];
                                                     var arrayData   = new Array();
 
-                                                    if (auxSubModel instanceof Model.RawModel) {
+                                                    if (auxSubModel instanceof ModelData.RawModel) {
                                                         for (let subModelKey in data[key]) {
                                                             arrayData.push(
                                                                 this.hydrate(newModel[key][0], data[key][subModelKey])

@@ -1,6 +1,6 @@
 /// <reference path="../Helper/Uuid" />
 
-namespace Model
+namespace ModelData
 {
     export class RawModel
     {

@@ -60,9 +60,9 @@ namespace Persistence
                 "find"
             );
 
-            if (objModel instanceof Model.RawModel) {
+            if (objModel instanceof ModelData.RawModel) {
 
-                if (objModel instanceof Model.AjaxModel) {
+                if (objModel instanceof ModelData.AjaxModel) {
 
                     this.ajax = new Network.Ajax();
                     this.ajax.setDi(this.getDi());
@@ -113,9 +113,9 @@ namespace Persistence
                 "findOne"
             );
 
-            if (objModel instanceof Model.RawModel) {
+            if (objModel instanceof ModelData.RawModel) {
 
-                if (objModel instanceof Model.AjaxModel) {
+                if (objModel instanceof ModelData.AjaxModel) {
 
                     this.ajax = new Network.Ajax();
                     this.ajax.setDi(this.getDi());
@@ -140,7 +140,7 @@ namespace Persistence
                         "findOne"
                     );
 
-                } else if (objModel instanceof Model.StaticModel) {
+                } else if (objModel instanceof ModelData.StaticModel) {
 
                 }
 
@@ -162,7 +162,7 @@ namespace Persistence
             filters.buildCondition(params);
 
             var data = new Array();
-            if ((new model) instanceof Model.AjaxModel) {
+            if ((new model) instanceof ModelData.AjaxModel) {
                 data = filters.getMultipleRowValues(
                     response,
                     false
@@ -181,7 +181,7 @@ namespace Persistence
                     data[key]
                 );
 
-                if (newModel instanceof Model.StaticModel) {
+                if (newModel instanceof ModelData.StaticModel) {
                     newModel.setIndex(i);
                 }
 
@@ -221,7 +221,7 @@ namespace Persistence
                     "save"
                 );
 
-            if (model instanceof Model.AjaxModel) {
+            if (model instanceof ModelData.AjaxModel) {
 
                 this.ajax = new Network.Ajax();
                 this.ajax.setDi(this.getDi());
@@ -266,7 +266,7 @@ namespace Persistence
                     model.getMethod()
                 );
 
-            } else if (model instanceof Model.StaticModel) {
+            } else if (model instanceof ModelData.StaticModel) {
                 switch (model.state) {
                     case UnitOfWork.NEW:
                             let tempData = model.getData();
@@ -307,7 +307,7 @@ namespace Persistence
                     .get("transactionParams");
             }
 
-            if (objModel instanceof Model.AjaxModel) {
+            if (objModel instanceof ModelData.AjaxModel) {
 
 
                 this.ajax.response(function (response) {
@@ -324,7 +324,7 @@ namespace Persistence
                 this.ajax.send();
 
             } else {
-                if (objModel instanceof Model.StaticModel) {
+                if (objModel instanceof ModelData.StaticModel) {
                     fn(this.setResponse(
                         objModel.getData(),
                         type,
@@ -452,13 +452,13 @@ namespace Persistence
     {
         uow : Object;
 
-        find(conext,      model : Model.RawModel, params : Object);
-        findOne(context,  model : Model.RawModel, params : Object);
-        count(context,    model : Model.RawModel, params : Object);
-        distinct(context, model : Model.RawModel, params : Object);
-        group(context,    model : Model.RawModel, params : Object);
-        save(context,     model : Model.RawModel);
-        delete(context,   model : Model.RawModel);
+        find(conext,      model : ModelData.RawModel, params : Object);
+        findOne(context,  model : ModelData.RawModel, params : Object);
+        count(context,    model : ModelData.RawModel, params : Object);
+        distinct(context, model : ModelData.RawModel, params : Object);
+        group(context,    model : ModelData.RawModel, params : Object);
+        save(context,     model : ModelData.RawModel);
+        delete(context,   model : ModelData.RawModel);
         forget();
         flush();
         purge();

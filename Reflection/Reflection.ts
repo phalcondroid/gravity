@@ -81,14 +81,14 @@ namespace Reflection
                         break;
 
                     case 'object':
-                        if (propValue instanceof Model.RawModel) {
+                        if (propValue instanceof ModelData.RawModel) {
                             tempObj[propName] = this.getAtttributeAsObjects(propValue);
                             attributes.push(tempObj);
                         }
                         break;
 
                     default:
-                        var deny = Model.Deny.getDeny();
+                        var deny = ModelData.Deny.getDeny();
                         if (deny.indexOf(propName) == -1) {
                             tempObj[propName] = propValue;
                             attributes.push(tempObj);
