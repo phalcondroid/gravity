@@ -22,16 +22,5 @@ namespace View {
             this.em = this.getDi().get("em");
             this.initialize();
         }
-
-        /**
-         *
-         * @param
-         * @param
-         * @return
-         */
-        public build(elements)
-        {
-
-        }
     }
 }

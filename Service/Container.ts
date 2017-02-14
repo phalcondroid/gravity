@@ -4,7 +4,6 @@ namespace Service
     export class Container
     {
         private service    : any[] = [];
-        private persistent : string = "Gravity.Persistent.Session" + Helper.MathHelper.getUUID()
 
         public set(serviceName, content)
         {
@@ -19,7 +18,7 @@ namespace Service
         public setPersistent(serviceName, content)
         {
             sessionStorage.setItem(
-                this.persistent + serviceName,
+                serviceName,
                 content
             );
         }
@@ -27,7 +26,7 @@ namespace Service
         public getPersistent(serviceName)
         {
             return sessionStorage.getItem(
-                this.persistent + serviceName
+                serviceName
             );
         }
 

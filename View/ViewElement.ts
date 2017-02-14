@@ -54,6 +54,8 @@ namespace View
             if (typeof name.nodeName != "undefined") {
                 this.id      = name.getAttribute("id");
                 this.element = this.init(name.nodeName, this.id);
+            } else if (typeof name.target != "undefined") {
+                this.element = name.target;
             } else {
                 this.id      = name;
                 this.element = this.init(this.getClassName(), name);
@@ -265,7 +267,7 @@ namespace View
         {
             this.element.addEventListener(
                 "click",
-                fn.bind(this, this)
+                fn.bind(this)
             );
             return this;
         }
@@ -274,7 +276,7 @@ namespace View
         {
             this.element.addEventListener(
                 "dblclick",
-                fn.bind(this, this)
+                fn.bind(this)
             );
             return this;
         }
@@ -287,7 +289,7 @@ namespace View
         {
             this.element.addEventListener(
                 "change",
-                fn.bind(this, this)
+                fn.bind(this)
             );
             return this;
         }
@@ -300,7 +302,7 @@ namespace View
         {
             this.element.addEventListener(
                 "keypress",
-                fn.bind(this, this)
+                fn.bind(this)
             );
             return this;
         }
@@ -312,7 +314,7 @@ namespace View
         public keydown(fn) {
             this.element.addEventListener(
                 "keydown",
-                fn.bind(this, this)
+                fn.bind(this)
             );
             return this;
         }
@@ -324,7 +326,7 @@ namespace View
         public keyup(fn) {
             this.element.addEventListener(
                 "keyup",
-                fn.bind(this, this)
+                fn.bind(this)
             );
             return this;
         }
@@ -337,7 +339,7 @@ namespace View
         {
             this.element.addEventListener(
                 "blur",
-                fn.bind(this, this)
+                fn.bind(this)
             );
             return this;
         }
@@ -350,7 +352,7 @@ namespace View
         {
             this.element.addEventListener(
                 "focus",
-                fn.bind(this, this)
+                fn.bind(this)
             );
             return this;
         }
