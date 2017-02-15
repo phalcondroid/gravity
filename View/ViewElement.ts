@@ -267,7 +267,7 @@ namespace View
         {
             this.element.addEventListener(
                 "click",
-                fn.bind(this)
+                fn.bind(this, this)
             );
             return this;
         }
