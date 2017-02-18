@@ -267,7 +267,7 @@ namespace View
         {
             this.element.addEventListener(
                 "click",
-                fn.bind(this, this)
+                fn.bind(this)
             );
             return this;
         }
@@ -679,7 +679,7 @@ namespace View
                                     );
                                     let finalObj  = {};
                                     let auxObject = auxElement.getAsObject();
-                                    finalObj[auxElement.getClassName()] = auxObject;
+                                    finalObj[auxElement.getClassName().toLowerCase()] = auxObject;
 
                                     if (auxObject.length > 0) {
                                         obj.push(finalObj);
