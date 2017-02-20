@@ -241,6 +241,15 @@ namespace View
         }
 
         /**
+         * Set inner html throught
+         */
+        public setInnerHtml(html)
+        {
+            this.element.innerHTML = html;
+            return this.element;
+        }
+
+        /**
          *
          */
         public getAttribute(attr)
@@ -272,6 +281,9 @@ namespace View
             return this;
         }
 
+        /**
+         *
+         */
         public doubleClick(fn)
         {
             this.element.addEventListener(
@@ -448,11 +460,12 @@ namespace View
         }
 
         /**
-         * [html description]
-         * @param  {[type]} html [description]
-         * @return {[type]}      [description]
+         *
+         * @param  html [description]
+         * @return
          */
-        public html(html: any = null) {
+        public html(html: any = null)
+        {
             if (html != null) {
                 this.removeChildNodes();
                 this.append(html);
@@ -462,6 +475,9 @@ namespace View
             }
         }
 
+        /**
+         *
+         */
         public verifyElement(append, type : string = "append")
         {
             if (this.element instanceof HTMLCollection) {
@@ -481,6 +497,9 @@ namespace View
             }
         }
 
+        /**
+         *
+         */
         private removeChildNodes()
         {
             if (this.element instanceof HTMLCollection) {
@@ -498,6 +517,9 @@ namespace View
             }
         }
 
+        /**
+         *
+         */
         private removeChilds(element, childs)
         {
             while (element.firstChild) {
@@ -536,8 +558,8 @@ namespace View
 
         /**
          * [css description]
-         * @param  {[type]} css [description]
-         * @return {[type]}     [description]
+         * @param   css [description]
+         * @return
          */
         public css(css, value : any = null) {
             if (typeof css == "object") {
@@ -733,11 +755,34 @@ namespace View
             }
         }
 
+        /**
+         *
+         */
+        public setId(id)
+        {
+            this.attr("id", "id");
+            return this;
+        }
+
+        /**
+         *
+         */
+        public getId()
+        {
+            return this.attr("id");
+        }
+
+        /**
+         *
+         */
         public setDi(di)
         {
             this.di = di;
         }
 
+        /**
+         *
+         */
         public getDi()
         {
             return this.di;

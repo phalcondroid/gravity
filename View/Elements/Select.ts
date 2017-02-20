@@ -80,29 +80,17 @@ namespace View {
                     this.getContext()
                 );
 
-                if (content[key] instanceof ModelData.RawModel) {
-                    let id = content[key][fields[0]];
-                    if (id == "") {
-                        id = content[key][fields[1]];
-                    }
-                    option.attr({
-                        "value" : id
-                    });
-                    option.append(
-                        content[key][fields[1]]
-                    );
-                } else {
-                    let id = content[key][fields[0]];
-                    if (id == "") {
-                        id = content[key][fields[1]];
-                    }
-                    option.attr({
-                        "value" : id
-                    });
-                    option.append(
-                        content[key][fields[1]]
-                    );
+                let id = content[key][fields[0]];
+                if (id === "") {
+                    id = content[key][fields[1]];
                 }
+                
+                option.attr({
+                    "value" : id
+                });
+                option.append(
+                    content[key][fields[1]]
+                );
 
                 this.append([
                     option

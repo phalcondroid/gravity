@@ -221,8 +221,6 @@ namespace Persistence
                     "save"
                 );
 
-            console.log(model, model instanceof ModelData.AjaxModel);
-
             if (model instanceof ModelData.AjaxModel) {
 
                 this.ajax = new Network.Ajax();
