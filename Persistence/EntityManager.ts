@@ -266,8 +266,6 @@ namespace Persistence
                     model.getMethod()
                 );
 
-                this.ajax.send();
-
             } else if (model instanceof ModelData.StaticModel) {
                 switch (model.state) {
                     case UnitOfWork.NEW:
@@ -304,21 +302,14 @@ namespace Persistence
             var type =  this.getContainer()
                 .get("transactionType");
 
-            if (type == "find" || type == "findOne") {
-                var params = this.getContainer()
-                    .get("transactionParams");
-            }
-
-            if (objModel instanceof ModelData.AjaxModel) {
-
+            if (type == "save") {
 
                 this.ajax.response(function (response) {
 
                     return fn(this.setResponse(
                         response,
                         type,
-                        model,
-                        params
+                        model
                     ));
 
                 }.bind(this));
@@ -326,14 +317,38 @@ namespace Persistence
                 this.ajax.send();
 
             } else {
-                if (objModel instanceof ModelData.StaticModel) {
-                    fn(this.setResponse(
-                        objModel.getData(),
-                        type,
-                        model,
-                        params
-                    ));
+
+                if (type == "find" || type == "findOne") {
+                    var params = this.getContainer()
+                        .get("transactionParams");
                 }
+
+                if (objModel instanceof ModelData.AjaxModel) {
+
+                    this.ajax.response(function (response) {
+
+                        return fn(this.setResponse(
+                            response,
+                            type,
+                            model,
+                            params
+                        ));
+
+                    }.bind(this));
+
+                    this.ajax.send();
+
+                } else {
+                    if (objModel instanceof ModelData.StaticModel) {
+                        fn(this.setResponse(
+                            objModel.getData(),
+                            type,
+                            model,
+                            params
+                        ));
+                    }
+                }
+
             }
 
             return this;
