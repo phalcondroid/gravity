@@ -55,7 +55,7 @@ namespace View {
         {
             var childs = this.getElement().childNodes;
             for (var key in childs) {
-                if (childs[key].value === value) {
+                if (childs[key].value == value) {
                     childs[key].setAttribute("selected", "selected");
                 }
             }
@@ -84,7 +84,7 @@ namespace View {
                 if (id === "") {
                     id = content[key][fields[1]];
                 }
-                
+
                 option.attr({
                     "value" : id
                 });
