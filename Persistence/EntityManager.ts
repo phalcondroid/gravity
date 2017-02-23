@@ -22,6 +22,9 @@ namespace Persistence
         private fnResponse : Function;
         private resultSet  : any;
 
+        /**
+         * Entity manager is a class
+         */
         public constructor()
         {
             this.uow = new UnitOfWork;
@@ -39,9 +42,36 @@ namespace Persistence
         }
 
         /**
+         * Search data through ajax
          *
          */
         public find(model : any, params : Object = {})
+        {
+            this.setWhenIsModel(
+                model,
+                params,
+                "find"
+            );
+            return this;
+        }
+
+        /**
+         *
+         */
+        public findOne(model : any, params : Object = {})
+        {
+            this.setWhenIsModel(
+                model,
+                params,
+                "findOne"
+            );
+            return this;
+        }
+
+        /**
+         *
+         */
+        public setWhenIsModel(model, params, type)
         {
             let objModel = new model();
 
@@ -57,7 +87,7 @@ namespace Persistence
             this.getContainer()
                 .set(
                 "transactionType",
-                "find"
+                type
             );
 
             if (objModel instanceof ModelData.RawModel) {
@@ -71,7 +101,7 @@ namespace Persistence
                     if (url == null) {
                         url = this.getDi().get("url").get("baseUrl") +
                         objModel.getClassName() +
-                        "Find";
+                        type;
                     }
                     this.ajax.setUrl(
                         url
@@ -84,70 +114,12 @@ namespace Persistence
                     this.ajax.setMethod(
                         objModel.getMethod()
                     );
-
-                }
-            }
-
-            return this;
-        }
-
-        /**
-         *
-         */
-        public findOne(model : any, params : Object = {})
-        {
-
-            let objModel = new model();
-
-            this.getContainer()
-                .set("transactionModel", model);
-
-            this.getContainer()
-                .set("transactionObjModel", objModel);
-
-            this.getContainer()
-                .set("transactionParams", params);
-
-            this.getContainer().set(
-                "transactionType",
-                "findOne"
-            );
-
-            if (objModel instanceof ModelData.RawModel) {
-
-                if (objModel instanceof ModelData.AjaxModel) {
-
-                    this.ajax = new Network.Ajax();
-                    this.ajax.setDi(this.getDi());
-
-                    var url = objModel.getFindUrl();
-                    if (url == null) {
-                        url = this.getDi().get("url").get("baseUrl") +
-                        objModel.getClassName() +
-                        "FindOne";
-                    }
-                    this.ajax.setUrl(
-                        url
-                    );
-                    this.ajax.setParams(
-                        params
-                    );
-                    this.ajax.setMethod(
-                        objModel.getMethod()
-                    );
-                    this.ajax.set(
-                        "transactionType",
-                        "findOne"
-                    );
-
-                } else if (objModel instanceof ModelData.StaticModel) {
 
                 }
 
             } else {
-                throw "Not valid model";
+                throw "Model must be instance of RawModel";
             }
-            return this;
         }
 
         /**
@@ -323,35 +295,97 @@ namespace Persistence
                         .get("transactionParams");
                 }
 
-                if (objModel instanceof ModelData.AjaxModel) {
-
-                    this.ajax.response(function (response) {
-
-                        return fn(this.setResponse(
-                            response,
-                            type,
-                            model,
-                            params
-                        ));
-
-                    }.bind(this));
-
-                    this.ajax.send();
-
-                } else {
-                    if (objModel instanceof ModelData.StaticModel) {
-                        fn(this.setResponse(
-                            objModel.getData(),
-                            type,
-                            model,
-                            params
-                        ));
-                    }
-                }
-
+                this.checkModel(
+                    fn,
+                    type,
+                    model,
+                    objModel,
+                    params
+                );
             }
 
             return this;
+        }
+
+        /**
+         *
+         */
+        public checkModel(fn, type, model, objModel, params)
+        {
+            if (objModel instanceof ModelData.AjaxModelPersistent) {
+
+                let data = objModel.getData();
+                console.log(data);
+
+                if (typeof data != null) {
+                    this.setResponseAjax(
+                        fn,
+                        type,
+                        model,
+                        params
+                    );
+                } else {
+                    this.setResponseStatic(
+                        fn,
+                        objModel,
+                        type,
+                        model,
+                        params
+                    );
+                }
+
+            } else {
+                if (objModel instanceof ModelData.AjaxModel) {
+                    this.setResponseAjax(
+                        fn,
+                        type,
+                        model,
+                        params
+                    );
+                } else {
+                    if (objModel instanceof ModelData.StaticModel) {
+                        this.setResponseStatic(
+                            fn,
+                            objModel,
+                            type,
+                            model,
+                            params
+                        );
+                    }
+                }
+            }
+        }
+
+        /**
+         *
+         */
+        private setResponseAjax(fn, type, model, params)
+        {
+            this.ajax.response(function (response) {
+
+                return fn(this.setResponse(
+                    response,
+                    type,
+                    model,
+                    params
+                ));
+
+            }.bind(this));
+
+            this.ajax.send();
+        }
+
+        /**
+         *
+         */
+        public setResponseStatic(fn, objModel, type, model, params)
+        {
+            fn(this.setResponse(
+                objModel.getData(),
+                type,
+                model,
+                params
+            ));
         }
 
         /**

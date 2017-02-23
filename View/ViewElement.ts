@@ -30,6 +30,11 @@ namespace View
         /**
          *
          */
+        public args;
+
+        /**
+         *
+         */
         private deny = ["Table", "Td", "Div", "Thead", "Tbody", "Tfoot", "Tr", "Td", "Th", "Label", "Span", "I", "A"];
 
         /**
@@ -63,6 +68,44 @@ namespace View
             return this;
         }
 
+        /**
+         *
+         */
+        public getArguments(args)
+        {
+            if (typeof args == "object") {
+                var argsTemp = new Array();
+                for (var i = 0; i < args.length; i++) {
+                    if (args[i] != "atmpnil" && !(args[i] instanceof View.Controller)) {
+                        argsTemp.push(args[i]);
+                    }
+                }
+                return argsTemp;
+            } else {
+                return [];
+            }
+        }
+
+        /**
+         *
+         */
+        public setArgs(args)
+        {
+            this.args = args;
+            return this;
+        }
+
+        /**
+         *
+         */
+        public getArgs()
+        {
+            return this.args;
+        }
+
+        /**
+         *
+         */
         public initialize()
         {
 
@@ -373,6 +416,15 @@ namespace View
         {
             var nameEvent = "on" + event;
             this.element.removeEventListener("click", this.element.nameEvent);
+        }
+
+        /**
+         *
+         */
+        public removeAttr(attr)
+        {
+            this.element.removeAttribute(attr);
+            return this;
         }
 
         /**

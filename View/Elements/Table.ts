@@ -23,7 +23,7 @@ namespace View
         /**
          *
          */
-        public constructor(ctx)
+        public constructor(ctx, a1 : any = "atmpnil", a2 : any = "atmpnil", a3 : any = "atmpnil", a4 : any = "atmpnil", a5 : any = "atmpnil")
         {
             super();
             this.create("table");
@@ -46,6 +46,7 @@ namespace View
                 this.getContext()
             );
 
+            this.setArgs(this.getArguments(arguments));
             this.initialize();
         }
 
