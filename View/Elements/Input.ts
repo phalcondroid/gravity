@@ -26,6 +26,14 @@ namespace View
         }
 
         /**
+         *
+         */
+        public getValue()
+        {
+            return this.element.value;
+        }
+
+        /**
          * [type description]
          * @param  {[type]} type [description]
          * @return {[type]}      [description]
