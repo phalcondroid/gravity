@@ -43,6 +43,14 @@ namespace Gravity
         /**
          *
          */
+        public getConfig()
+        {
+            return this.config;
+        }
+
+        /**
+         *
+         */
         private resolveConfig(di)
         {
             var positionArray = new Array();
@@ -96,11 +104,12 @@ namespace Gravity
                     }
                 }
             } else if(typeof url == "object") {
-                let urlKey = Object.keys(urls)[0];
-                url.set(
-                    urlKey,
-                    urls[urlKey]
-                );
+                for (var keyUrlFor in urls) {
+                    url.set(
+                        keyUrlFor,
+                        urls[keyUrlFor]
+                    );
+                }
             } else {
                 throw "Url data unrecognized"
             }
@@ -124,7 +133,7 @@ namespace Gravity
                 let i = 1;
 
                 for (let key in controllers) {
-                    
+
                     if (typeof controllers[key].name != "undefined") {
 
                         var temp = new controllers[key].name;

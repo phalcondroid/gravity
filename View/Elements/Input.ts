@@ -26,11 +26,20 @@ namespace View
         }
 
         /**
-         *
+         * 
          */
         public getValue()
         {
             return this.element.value;
+        }
+
+        /**
+         *
+         */
+        public setValue(value)
+        {
+            this.element.value = value;
+            return this;
         }
 
         /**

@@ -24,6 +24,18 @@ namespace View {
             this.initialize();
         }
 
+        public width(width)
+        {
+            this.element.style.width = width;
+            return this;
+        }
+
+        public height(height)
+        {
+            this.element.style.width = height;
+            return this;
+        }
+
         public src(src)
         {
             this.attr("src", src);
