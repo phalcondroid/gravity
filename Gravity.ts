@@ -1,6 +1,7 @@
 
 ///<reference path="./Environment/Scope"/>
 ///<reference path="./Environment/Config"/>
+///<reference path="./Helper/ArrayHelper"/>
 
 namespace Gravity
 {
@@ -141,7 +142,11 @@ namespace Gravity
                         if (temp instanceof View.Controller) {
 
                             temp.setDi(di);
+                            temp.setUrl(di.get("url"));
                             temp.initialize();
+                            this.resolvePropertiesController(
+                                temp
+                            );
 
                         } else {
                             throw "Controller #" + i + " must be extend from View.Controller class";
@@ -155,6 +160,34 @@ namespace Gravity
                 }
             } else {
                 throw "Config => controllers must be array"
+            }
+        }
+
+        private resolvePropertiesController(controller : View.Controller)
+        {
+            var restricted = [
+                "constructor",
+                "initialize",
+                "getById",
+                "getByTag",
+                "getByClass",
+                "getDi",
+                "setDi",
+                "getUrl",
+                "setUrl"
+            ];
+
+            for (var key in controller) {
+                switch (typeof controller[key]) {
+                    case "function":
+                            if (!Helper.ArrayHelper.inArray(restricted, key)) {
+                                var component = controller.getById(key);
+                                if (component) {
+                                    controller[key](component);
+                                }
+                            }
+                        break;
+                }
             }
         }
 

@@ -163,6 +163,9 @@ namespace View
                 let adapter = new View.ViewAdapter(
                     document.getElementById(id)
                 );
+                if (!adapter) {
+                    return false;
+                }
                 return adapter.get(
                     this.getContext()
                 );

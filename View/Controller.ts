@@ -4,8 +4,9 @@ namespace View
 {
     export class Controller implements Service.InjectionAwareInterface
     {
-        public di         : Service.Container;
-        public em         : Persistence.EntityManager;
+        public di  : Service.Container;
+        public em  : Persistence.EntityManager;
+        public url : Service.Container;
 
         /**
          *
@@ -86,6 +87,22 @@ namespace View
         {
             this.di = di;
             this.em = this.di.get("em");
+        }
+
+        /**
+         *
+         */
+        public setUrl(url)
+        {
+            this.url = url;
+        }
+
+        /**
+         *
+         */
+        public getUrl()
+        {
+            return this.url;
         }
     }
 }
