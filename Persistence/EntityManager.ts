@@ -1,12 +1,12 @@
 
-/// <reference path="../Reflection/Reflection" />
-/// <reference path="../Service/Container" />
-/// <reference path="../Model/StaticModel" />
-/// <reference path="../Model/AjaxModel" />
-/// <reference path="../Network/Ajax" />
-/// <reference path="./UnitOfWork" />
-/// <reference path="./Hydrator" />
-/// <reference path="./Filter" />
+/// <reference path="../Reflection/Reflection.ts" />
+/// <reference path="../Service/Container.ts" />
+/// <reference path="../Model/StaticModel.ts" />
+/// <reference path="../Model/AjaxModel.ts" />
+/// <reference path="../Network/Ajax.ts" />
+/// <reference path="./UnitOfWork.ts" />
+/// <reference path="./Hydrator.ts" />
+/// <reference path="./Filter.ts" />
 
 namespace Persistence
 {
@@ -42,8 +42,9 @@ namespace Persistence
         }
 
         /**
-         * Search data through ajax
-         *
+         * 
+         * @param model 
+         * @param params 
          */
         public find(model : any, params : Object = {})
         {
@@ -56,7 +57,9 @@ namespace Persistence
         }
 
         /**
-         *
+         * 
+         * @param model 
+         * @param params 
          */
         public findOne(model : any, params : Object = {})
         {
@@ -64,6 +67,21 @@ namespace Persistence
                 model,
                 params,
                 "findOne"
+            );
+            return this;
+        }
+
+        /**
+         * 
+         * @param model 
+         * @param params 
+         */
+        public count(model : any, params : Object = {})
+        {
+            this.setWhenIsModel(
+                model,
+                params,
+                "count"
             );
             return this;
         }
@@ -194,10 +212,8 @@ namespace Persistence
                 );
 
             if (model instanceof ModelData.AjaxModel) {
-
                 this.ajax = new Network.Ajax();
                 this.ajax.setDi(this.getDi());
-
                 var modelName = model.getClassName();
 
                 switch (model.state) {
@@ -231,9 +247,7 @@ namespace Persistence
                 );
                 var objParams = {};
                 objParams[modelName] = attrsAsString;
-
                 this.ajax.setParams(objParams);
-
                 this.ajax.setMethod(
                     model.getMethod()
                 );
@@ -290,7 +304,7 @@ namespace Persistence
 
             } else {
 
-                if (type == "find" || type == "findOne") {
+                if (type == "find" || type == "findOne" || type == "count") {
                     var params = this.getContainer()
                         .get("transactionParams");
                 }
@@ -313,9 +327,7 @@ namespace Persistence
         public checkModel(fn, type, model, objModel, params)
         {
             if (objModel instanceof ModelData.AjaxModelPersistent) {
-
                 let data = objModel.getData();
-                console.log(data);
 
                 if (typeof data != null) {
                     this.setResponseAjax(
@@ -362,16 +374,13 @@ namespace Persistence
         private setResponseAjax(fn, type, model, params)
         {
             this.ajax.response(function (response) {
-
                 return fn(this.setResponse(
                     response,
                     type,
                     model,
                     params
                 ));
-
             }.bind(this));
-
             this.ajax.send();
         }
 
@@ -396,6 +405,7 @@ namespace Persistence
             let resultSet : any = new Array();
 
             switch (type) {
+                case "count":
                 case "findOne":
                         resultSet = this.getResultSet(
                             data,
@@ -450,14 +460,6 @@ namespace Persistence
         public distinct()
         {
             return {};
-        }
-
-        /**
-         *
-         */
-        public count()
-        {
-            return 0;
         }
 
         /**
