@@ -1,5 +1,4 @@
-
-///<reference path="./ViewAdapter"/>
+///<reference path="./ViewAdapter.ts"/>
 
 namespace View
 {
@@ -604,14 +603,6 @@ namespace View
         }
 
         /**
-         *
-         */
-        public getAttr(attr)
-        {
-            return this.attr(attr);
-        }
-
-        /**
          * [css description]
          * @param   css [description]
          * @return
@@ -619,10 +610,12 @@ namespace View
         public css(css, value : any = null) {
             if (typeof css == "object") {
                 for (let key in css) {
-                    this.element.style.key = css[key];
+                    this.element.style[key] = css[key];
                 }
             } else if (typeof css == "string" && value != null) {
-                this.element.style.css = value;
+                this.element.style[css] = value;
+            } else if (typeof css == "string" && value == null) {
+                return this.element.style[css];
             }
             return this;
         }
@@ -653,7 +646,6 @@ namespace View
          * @return {[type]}        [description]
          */
         public validateAndSet(config) {
-
             try {
                 if (typeof config.name === "undefined") {
                     throw "The identify is required";
@@ -701,7 +693,7 @@ namespace View
                 this.element.innerHtml = text;
                 return this;
             } else {
-                return this.element.value;
+                return this.element.innerHtml;
             }
         }
 
@@ -757,7 +749,6 @@ namespace View
                                     let finalObj  = {};
                                     let auxObject = auxElement.getAsObject();
                                     finalObj[auxElement.getClassName().toLowerCase()] = auxObject;
-
                                     if (auxObject.length > 0) {
                                         obj.push(finalObj);
                                     }

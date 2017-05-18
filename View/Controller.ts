@@ -1,4 +1,5 @@
-///<reference path="./ViewAdapter"/>
+///<reference path="./ViewAdapter.ts"/>
+///<reference path="../Url/Url.ts"/>
 
 namespace View
 {
@@ -6,7 +7,7 @@ namespace View
     {
         public di  : Service.Container;
         public em  : Persistence.EntityManager;
-        public url : Service.Container;
+        public url : Url.Url;
 
         /**
          *

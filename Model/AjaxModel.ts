@@ -29,12 +29,6 @@ namespace ModelData
             this.setFindUrl(data.insert);
         }
 
-        public getClassName() {
-            let funcNameRegex = /function (.{1,})\(/;
-            let results  = (funcNameRegex).exec(this["constructor"].toString());
-            return (results && results.length > 1) ? results[1] : "";
-        }
-
         public setInsertUrl(url : string)
         {
             this.insertUrl  = url;

@@ -15,7 +15,7 @@ namespace ModelData
         public constructor(di : Service.Container)
         {
             super();
-            this.setDi(new Service.Container());
+            this.setContainer(new Service.Container());
             this.initialize();
         }
 
@@ -24,8 +24,8 @@ namespace ModelData
          */
         public setData(data)
         {
-            this.getDi().setPersistent(
-                this.getIdentify(),
+            this.getContainer().setPersistent(
+                "Models_Identify_" + this.getClassName(),
                 JSON.stringify(
                     data
                 )
@@ -37,9 +37,13 @@ namespace ModelData
          */
         public getData()
         {
-            return this.getDi().getPersistent(
-                this.getIdentify()
+            var data = this.getContainer().getPersistent(
+                "Models_Identify_" + this.getClassName()
             );
+            if (typeof data == "string") {
+                //return this.getObjectData();
+            }
+            return data;
         }
 
         /**
@@ -48,8 +52,8 @@ namespace ModelData
         public getObjectData()
         {
             return JSON.parse(
-                this.getDi().getPersistent(
-                    this.getIdentify()
+                this.getContainer().getPersistent(
+                    "Models_Identify_" + this.getClassName()
                 )
             );
         }
@@ -89,9 +93,17 @@ namespace ModelData
         /**
          *
          */
-        public getSerialized()
+        public setContainer(container)
         {
+            this.container = container;
+        }
 
+        /**
+         * 
+         */
+        public getContainer()
+        {
+            return this.container;
         }
     }
 }

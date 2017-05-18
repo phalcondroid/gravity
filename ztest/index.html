@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <script src="../gravity.src.js"></script>
+        <script src="json.js"></script>
+        <script>
+            var builder = new Mvc.Builder();
+            builder.buildCondition({
+                "$and" : {
+                    "deviceGroup" : "MacBookPro12,1"
+                }
+            });
+            console.log(jsonData);
+            console.log(
+                builder.getMultipleRowValues(jsonData)
+            );
+        </script>
+    </head>
+</html>

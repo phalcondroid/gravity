@@ -1,12 +1,13 @@
 
-/// <reference path="./DatamapperOperators.ts" />
-/// <reference path="./ComparisonOperators.ts" />
+/// <reference path="Builder/DataType.ts" />
+/// <reference path="Builder/Operators.ts" />
+/// <reference path="Builder/ComparisonOperators.ts" />
 
-namespace Persistence
+namespace Mvc
 {
-    export class Filter
+    export class Builder
     {
-
+        private data    : Object = false;
         private params  : Object;
         private first   : string  = "";
         private final   : any[]   = [];
@@ -15,9 +16,9 @@ namespace Persistence
         private limit   : string  = null;
         private columns : Object  = {};
 
-        public constructor()
+        public constructor(data : any = false)
         {
-
+            this.data = data;
         }
 
         public buildCondition(params)
@@ -29,14 +30,14 @@ namespace Persistence
 
                 switch (key) {
 
-                    case DatamapperOperators.CONDITIONAL:
+                    case Mvc.Operators.CONDITIONAL:
 
                         let conditional = params[key];
 
                         for (var keyConditional in conditional) {
 
                             switch (keyConditional) {
-                                case DatamapperOperators.AND:
+                                case Mvc.Operators.AND:
 
                                     let iAnd = 1;
                                     let andContent = conditional[keyConditional];
@@ -54,7 +55,7 @@ namespace Persistence
                                     }
 
                                     break;
-                                case DatamapperOperators.OR:
+                                case Operators.OR:
 
                                         let iOr = 1;
                                         let orContent = conditional[keyConditional];
@@ -64,14 +65,14 @@ namespace Persistence
                                             this.getExpression(
                                                 keyOr,
                                                 orContent[keyOr],
-                                                ComparisonOperators.OR,
+                                                Operators.OR,
                                                 iOr,
                                                 orLength
                                             );
                                             iOr++;
                                         }
                                     break;
-                                case DatamapperOperators.IS_NOT:
+                                case Mvc.Operators.IS_NOT:
                                         let iIsNot = 1;
                                         let isNotContent = conditional[keyConditional];
                                         let isNotLength  = Object.keys(isNotContent).length;
@@ -94,17 +95,17 @@ namespace Persistence
                         }
                         break;
 
-                    case DatamapperOperators.SORT:
+                    case Mvc.Operators.SORT:
                             this.getSort(
                                 params[key]
                             );
                         break;
-                    case DatamapperOperators.LIMIT:
+                    case Mvc.Operators.LIMIT:
                             this.getLimit(
                                 params[key]
                             );
                         break;
-                    case DatamapperOperators.COLUMNS:
+                    case Mvc.Operators.COLUMNS:
                             this.columns = params[key];
                             if (typeof params[key] != "object") {
                                 throw Errors.Message.getCodeMessage(
@@ -130,12 +131,12 @@ namespace Persistence
         public getSort(sortContent)
         {
             switch (typeof sortContent) {
-                case DataType.STRING_TYPE:
+                case Mvc.DataType.STRING_TYPE:
                         this.sort.push(
                             "data = Sort.sortByField('" + sortContent + "');"
                         );
                     break;
-                case DataType.OBJECT_TYPE:
+                case Mvc.DataType.OBJECT_TYPE:
                         if (Array.isArray(sortContent)) {
                             for (let sortKey in sortContent) {
                                 let sortValue = sortContent[sortKey]
@@ -149,7 +150,7 @@ namespace Persistence
                                 this.sort.push(
                                     "data = Sort.sortByField(data, '" + sortKey + "');"
                                 );
-                                if (sortContent[sortKey] == Sort.DESC) {
+                                if (sortContent[sortKey] == Mvc.Sort.DESC) {
                                     this.sort.push(
                                         "data = data.reverse();"
                                     );
@@ -183,13 +184,13 @@ namespace Persistence
                     if (j < (newVal.length - 1)) {
                         operatorStr = operator;
                     }
-                    let valueByType = DataType.getValueByType(newVal[j]);
+                    let valueByType = Mvc.DataType.getValueByType(newVal[j]);
                     condition += "row[\"" + key + "\"] " + comparison + " " + newVal[j] + " " + operatorStr + " ";
                 }
 
             } else {
                 let operatorStr = "";
-                let valueByType = DataType.getValueByType(content);
+                let valueByType = Mvc.DataType.getValueByType(content);
                 condition += "row[\"" + key + "\"] " + comparison + " " + valueByType + " " + operatorStr + " ";
             }
             this.first += finalOperator + " ( " + condition + " ) ";
@@ -217,9 +218,13 @@ namespace Persistence
          */
         public getMultipleRowValues(rsp, conds = true)
         {
-            var response = JSON.parse(rsp);
-            if (typeof response == "string") {
-                response = JSON.parse(response);
+            if (typeof rsp != "object") {
+                var response = JSON.parse(rsp);
+                if (typeof response == "string") {
+                    response = JSON.parse(response);
+                }
+            } else {
+                response = rsp;
             }
 
             if (this.first == "") {
@@ -235,6 +240,7 @@ namespace Persistence
 
                 for (let key in response) {
                     let row = response[key];
+
                     if (conds) {
                         eval(
                             evalValue
@@ -243,6 +249,7 @@ namespace Persistence
                         data.push(this.getColumns(row));
                     }
                 }
+
 
                 if (this.sort.length > 0) {
                     var i = 0;
@@ -257,7 +264,9 @@ namespace Persistence
                 }
             } else {
                 if (typeof response == "object") {
-                    data.push(this.getColumns(response));
+                    data.push(
+                        this.getColumns(response)
+                    );
                 } else {
                     console.log("Response is not an object");
                 }

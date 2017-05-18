@@ -1,7 +1,7 @@
 
-///<reference path="./Environment/Scope"/>
-///<reference path="./Environment/Config"/>
-///<reference path="./Helper/ArrayHelper"/>
+///<reference path="./Environment/Scope.ts"/>
+///<reference path="./Environment/Config.ts"/>
+///<reference path="./Helper/ArrayHelper.ts"/>
 
 namespace Gravity
 {
@@ -22,7 +22,9 @@ namespace Gravity
          */
         public constructor()
         {
-
+            window.onbeforeunload = function () {
+                sessionStorage.clear();
+            }
         }
 
         /**

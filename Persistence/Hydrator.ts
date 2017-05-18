@@ -1,7 +1,7 @@
 
-/// <reference path="../Reflection/Reflection" />
-/// <reference path="../Model/RawModel" />
-/// <reference path="./UnitOfWork" />
+/// <reference path="../Reflection/Reflection.ts" />
+/// <reference path="../Model/RawModel.ts" />
+/// <reference path="./UnitOfWork.ts" />
 
 namespace Persistence
 {

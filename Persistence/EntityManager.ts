@@ -109,83 +109,40 @@ namespace Persistence
             );
 
             if (objModel instanceof ModelData.RawModel) {
-
-                if (objModel instanceof ModelData.AjaxModel) {
-
-                    this.ajax = new Network.Ajax();
-                    this.ajax.setDi(this.getDi());
-
-                    var url = objModel.getFindUrl();
-                    if (url == null) {
-                        url = this.getDi().get("url").get("baseUrl") +
-                        objModel.getClassName() +
-                        type;
+                var callAjax = false;
+                
+                if (objModel instanceof ModelData.AjaxModelPersistent) {
+                    if (objModel.getAjaxInit() === null) {
+                        this.callAjax(objModel, type, params);
                     }
-                    this.ajax.setUrl(
-                        url
-                    );
-
-                    this.ajax.setParams(
-                        params
-                    );
-
-                    this.ajax.setMethod(
-                        objModel.getMethod()
-                    );
-
+                } else if (objModel instanceof ModelData.AjaxModel) {
+                    this.callAjax(objModel, type, params);
                 }
-
             } else {
                 throw "Model must be instance of RawModel";
             }
         }
 
-        /**
-         *
-         */
-        private getResultSet(response, params, model)
+        private callAjax(objModel : any, type, params)
         {
-            let resultSet : any = new Array();
-            let hydrator = new Hydrator;
+            this.ajax = new Network.Ajax();
+            this.ajax.setDi(this.getDi());
 
-            let filters  = new Filter;
-            filters.buildCondition(params);
-
-            var data = new Array();
-            if ((new model) instanceof ModelData.AjaxModel) {
-                data = filters.getMultipleRowValues(
-                    response,
-                    false
-                );
-            } else {
-                data = filters.getMultipleRowValues(
-                    response
-                );
+            var url = objModel.getFindUrl();
+            if (url == null) {
+                url = this.getDi().get("url").get("baseUrl") +
+                objModel.getClassName() +
+                type;
             }
-
-            var i = 0;
-            for (let key in data) {
-
-                let newModel = hydrator.hydrate(
-                    model,
-                    data[key]
-                );
-
-                if (newModel instanceof ModelData.StaticModel) {
-                    newModel.setIndex(i);
-                }
-
-                resultSet.push(
-                    newModel
-                );
-                i++;
-            }
-
-            if (resultSet.length == 0) {
-                resultSet = false;
-            }
-
-            return resultSet;
+            this.ajax.setUrl(
+                url
+            );
+            this.ajax.setParams(
+                params
+            );
+            this.ajax.setMethod(
+                objModel.getMethod()
+            );
         }
 
         /**
@@ -328,12 +285,12 @@ namespace Persistence
         {
             if (objModel instanceof ModelData.AjaxModelPersistent) {
                 let data = objModel.getData();
-
-                if (typeof data != null) {
+                if (objModel.getAjaxInit() == null) {
                     this.setResponseAjax(
                         fn,
                         type,
                         model,
+                        objModel,
                         params
                     );
                 } else {
@@ -345,13 +302,13 @@ namespace Persistence
                         params
                     );
                 }
-
             } else {
                 if (objModel instanceof ModelData.AjaxModel) {
                     this.setResponseAjax(
                         fn,
                         type,
                         model,
+                        objModel,
                         params
                     );
                 } else {
@@ -371,11 +328,12 @@ namespace Persistence
         /**
          *
          */
-        private setResponseAjax(fn, type, model, params)
+        private setResponseAjax(fn, type, model, objModel, params)
         {
             this.ajax.response(function (response) {
                 return fn(this.setResponse(
                     response,
+                    objModel,
                     type,
                     model,
                     params
@@ -391,6 +349,7 @@ namespace Persistence
         {
             fn(this.setResponse(
                 objModel.getData(),
+                objModel,
                 type,
                 model,
                 params
@@ -400,7 +359,7 @@ namespace Persistence
         /**
          *
          */
-        private setResponse(data, type, model, params)
+        private setResponse(data, objModel, type, model, params)
         {
             let resultSet : any = new Array();
 
@@ -410,7 +369,8 @@ namespace Persistence
                         resultSet = this.getResultSet(
                             data,
                             params,
-                            model
+                            model,
+                            objModel
                         );
                         if (resultSet != false) {
                             resultSet = resultSet[0];
@@ -420,13 +380,71 @@ namespace Persistence
                         resultSet = this.getResultSet(
                             data,
                             params,
-                            model
+                            model,
+                            objModel
                         );
                     break;
                 case "save":
                         resultSet = data;
                     break;
             }
+            return resultSet;
+        }
+
+        /**
+         *
+         */
+        private getResultSet(response, params, model, objModel)
+        {
+            let resultSet : any = new Array();
+            let hydrator = new Hydrator;
+
+            let filters  = new Filter;
+            filters.buildCondition(params);
+
+            var data = new Array();
+            if (objModel instanceof ModelData.AjaxModelPersistent) {
+                if (objModel.getAjaxInit() == null) {
+                    objModel.setAjaxInit(true);
+                    objModel.setData(response);
+                }
+                data = filters.getMultipleRowValues(
+                    response,
+                    false
+                );
+            } else if (objModel instanceof ModelData.AjaxModel) {
+                data = filters.getMultipleRowValues(
+                    response,
+                    false
+                );
+            } else {
+                data = filters.getMultipleRowValues(
+                    response
+                );
+            }
+
+            var i = 0;
+            for (let key in data) {
+
+                let newModel = hydrator.hydrate(
+                    model,
+                    data[key]
+                );
+
+                if (newModel instanceof ModelData.StaticModel) {
+                    newModel.setIndex(i);
+                }
+
+                resultSet.push(
+                    newModel
+                );
+                i++;
+            }
+
+            if (resultSet.length == 0) {
+                resultSet = false;
+            }
+
             return resultSet;
         }
 

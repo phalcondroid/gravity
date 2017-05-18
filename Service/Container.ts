@@ -23,7 +23,7 @@ namespace Service
             );
         }
 
-        public getPersistent(serviceName)
+        public getPersistent(serviceName) : any
         {
             return sessionStorage.getItem(
                 serviceName

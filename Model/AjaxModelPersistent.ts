@@ -4,7 +4,6 @@ namespace ModelData
 {
     export class AjaxModelPersistent extends StaticModel implements ModelInterface
     {
-
         source        : string;
         insertUrl     : string = null;
         deleteUrl     : string = null;
@@ -22,10 +21,19 @@ namespace ModelData
             this.setFindUrl(data.insert);
         }
 
-        public getClassName() {
-            let funcNameRegex = /function (.{1,})\(/;
-            let results  = (funcNameRegex).exec(this["constructor"].toString());
-            return (results && results.length > 1) ? results[1] : "";
+        public setAjaxInit(value : boolean)
+        {
+            this.getContainer().setPersistent(
+                "ajaxInit_" + this.getClassName(),
+                value
+            );
+        }
+
+        public getAjaxInit() : boolean
+        {
+            return this.getContainer().getPersistent(
+                "ajaxInit_" + this.getClassName()
+            );
         }
 
         public setInsertUrl(url : string)
