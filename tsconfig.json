@@ -5,8 +5,8 @@
         "module": "system",
         "sourceMap": false,
         "inlineSources": false,
-        "outFile" : "gravity.src.js"
-        //"outFile" : "../wwd-backend/public/js/Libraries/gravity.js"
+        //"outFile" : "gravity.src.js"
+        "outFile" : "../wwd-backend/public/js/Libraries/gravity.js"
     },
     "filesGlob": [
         "./*.ts",

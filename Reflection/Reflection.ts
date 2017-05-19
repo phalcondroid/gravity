@@ -6,11 +6,18 @@ namespace Reflection
     export class Reflection
     {
         private classToReflect : any;
-        private methods    : any[] = new Array();
-        private attributes : any[] = new Array();
+        private methods    : any[]  = new Array();
+        private attributes : any[]  = new Array();
+        private deny       : Object = {};
 
         public constructor()
         {
+            this.deny = {
+                "insertUrl" : true,
+                "deleteUrl" : true,
+                "updateUrl" : true,
+                "findUrl"   : true
+            };
         }
 
         public getName(obj)
@@ -72,40 +79,49 @@ namespace Reflection
             }
 
             var output = '';
-            let attributes = new Array();
+            var dataAttributes = {};
 
             for (var i in obj) {
 
                 var propName  = i;
                 var propValue = obj[i];
-
                 var type = (typeof propValue);
-                var tempObj = {};
 
                 switch (type) {
                     case 'function':
 
                         break;
-
                     case 'object':
                         if (propValue instanceof ModelData.RawModel) {
-                            tempObj[propName] = this.getAtttributeAsObjects(propValue);
-                            attributes.push(tempObj);
+                            dataAttributes[propName] = this.getAtttributeAsObjects(propValue);
+                        } else {
+                            if (propValue != null) {
+                                if (Object.keys(propValue).length > 0) {
+                                    if (this.checkDataObject(propName)) {
+                                        dataAttributes[propName] = propValue;
+                                    }
+                                }
+                            }
                         }
                         break;
-
                     default:
                         var deny = ModelData.Deny.getDeny();
                         if (deny.indexOf(propName) == -1) {
-                            tempObj[propName] = propValue;
-                            attributes.push(tempObj);
+                            dataAttributes[propName] = propValue;
                         }
                         break;
-
                 }
             }
+            return dataAttributes;
+        }
 
-            return attributes;
+        public checkDataObject(key)
+        {
+            if (this.deny[key] != true) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         /**

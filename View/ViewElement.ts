@@ -677,6 +677,7 @@ namespace View
         {
             if (val) {
                 this.element.value = val;
+                this.attr("value", val);
                 return this;
             } else {
                 return this.element.value;
