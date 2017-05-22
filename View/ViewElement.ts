@@ -388,6 +388,15 @@ namespace View
             return this;
         }
 
+        public paste(fn)
+        {
+            this.element.addEventListener(
+                "paste",
+                fn.bind(this)
+            );
+            return this;
+        }
+
         /**
          * [change description]
          * @return {[type]} [description]
