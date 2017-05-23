@@ -737,6 +737,20 @@ namespace View
             return childs;
         }
 
+        public getParent()
+        {
+            var parent = this.element.parentElement;
+            if (parent.nodeType == 1) {
+                let adapter = new View.ViewAdapter(
+                    parent
+                );
+                return adapter.get(
+                    this.getContext()
+                );
+            }
+            return false;
+        }
+
         /**
          *
          */

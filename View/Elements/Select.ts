@@ -42,6 +42,18 @@ namespace View {
         }
 
         /**
+         * 
+         * @param fn 
+         */
+        public iterate(fn) {
+            var childs = this.getChilds();
+            for (var key in childs) {
+                fn(childs[key]);
+            }
+            return this;
+        }
+
+        /**
          *
          */
         public setChoose(choose)
@@ -69,7 +81,6 @@ namespace View {
          */
         public build(content, fields)
         {
-
             if (content instanceof ModelData.StaticModel) {
                 content = JSON.parse(content.getData());
             }
