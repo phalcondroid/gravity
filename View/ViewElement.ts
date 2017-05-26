@@ -713,6 +713,7 @@ namespace View
         public empty()
         {
             this.removeChildNodes();
+            return this;
         }
 
         /**
