@@ -2,7 +2,6 @@ namespace Persistence
 {
     export class DataType
     {
-
         public static BOOLEAN = 1;
         public static INTEGER = 2;
         public static STRING  = 3;
@@ -16,7 +15,7 @@ namespace Persistence
         public static OBJECT_TYPE  = "object";
 
         /**
-         *
+         * 
          */
         public static getValueByType(value : any)
         {

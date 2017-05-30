@@ -33,6 +33,17 @@ var jsonData = [
         "batteryDuration" : 0
     }, 
     {
+        "id" : "58e1990797caff46d6ff3215", 
+        "deviceGroup" : "MacBookPro8,2", 
+        "platform" : 4, 
+        "version" : "0.4.4", 
+        "quality" : 3, 
+        "resolution" : "1", 
+        "fps" : 39, 
+        "batterySpent" : 0, 
+        "batteryDuration" : 0
+    }, 
+    {
         "id" : "58da7cad3ec3333934063299", 
         "deviceGroup" : "MacBookPro12,1", 
         "platform" : 4, 

@@ -6,7 +6,6 @@ namespace Persistence
 {
     export class Filter
     {
-
         private params  : Object;
         private first   : string  = "";
         private final   : any[]   = [];

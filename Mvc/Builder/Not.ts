@@ -1,6 +1,6 @@
 namespace Mvc
 {
-    export class Or
+    export class Not
     {
         /**
          * 
@@ -21,13 +21,13 @@ namespace Mvc
                     );
                 }
             } else {
-                throw "And condition must be an object";
+                throw "Not condition must be an object";
             }
         }
 
         public get()
         {
-            return "(" + this.conditions.join(" || ") + ")";
+            return "(" + this.conditions.join(" != ") + ")";
         }
     }
 }

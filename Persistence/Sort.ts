@@ -2,12 +2,10 @@ namespace Persistence
 {
     export class Sort
     {
-
         public static ASC  : number = 1;
         public static DESC : number = -1;
 
         public static sortByField(data, field) {
-
             var arr = [];
             for (var prop in data) {
                 if (data.hasOwnProperty(prop)) {

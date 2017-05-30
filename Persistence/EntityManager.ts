@@ -362,7 +362,6 @@ namespace Persistence
         private setResponse(data, objModel, type, model, params)
         {
             let resultSet : any = new Array();
-
             switch (type) {
                 case "count":
                 case "findOne":

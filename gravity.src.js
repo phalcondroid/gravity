@@ -117,13 +117,13 @@ var Helper;
     }());
     Helper.ArrayHelper = ArrayHelper;
 })(Helper || (Helper = {}));
-///<reference path="./Environment/Scope"/>
-///<reference path="./Environment/Config"/>
-///<reference path="./Helper/ArrayHelper"/>
+///<reference path="./Environment/Scope.ts"/>
+///<reference path="./Environment/Config.ts"/>
+///<reference path="./Helper/ArrayHelper.ts"/>
 var Gravity;
-///<reference path="./Environment/Scope"/>
-///<reference path="./Environment/Config"/>
-///<reference path="./Helper/ArrayHelper"/>
+///<reference path="./Environment/Scope.ts"/>
+///<reference path="./Environment/Config.ts"/>
+///<reference path="./Helper/ArrayHelper.ts"/>
 (function (Gravity) {
     var Application = (function () {
         /**
@@ -744,141 +744,35 @@ var Mvc;
 /// <reference path="Builder/ComparisonOperators.ts" />
 (function (Mvc) {
     var Builder = (function () {
+        /**
+         *
+         * @param data
+         */
         function Builder(data) {
             if (data === void 0) { data = false; }
+            this.lim = null;
             this.data = false;
-            this.first = "";
-            this.final = [];
-            this.init = false;
-            this.sort = new Array();
-            this.limit = null;
-            this.columns = {};
+            this.cols = new Array;
+            this.conditions = new Array();
             this.data = data;
         }
-        Builder.prototype.buildCondition = function (params) {
-            var index = 1;
-            var length = Object.keys(params).length;
-            for (var key in params) {
-                switch (key) {
-                    case Mvc.Operators.CONDITIONAL:
-                        var conditional = params[key];
-                        for (var keyConditional in conditional) {
-                            switch (keyConditional) {
-                                case Mvc.Operators.AND:
-                                    var iAnd = 1;
-                                    var andContent = conditional[keyConditional];
-                                    var andLength = Object.keys(andContent).length;
-                                    for (var keyAnd in andContent) {
-                                        this.getExpression(keyAnd, andContent[keyAnd], Mvc.ComparisonOperators.AND, iAnd, andLength);
-                                        iAnd++;
-                                    }
-                                    break;
-                                case Mvc.Operators.OR:
-                                    var iOr = 1;
-                                    var orContent = conditional[keyConditional];
-                                    var orLength = Object.keys(orContent).length;
-                                    for (var keyOr in orContent) {
-                                        this.getExpression(keyOr, orContent[keyOr], Mvc.Operators.OR, iOr, orLength);
-                                        iOr++;
-                                    }
-                                    break;
-                                case Mvc.Operators.IS_NOT:
-                                    var iIsNot = 1;
-                                    var isNotContent = conditional[keyConditional];
-                                    var isNotLength = Object.keys(isNotContent).length;
-                                    for (var keyIsNot in isNotContent) {
-                                        this.getExpression(keyIsNot, isNotContent[keyIsNot], Mvc.ComparisonOperators.AND, iIsNot, isNotLength, Mvc.ComparisonOperators.DIFFERENT);
-                                        iIsNot++;
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        break;
-                    case Mvc.Operators.SORT:
-                        this.getSort(params[key]);
-                        break;
-                    case Mvc.Operators.LIMIT:
-                        this.getLimit(params[key]);
-                        break;
-                    case Mvc.Operators.COLUMNS:
-                        this.columns = params[key];
-                        if (typeof params[key] != "object") {
-                            throw Errors.Message.getCodeMessage(Errors.MessageCode.NOT_VALID_OBJECT, "$columns option");
-                        }
-                        break;
-                    default:
-                        this.getExpression(key, params[key], Mvc.ComparisonOperators.AND, index, length);
-                        index++;
-                        break;
-                }
-            }
-        };
-        Builder.prototype.getSort = function (sortContent) {
-            switch (typeof sortContent) {
-                case Mvc.DataType.STRING_TYPE:
-                    this.sort.push("data = Sort.sortByField('" + sortContent + "');");
-                    break;
-                case Mvc.DataType.OBJECT_TYPE:
-                    if (Array.isArray(sortContent)) {
-                        for (var sortKey in sortContent) {
-                            var sortValue = sortContent[sortKey];
-                            this.sort.push("data = Sort.sortByField(data, '" + sortValue + "')");
-                        }
-                    }
-                    else {
-                        for (var sortKey in sortContent) {
-                            var sortType = sortContent[sortKey];
-                            this.sort.push("data = Sort.sortByField(data, '" + sortKey + "');");
-                            if (sortContent[sortKey] == Mvc.Sort.DESC) {
-                                this.sort.push("data = data.reverse();");
-                            }
-                        }
-                    }
-                    break;
-            }
-        };
-        Builder.prototype.getLimit = function (limit) {
-            if (typeof limit == "string") {
-                limit = parseInt(limit);
-            }
-            this.limit = "data = data.slice(0, " + limit + ") ";
-        };
-        Builder.prototype.getExpression = function (key, content, operator, index, length, comparison) {
-            if (comparison === void 0) { comparison = "=="; }
-            var condition = "";
-            var finalOperator = "";
-            if (this.init) {
-                finalOperator = operator;
-            }
-            if (Array.isArray(content)) {
-                var newVal = content;
-                for (var j = 0; j < newVal.length; j++) {
-                    var operatorStr = "";
-                    if (j < (newVal.length - 1)) {
-                        operatorStr = operator;
-                    }
-                    var valueByType = Mvc.DataType.getValueByType(newVal[j]);
-                    condition += "row[\"" + key + "\"] " + comparison + " " + newVal[j] + " " + operatorStr + " ";
-                }
-            }
-            else {
-                var operatorStr = "";
-                var valueByType = Mvc.DataType.getValueByType(content);
-                condition += "row[\"" + key + "\"] " + comparison + " " + valueByType + " " + operatorStr + " ";
-            }
-            this.first += finalOperator + " ( " + condition + " ) ";
-            this.init = true;
-        };
         /**
          *
          */
+        Builder.prototype.columns = function (cols) {
+            if (typeof cols == "object") {
+                this.cols = cols;
+            }
+            else {
+                throw "Column param must be an object";
+            }
+            return this;
+        };
         Builder.prototype.getColumns = function (row) {
             var newRow = {};
-            if (Object.keys(this.columns).length > 0) {
-                for (var key in this.columns) {
-                    newRow[this.columns[key]] = row[this.columns[key]];
+            if (Object.keys(this.cols).length > 0) {
+                for (var key in this.cols) {
+                    newRow[this.cols[key]] = row[this.cols[key]];
                 }
             }
             else {
@@ -888,61 +782,202 @@ var Mvc;
         };
         /**
          *
+         * @param condClass
          */
-        Builder.prototype.getMultipleRowValues = function (rsp, conds) {
-            if (conds === void 0) { conds = true; }
-            if (typeof rsp != "object") {
-                var response = JSON.parse(rsp);
-                if (typeof response == "string") {
-                    response = JSON.parse(response);
-                }
+        Builder.prototype.where = function (conditions) {
+            if (conditions instanceof Mvc.And) {
+                this.conditions.push(conditions.get());
+            }
+            else if (conditions instanceof Mvc.Or) {
+                this.conditions.push(conditions.get());
+            }
+            else if (conditions instanceof Mvc.Not) {
+                this.conditions.push(conditions.get());
+            }
+            else if (conditions instanceof Mvc.In) {
+                this.conditions.push(conditions.get());
+            }
+            return this;
+        };
+        Builder.prototype.limit = function (limit) {
+            if (typeof limit == "number") {
+                this.lim = limit;
             }
             else {
-                response = rsp;
+                throw "limit must be number";
             }
-            if (this.first == "") {
-                this.first = "true";
-            }
-            var data = new Array();
-            if (Array.isArray(response)) {
-                var conditions = this.first;
-                var evalValue = "if (" + conditions + ") { data.push(this.getColumns(row)); }";
-                for (var key in response) {
-                    var row = response[key];
-                    console.log("si cas", row);
-                    if (conds) {
-                        eval(evalValue);
-                    }
-                    else {
-                        data.push(this.getColumns(row));
-                    }
+            return this;
+        };
+        /**
+         *
+         * @param conditions
+         */
+        Builder.prototype.joinConditions = function () {
+            return this.conditions.join(" || ");
+        };
+        /**
+         *
+         * @param conditions
+         */
+        Builder.prototype.orderBy = function (conditions) {
+        };
+        /**
+         *
+         */
+        Builder.prototype.get = function () {
+            var results = new Array;
+            var limit = 1;
+            for (var key in this.data) {
+                var row = this.data[key];
+                if (this.cols != null && this.cols.length > 0) {
+                    row = this.getColumns(row);
                 }
-                if (this.sort.length > 0) {
-                    var i = 0;
-                    for (var key in this.sort) {
-                        eval(this.sort[key]);
-                        i++;
-                    }
-                }
-                if (this.limit != null) {
-                    eval(this.limit);
-                }
-            }
-            else {
-                if (typeof response == "object") {
-                    data.push(this.getColumns(response));
+                if (this.conditions.length > 0) {
+                    var conditions = this.joinConditions();
+                    eval("if (" + conditions + ") { results.push(row) }");
                 }
                 else {
-                    console.log("Response is not an object");
+                    results.push(row);
                 }
+                if (this.lim != null) {
+                    if (limit == this.lim) {
+                        break;
+                    }
+                }
+                limit++;
             }
-            return data;
-        };
-        Builder.prototype.getOneRowValue = function (data) {
+            return results;
         };
         return Builder;
     }());
     Mvc.Builder = Builder;
+})(Mvc || (Mvc = {}));
+var Mvc;
+(function (Mvc) {
+    var And = (function () {
+        /**
+         *
+         * @param condition
+         */
+        function And(condition) {
+            /**
+             *
+             */
+            this.conditions = new Array;
+            if (typeof condition == "object") {
+                for (var key in condition) {
+                    var value = Mvc.DataType.getValueByType(condition[key]);
+                    this.conditions.push("row[\"" + key + "\"]" + " == " + value);
+                }
+            }
+            else {
+                throw "And condition must be an object";
+            }
+        }
+        And.prototype.get = function () {
+            return "(" + this.conditions.join(" && ") + ")";
+        };
+        return And;
+    }());
+    Mvc.And = And;
+})(Mvc || (Mvc = {}));
+var Mvc;
+(function (Mvc) {
+    var In = (function () {
+        function In(condition) {
+        }
+        In.prototype.get = function () {
+        };
+        return In;
+    }());
+    Mvc.In = In;
+})(Mvc || (Mvc = {}));
+var Mvc;
+(function (Mvc) {
+    var Not = (function () {
+        /**
+         *
+         * @param condition
+         */
+        function Not(condition) {
+            /**
+             *
+             */
+            this.conditions = new Array;
+            if (typeof condition == "object") {
+                for (var key in condition) {
+                    var value = Mvc.DataType.getValueByType(condition[key]);
+                    this.conditions.push("row[\"" + key + "\"]" + " == " + value);
+                }
+            }
+            else {
+                throw "Not condition must be an object";
+            }
+        }
+        Not.prototype.get = function () {
+            return "(" + this.conditions.join(" != ") + ")";
+        };
+        return Not;
+    }());
+    Mvc.Not = Not;
+})(Mvc || (Mvc = {}));
+var Mvc;
+(function (Mvc) {
+    var NotIn = (function () {
+        /**
+         *
+         * @param condition
+         */
+        function NotIn(condition) {
+            /**
+             *
+             */
+            this.conditions = new Array;
+            if (typeof condition == "object") {
+                for (var key in condition) {
+                    var value = Mvc.DataType.getValueByType(condition[key]);
+                    this.conditions.push("row[\"" + key + "\"]" + " == " + value);
+                }
+            }
+            else {
+                throw "Not condition must be an object";
+            }
+        }
+        NotIn.prototype.get = function () {
+            return "(" + this.conditions.join(" != ") + ")";
+        };
+        return NotIn;
+    }());
+    Mvc.NotIn = NotIn;
+})(Mvc || (Mvc = {}));
+var Mvc;
+(function (Mvc) {
+    var Or = (function () {
+        /**
+         *
+         * @param condition
+         */
+        function Or(condition) {
+            /**
+             *
+             */
+            this.conditions = new Array;
+            if (typeof condition == "object") {
+                for (var key in condition) {
+                    var value = Mvc.DataType.getValueByType(condition[key]);
+                    this.conditions.push("row[\"" + key + "\"]" + " == " + value);
+                }
+            }
+            else {
+                throw "And condition must be an object";
+            }
+        }
+        Or.prototype.get = function () {
+            return "(" + this.conditions.join(" || ") + ")";
+        };
+        return Or;
+    }());
+    Mvc.Or = Or;
 })(Mvc || (Mvc = {}));
 var Mvc;
 (function (Mvc) {
@@ -1281,6 +1316,13 @@ var Reflection;
         function Reflection() {
             this.methods = new Array();
             this.attributes = new Array();
+            this.deny = {};
+            this.deny = {
+                "insertUrl": true,
+                "deleteUrl": true,
+                "updateUrl": true,
+                "findUrl": true
+            };
         }
         Reflection.prototype.getName = function (obj) {
             var funcNameRegex = /function (.{1,})\(/;
@@ -1321,31 +1363,45 @@ var Reflection;
                 return;
             }
             var output = '';
-            var attributes = new Array();
+            var dataAttributes = {};
             for (var i in obj) {
                 var propName = i;
                 var propValue = obj[i];
                 var type = (typeof propValue);
-                var tempObj = {};
                 switch (type) {
                     case 'function':
                         break;
                     case 'object':
                         if (propValue instanceof ModelData.RawModel) {
-                            tempObj[propName] = this.getAtttributeAsObjects(propValue);
-                            attributes.push(tempObj);
+                            dataAttributes[propName] = this.getAtttributeAsObjects(propValue);
+                        }
+                        else {
+                            if (propValue != null) {
+                                if (Object.keys(propValue).length > 0) {
+                                    if (this.checkDataObject(propName)) {
+                                        dataAttributes[propName] = propValue;
+                                    }
+                                }
+                            }
                         }
                         break;
                     default:
                         var deny = ModelData.Deny.getDeny();
                         if (deny.indexOf(propName) == -1) {
-                            tempObj[propName] = propValue;
-                            attributes.push(tempObj);
+                            dataAttributes[propName] = propValue;
                         }
                         break;
                 }
             }
-            return attributes;
+            return dataAttributes;
+        };
+        Reflection.prototype.checkDataObject = function (key) {
+            if (this.deny[key] != true) {
+                return true;
+            }
+            else {
+                return false;
+            }
         };
         /**
          *
@@ -2415,6 +2471,10 @@ var View;
             this.element.addEventListener("keyup", fn.bind(this));
             return this;
         };
+        ViewElement.prototype.paste = function (fn) {
+            this.element.addEventListener("paste", fn.bind(this));
+            return this;
+        };
         /**
          * [change description]
          * @return {[type]} [description]
@@ -2652,6 +2712,7 @@ var View;
             if (val === void 0) { val = false; }
             if (val) {
                 this.element.value = val;
+                this.attr("value", val);
                 return this;
             }
             else {
@@ -2678,6 +2739,7 @@ var View;
          */
         ViewElement.prototype.empty = function () {
             this.removeChildNodes();
+            return this;
         };
         /**
          *
@@ -2692,6 +2754,14 @@ var View;
                 }
             }
             return childs;
+        };
+        ViewElement.prototype.getParent = function () {
+            var parent = this.element.parentElement;
+            if (parent.nodeType == 1) {
+                var adapter = new View.ViewAdapter(parent);
+                return adapter.get(this.getContext());
+            }
+            return false;
         };
         /**
          *
@@ -5789,6 +5859,17 @@ var View;
             var option = new View.Option(this.getContext());
             option.setElement(this.getElement().options[this.getElement().selectedIndex]);
             return option;
+        };
+        /**
+         *
+         * @param fn
+         */
+        Select.prototype.iterate = function (fn) {
+            var childs = this.getChilds();
+            for (var key in childs) {
+                fn(childs[key]);
+            }
+            return this;
         };
         /**
          *
