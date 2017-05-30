@@ -8,6 +8,7 @@ namespace Mvc
     export class Builder
     {
         private lim  : number = null;
+        private sort : any[]  = null; 
         private data : Object = false;
         private cols : any[]  = new Array;
         private conditions : any[] = new Array();
