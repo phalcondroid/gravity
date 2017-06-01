@@ -1,8 +1,7 @@
-namespace Mvc
+namespace Builder
 {
     export class Sort
     {
-
         public static ASC  : number = 1;
         public static DESC : number = -1;
 

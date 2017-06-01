@@ -675,8 +675,81 @@ var ModelData;
     }());
     ModelData.Deny = Deny;
 })(ModelData || (ModelData = {}));
-var Mvc;
-(function (Mvc) {
+var Builder;
+(function (Builder) {
+    var Transaction = (function () {
+        function Transaction() {
+        }
+        Transaction.prototype.get = function (row) {
+        };
+        return Transaction;
+    }());
+    Builder.Transaction = Transaction;
+})(Builder || (Builder = {}));
+///<reference path="Transaction.ts"/>
+var Builder;
+///<reference path="Transaction.ts"/>
+(function (Builder) {
+    var And = (function (_super) {
+        __extends(And, _super);
+        /**
+         *
+         * @param condition
+         */
+        function And(condition) {
+            var _this = _super.call(this) || this;
+            /**
+             *
+             */
+            _this.condition = {};
+            if (typeof condition == "object") {
+                _this.condition = condition;
+            }
+            else {
+                throw "And condition must be an object";
+            }
+            return _this;
+        }
+        /**
+         *
+         */
+        And.prototype.get = function (row) {
+            var result = new Array();
+            var size = Object.keys(this.condition).length;
+            for (var key in row) {
+                if (row[key] == this.condition[key]) {
+                    result.push(true);
+                }
+            }
+            if (result.length != size) {
+                return false;
+            }
+            for (var i = 1; i <= size; i++) {
+                if (result[i] == false) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        return And;
+    }(Builder.Transaction));
+    Builder.And = And;
+})(Builder || (Builder = {}));
+var Builder;
+(function (Builder) {
+    var ComparisonOperators = (function () {
+        function ComparisonOperators() {
+        }
+        return ComparisonOperators;
+    }());
+    ComparisonOperators.AND = "&&";
+    ComparisonOperators.OR = "||";
+    ComparisonOperators.EQUAL = "==";
+    ComparisonOperators.DIFFERENT = "!=";
+    Builder.ComparisonOperators = ComparisonOperators;
+})(Builder || (Builder = {}));
+var Builder;
+(function (Builder) {
     var DataType = (function () {
         function DataType() {
         }
@@ -704,10 +777,353 @@ var Mvc;
     DataType.INTEGER_TYPE = "number";
     DataType.STRING_TYPE = "string";
     DataType.OBJECT_TYPE = "object";
-    Mvc.DataType = DataType;
-})(Mvc || (Mvc = {}));
-var Mvc;
-(function (Mvc) {
+    Builder.DataType = DataType;
+})(Builder || (Builder = {}));
+///<reference path="Transaction.ts"/>
+var Builder;
+///<reference path="Transaction.ts"/>
+(function (Builder) {
+    var Group = (function (_super) {
+        __extends(Group, _super);
+        function Group() {
+            return _super.call(this) || this;
+        }
+        Group.prototype.get = function () {
+        };
+        return Group;
+    }(Builder.Transaction));
+    Builder.Group = Group;
+})(Builder || (Builder = {}));
+///<reference path="DataType.ts" />
+///<reference path="Transaction.ts"/>
+var Builder;
+///<reference path="DataType.ts" />
+///<reference path="Transaction.ts"/>
+(function (Builder) {
+    var Gt = (function (_super) {
+        __extends(Gt, _super);
+        /**
+         *
+         * @param condition
+         */
+        function Gt(condition) {
+            var _this = _super.call(this) || this;
+            /**
+             *
+             */
+            _this.condition = {};
+            if (typeof condition == "object") {
+                _this.condition = condition;
+            }
+            else {
+                throw "And condition must be an object";
+            }
+            return _this;
+        }
+        /**
+         *
+         */
+        Gt.prototype.get = function (row) {
+            var result = new Array();
+            var size = Object.keys(this.condition).length;
+            for (var key in row) {
+                if (row[key] > this.condition[key]) {
+                    result.push(true);
+                }
+            }
+            if (result.length != size) {
+                return false;
+            }
+            for (var i = 1; i <= size; i++) {
+                if (result[i] == false) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        return Gt;
+    }(Builder.Transaction));
+    Builder.Gt = Gt;
+})(Builder || (Builder = {}));
+///<reference path="DataType.ts" />
+var Builder;
+///<reference path="DataType.ts" />
+(function (Builder) {
+    var Gte = (function (_super) {
+        __extends(Gte, _super);
+        /**
+         *
+         * @param condition
+         */
+        function Gte(condition) {
+            var _this = _super.call(this) || this;
+            /**
+             *
+             */
+            _this.condition = {};
+            if (typeof condition == "object") {
+                _this.condition = condition;
+            }
+            else {
+                throw "And condition must be an object";
+            }
+            return _this;
+        }
+        /**
+         *
+         */
+        Gte.prototype.get = function (row) {
+            var result = new Array();
+            var size = Object.keys(this.condition).length;
+            for (var key in row) {
+                if (row[key] >= this.condition[key]) {
+                    result.push(true);
+                }
+            }
+            if (result.length != size) {
+                return false;
+            }
+            for (var i = 1; i <= size; i++) {
+                if (result[i] == false) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        return Gte;
+    }(Builder.Transaction));
+    Builder.Gte = Gte;
+})(Builder || (Builder = {}));
+///<reference path="Transaction.ts"/>
+var Builder;
+///<reference path="Transaction.ts"/>
+(function (Builder) {
+    var In = (function (_super) {
+        __extends(In, _super);
+        /**
+         *
+         * @param condition
+         */
+        function In(condition) {
+            var _this = _super.call(this) || this;
+            /**
+             *
+             */
+            _this.conditions = new Array;
+            if (typeof condition == "object") {
+                for (var key in condition) {
+                    if (condition[key] instanceof Array) {
+                        var row = condition[key];
+                        for (var key2 in row) {
+                            var value2 = Builder.DataType.getValueByType(row[key2]);
+                            _this.conditions.push("row[\"" + key + "\"]" + " == " + value2);
+                        }
+                    }
+                    else {
+                        throw "Not in value should be array";
+                    }
+                }
+            }
+            else {
+                throw "Not condition must be an object";
+            }
+            return _this;
+        }
+        In.prototype.get = function () {
+            return "(" + this.conditions.join(" || ") + ")";
+        };
+        return In;
+    }(Builder.Transaction));
+    Builder.In = In;
+})(Builder || (Builder = {}));
+///<reference path="DataType.ts" />
+var Builder;
+///<reference path="DataType.ts" />
+(function (Builder) {
+    var Lt = (function (_super) {
+        __extends(Lt, _super);
+        /**
+         *
+         * @param condition
+         */
+        function Lt(condition) {
+            var _this = _super.call(this) || this;
+            /**
+             *
+             */
+            _this.condition = {};
+            if (typeof condition == "object") {
+                _this.condition = condition;
+            }
+            else {
+                throw "And condition must be an object";
+            }
+            return _this;
+        }
+        /**
+         *
+         */
+        Lt.prototype.get = function (row) {
+            var result = new Array();
+            var size = Object.keys(this.condition).length;
+            for (var key in row) {
+                if (row[key] < this.condition[key]) {
+                    result.push(true);
+                }
+            }
+            if (result.length != size) {
+                return false;
+            }
+            for (var i = 1; i <= size; i++) {
+                if (result[i] == false) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        return Lt;
+    }(Builder.Transaction));
+    Builder.Lt = Lt;
+})(Builder || (Builder = {}));
+///<reference path="DataType.ts" />
+var Builder;
+///<reference path="DataType.ts" />
+(function (Builder) {
+    var Lte = (function (_super) {
+        __extends(Lte, _super);
+        /**
+         *
+         * @param condition
+         */
+        function Lte(condition) {
+            var _this = _super.call(this) || this;
+            /**
+             *
+             */
+            _this.condition = {};
+            if (typeof condition == "object") {
+                _this.condition = condition;
+            }
+            else {
+                throw "And condition must be an object";
+            }
+            return _this;
+        }
+        /**
+         *
+         */
+        Lte.prototype.get = function (row) {
+            var result = new Array();
+            var size = Object.keys(this.condition).length;
+            for (var key in row) {
+                if (row[key] <= this.condition[key]) {
+                    result.push(true);
+                }
+            }
+            if (result.length != size) {
+                return false;
+            }
+            for (var i = 1; i <= size; i++) {
+                if (result[i] == false) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        return Lte;
+    }(Builder.Transaction));
+    Builder.Lte = Lte;
+})(Builder || (Builder = {}));
+///<reference path="Transaction.ts"/>
+var Builder;
+///<reference path="Transaction.ts"/>
+(function (Builder) {
+    var Not = (function (_super) {
+        __extends(Not, _super);
+        /**
+         *
+         * @param condition
+         */
+        function Not(condition) {
+            var _this = _super.call(this) || this;
+            /**
+             *
+             */
+            _this.condition = {};
+            if (typeof condition == "object") {
+                _this.condition = condition;
+            }
+            else {
+                throw "And condition must be an object";
+            }
+            return _this;
+        }
+        /**
+         *
+         */
+        Not.prototype.get = function (row) {
+            var result = new Array();
+            var size = Object.keys(this.condition).length;
+            for (var key in row) {
+                if (row[key] == this.condition[key]) {
+                    result.push(true);
+                }
+            }
+            for (var i = 0; i < size; i++) {
+                if (result[i] == true) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        return Not;
+    }(Builder.Transaction));
+    Builder.Not = Not;
+})(Builder || (Builder = {}));
+///<reference path="DataType.ts" />
+var Builder;
+///<reference path="DataType.ts" />
+(function (Builder) {
+    var NotIn = (function (_super) {
+        __extends(NotIn, _super);
+        /**
+         *
+         * @param condition
+         */
+        function NotIn(condition) {
+            var _this = _super.call(this) || this;
+            /**
+             *
+             */
+            _this.conditions = new Array;
+            if (typeof condition == "object") {
+                for (var key in condition) {
+                    if (condition[key] instanceof Array) {
+                        var row = condition[key];
+                        for (var key2 in row) {
+                            var value2 = Builder.DataType.getValueByType(row[key2]);
+                            _this.conditions.push("row[\"" + key + "\"]" + " != " + value2);
+                        }
+                    }
+                    else {
+                        throw "Not in value should be array";
+                    }
+                }
+            }
+            else {
+                throw "Not condition must be an object";
+            }
+            return _this;
+        }
+        NotIn.prototype.get = function () {
+            return "(" + this.conditions.join(" && ") + ")";
+        };
+        return NotIn;
+    }(Builder.Transaction));
+    Builder.NotIn = NotIn;
+})(Builder || (Builder = {}));
+var Builder;
+(function (Builder) {
     var Operators = (function () {
         function Operators() {
         }
@@ -720,267 +1136,64 @@ var Mvc;
     Operators.LIMIT = "$limit";
     Operators.COLUMNS = "$columns";
     Operators.CONDITIONAL = "$conditions";
-    Mvc.Operators = Operators;
-})(Mvc || (Mvc = {}));
-var Mvc;
-(function (Mvc) {
-    var ComparisonOperators = (function () {
-        function ComparisonOperators() {
-        }
-        return ComparisonOperators;
-    }());
-    ComparisonOperators.AND = "&&";
-    ComparisonOperators.OR = "||";
-    ComparisonOperators.EQUAL = "==";
-    ComparisonOperators.DIFFERENT = "!=";
-    Mvc.ComparisonOperators = ComparisonOperators;
-})(Mvc || (Mvc = {}));
-/// <reference path="Builder/DataType.ts" />
-/// <reference path="Builder/Operators.ts" />
-/// <reference path="Builder/ComparisonOperators.ts" />
-var Mvc;
-/// <reference path="Builder/DataType.ts" />
-/// <reference path="Builder/Operators.ts" />
-/// <reference path="Builder/ComparisonOperators.ts" />
-(function (Mvc) {
-    var Builder = (function () {
-        /**
-         *
-         * @param data
-         */
-        function Builder(data) {
-            if (data === void 0) { data = false; }
-            this.lim = null;
-            this.data = false;
-            this.cols = new Array;
-            this.conditions = new Array();
-            this.data = data;
-        }
-        /**
-         *
-         */
-        Builder.prototype.columns = function (cols) {
-            if (typeof cols == "object") {
-                this.cols = cols;
-            }
-            else {
-                throw "Column param must be an object";
-            }
-            return this;
-        };
-        Builder.prototype.getColumns = function (row) {
-            var newRow = {};
-            if (Object.keys(this.cols).length > 0) {
-                for (var key in this.cols) {
-                    newRow[this.cols[key]] = row[this.cols[key]];
-                }
-            }
-            else {
-                newRow = row;
-            }
-            return newRow;
-        };
-        /**
-         *
-         * @param condClass
-         */
-        Builder.prototype.where = function (conditions) {
-            if (conditions instanceof Mvc.And) {
-                this.conditions.push(conditions.get());
-            }
-            else if (conditions instanceof Mvc.Or) {
-                this.conditions.push(conditions.get());
-            }
-            else if (conditions instanceof Mvc.Not) {
-                this.conditions.push(conditions.get());
-            }
-            else if (conditions instanceof Mvc.In) {
-                this.conditions.push(conditions.get());
-            }
-            return this;
-        };
-        Builder.prototype.limit = function (limit) {
-            if (typeof limit == "number") {
-                this.lim = limit;
-            }
-            else {
-                throw "limit must be number";
-            }
-            return this;
-        };
-        /**
-         *
-         * @param conditions
-         */
-        Builder.prototype.joinConditions = function () {
-            return this.conditions.join(" || ");
-        };
-        /**
-         *
-         * @param conditions
-         */
-        Builder.prototype.orderBy = function (conditions) {
-        };
-        /**
-         *
-         */
-        Builder.prototype.get = function () {
-            var results = new Array;
-            var limit = 1;
-            for (var key in this.data) {
-                var row = this.data[key];
-                if (this.cols != null && this.cols.length > 0) {
-                    row = this.getColumns(row);
-                }
-                if (this.conditions.length > 0) {
-                    var conditions = this.joinConditions();
-                    eval("if (" + conditions + ") { results.push(row) }");
-                }
-                else {
-                    results.push(row);
-                }
-                if (this.lim != null) {
-                    if (limit == this.lim) {
-                        break;
-                    }
-                }
-                limit++;
-            }
-            return results;
-        };
-        return Builder;
-    }());
-    Mvc.Builder = Builder;
-})(Mvc || (Mvc = {}));
-var Mvc;
-(function (Mvc) {
-    var And = (function () {
-        /**
-         *
-         * @param condition
-         */
-        function And(condition) {
-            /**
-             *
-             */
-            this.conditions = new Array;
-            if (typeof condition == "object") {
-                for (var key in condition) {
-                    var value = Mvc.DataType.getValueByType(condition[key]);
-                    this.conditions.push("row[\"" + key + "\"]" + " == " + value);
-                }
-            }
-            else {
-                throw "And condition must be an object";
-            }
-        }
-        And.prototype.get = function () {
-            return "(" + this.conditions.join(" && ") + ")";
-        };
-        return And;
-    }());
-    Mvc.And = And;
-})(Mvc || (Mvc = {}));
-var Mvc;
-(function (Mvc) {
-    var In = (function () {
-        function In(condition) {
-        }
-        In.prototype.get = function () {
-        };
-        return In;
-    }());
-    Mvc.In = In;
-})(Mvc || (Mvc = {}));
-var Mvc;
-(function (Mvc) {
-    var Not = (function () {
-        /**
-         *
-         * @param condition
-         */
-        function Not(condition) {
-            /**
-             *
-             */
-            this.conditions = new Array;
-            if (typeof condition == "object") {
-                for (var key in condition) {
-                    var value = Mvc.DataType.getValueByType(condition[key]);
-                    this.conditions.push("row[\"" + key + "\"]" + " == " + value);
-                }
-            }
-            else {
-                throw "Not condition must be an object";
-            }
-        }
-        Not.prototype.get = function () {
-            return "(" + this.conditions.join(" != ") + ")";
-        };
-        return Not;
-    }());
-    Mvc.Not = Not;
-})(Mvc || (Mvc = {}));
-var Mvc;
-(function (Mvc) {
-    var NotIn = (function () {
-        /**
-         *
-         * @param condition
-         */
-        function NotIn(condition) {
-            /**
-             *
-             */
-            this.conditions = new Array;
-            if (typeof condition == "object") {
-                for (var key in condition) {
-                    var value = Mvc.DataType.getValueByType(condition[key]);
-                    this.conditions.push("row[\"" + key + "\"]" + " == " + value);
-                }
-            }
-            else {
-                throw "Not condition must be an object";
-            }
-        }
-        NotIn.prototype.get = function () {
-            return "(" + this.conditions.join(" != ") + ")";
-        };
-        return NotIn;
-    }());
-    Mvc.NotIn = NotIn;
-})(Mvc || (Mvc = {}));
-var Mvc;
-(function (Mvc) {
-    var Or = (function () {
+    Builder.Operators = Operators;
+})(Builder || (Builder = {}));
+///<reference path="DataType.ts" />
+var Builder;
+///<reference path="DataType.ts" />
+(function (Builder) {
+    var Or = (function (_super) {
+        __extends(Or, _super);
         /**
          *
          * @param condition
          */
         function Or(condition) {
+            var _this = _super.call(this) || this;
             /**
              *
              */
-            this.conditions = new Array;
+            _this.condition = {};
             if (typeof condition == "object") {
-                for (var key in condition) {
-                    var value = Mvc.DataType.getValueByType(condition[key]);
-                    this.conditions.push("row[\"" + key + "\"]" + " == " + value);
-                }
+                _this.condition = condition;
             }
             else {
                 throw "And condition must be an object";
             }
+            return _this;
         }
-        Or.prototype.get = function () {
-            return "(" + this.conditions.join(" || ") + ")";
+        /**
+         *
+         */
+        Or.prototype.get = function (row) {
+            var result = new Array();
+            var size = Object.keys(this.condition).length;
+            if (this.condition instanceof Builder.Transaction) {
+                result.push(this.condition.get(row));
+            }
+            for (var key in row) {
+                if (this.condition[key] instanceof Builder.Transaction) {
+                    result.push(this.condition[key].get(row));
+                }
+                else {
+                    if (row[key] == this.condition[key]) {
+                        result.push(true);
+                    }
+                }
+            }
+            for (var i = 0; i < size; i++) {
+                if (result[i] == true) {
+                    return true;
+                }
+            }
+            return false;
         };
         return Or;
-    }());
-    Mvc.Or = Or;
-})(Mvc || (Mvc = {}));
-var Mvc;
-(function (Mvc) {
+    }(Builder.Transaction));
+    Builder.Or = Or;
+})(Builder || (Builder = {}));
+var Builder;
+(function (Builder) {
     var Sort = (function () {
         function Sort() {
         }
@@ -1016,16 +1229,267 @@ var Mvc;
     }());
     Sort.ASC = 1;
     Sort.DESC = -1;
-    Mvc.Sort = Sort;
-})(Mvc || (Mvc = {}));
+    Builder.Sort = Sort;
+})(Builder || (Builder = {}));
+/// <reference path="Builder/DataType.ts" />
+/// <reference path="Builder/ComparisonOperators.ts" />
+/// <reference path="Builder/Operators.ts" />
+/// <reference path="Builder/Gt.ts" />
+/// <reference path="Builder/Gte.ts" />
+/// <reference path="Builder/Lt.ts" />
+/// <reference path="Builder/Lte.ts" />
+/// <reference path="Builder/And.ts" />
+/// <reference path="Builder/NotIn.ts" />
+/// <reference path="Builder/Not.ts" />
+/// <reference path="Builder/In.ts" />
+/// <reference path="Builder/Sort.ts" />
 var Mvc;
+/// <reference path="Builder/DataType.ts" />
+/// <reference path="Builder/ComparisonOperators.ts" />
+/// <reference path="Builder/Operators.ts" />
+/// <reference path="Builder/Gt.ts" />
+/// <reference path="Builder/Gte.ts" />
+/// <reference path="Builder/Lt.ts" />
+/// <reference path="Builder/Lte.ts" />
+/// <reference path="Builder/And.ts" />
+/// <reference path="Builder/NotIn.ts" />
+/// <reference path="Builder/Not.ts" />
+/// <reference path="Builder/In.ts" />
+/// <reference path="Builder/Sort.ts" />
 (function (Mvc) {
-    var Where = (function () {
-        function Where() {
+    var Query = (function () {
+        /**
+         *
+         * @param data
+         */
+        function Query(data) {
+            if (data === void 0) { data = false; }
+            this.lim = null;
+            this.sort = new Array;
+            this.data = false;
+            this.cols = new Array;
+            this.gt = new Array;
+            this.gte = new Array;
+            this.lt = new Array;
+            this.lte = new Array;
+            this.conds = null;
+            this.transactions = new Array;
+            this.negativeConds = null;
+            this.negativeTransactions = new Array();
+            this.data = data;
         }
-        return Where;
+        /**
+         *
+         */
+        Query.prototype.columns = function (cols) {
+            if (typeof cols == "object") {
+                this.cols = cols;
+            }
+            else {
+                throw "Column param must be an object";
+            }
+            return this;
+        };
+        Query.prototype.getColumns = function (row) {
+            var newRow = {};
+            if (Object.keys(this.cols).length > 0) {
+                for (var key in this.cols) {
+                    newRow[this.cols[key]] = row[this.cols[key]];
+                }
+            }
+            else {
+                newRow = row;
+            }
+            return newRow;
+        };
+        /**
+         *
+         * @param condClass
+         */
+        Query.prototype.where = function (conditions) {
+            if (conditions instanceof Builder.Transaction) {
+                if (conditions instanceof Builder.Not || conditions instanceof Builder.NotIn) {
+                    this.negativeTransactions.push(conditions);
+                    this.negativeConds++;
+                }
+                else {
+                    this.transactions.push(conditions);
+                    this.conds++;
+                }
+            }
+            return this;
+        };
+        Query.prototype.limit = function (limit) {
+            if (typeof limit == "number") {
+                this.lim = limit;
+            }
+            else {
+                throw "limit must be number";
+            }
+            return this;
+        };
+        Query.prototype.addOperator = function (length, operator) {
+            var cond = "";
+            if (length > 0) {
+                cond = operator + " ";
+            }
+            return cond;
+        };
+        /**
+         *
+         * @param conditions
+         */
+        Query.prototype.joinConditions = function () {
+            /*
+            var conditions = "";
+            if (this.and.length > 0) {
+                conditions += this.addOperator(conditions.length, "&&") + this.and.join(" && ") + " ";
+            }
+            if (this.or.length > 0) {
+                conditions += this.addOperator(conditions.length, "||") + this.or.join(" || ") + " ";
+            }
+            if (this.not.length > 0) {
+                conditions += this.addOperator(conditions.length, "&&") + this.not.join(" && ") + " ";
+            }
+            if (this.in.length > 0) {
+                conditions += this.addOperator(conditions.length, "&&") + this.in.join(" && ") + " ";
+            }
+            if (this.notIn.length > 0) {
+                conditions += this.addOperator(conditions.length, "&&") + this.notIn.join(" && ") + " ";
+            }
+            if (this.gt.length > 0) {
+                conditions += this.addOperator(conditions.length, "&&") + this.gt.join(" && ") + " ";
+            }
+            if (this.gte.length > 0) {
+                conditions += this.addOperator(conditions.length, "&&") + this.gte.join(" && ") + " ";
+            }
+            if (this.lt.length > 0) {
+                conditions += this.addOperator(conditions.length, "&&") + this.lt.join(" && ") + " ";
+            }
+            if (this.lte.length > 0) {
+                conditions += this.addOperator(conditions.length, "&&") + this.lte.join(" && ") + " ";
+            }
+            return conditions;
+            */
+        };
+        /**
+         *
+         * @param conditions
+         */
+        Query.prototype.orderBy = function (sortContent) {
+            switch (typeof sortContent) {
+                case Builder.DataType.STRING_TYPE:
+                    this.sort.push("results = Builder.Sort.sortByField('" + sortContent + "');");
+                    break;
+                case Builder.DataType.OBJECT_TYPE:
+                    if (Array.isArray(sortContent)) {
+                        for (var sortKey in sortContent) {
+                            var sortValue = sortContent[sortKey];
+                            this.sort.push("results = Builder.Sort.sortByField(results, '" + sortValue + "')");
+                        }
+                    }
+                    else {
+                        for (var sortKey in sortContent) {
+                            var sortType = sortContent[sortKey];
+                            this.sort.push("results = Builder.Sort.sortByField(results, '" + sortKey + "');");
+                            if (sortContent[sortKey] == Builder.Sort.DESC) {
+                                this.sort.push("results = results.reverse();");
+                            }
+                        }
+                    }
+                    break;
+            }
+        };
+        /**
+         *
+         * @param row
+         */
+        Query.prototype.miniChecksum = function (row) {
+            var str = JSON.stringify(row);
+            var hash = 0;
+            var char = 0;
+            if (str.length == 0)
+                return hash;
+            for (var i = 0; i < str.length; i++) {
+                char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return hash;
+        };
+        /**
+         *
+         * @param result
+         * @param row
+         */
+        Query.prototype.ifExistOnResult = function (result, row) {
+            for (var key in result) {
+                if (this.miniChecksum(result[key]) == this.miniChecksum(row)) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        /**
+         *
+         */
+        Query.prototype.get = function () {
+            var results = new Array;
+            var limit = 1;
+            for (var key in this.data) {
+                var row = this.data[key];
+                if (this.cols != null && this.cols.length > 0) {
+                    row = this.getColumns(row);
+                }
+                if (this.conds > 0) {
+                    for (var key in this.transactions) {
+                        var result = this.transactions[key].get(row);
+                        if (result) {
+                            if (this.ifExistOnResult(results, row)) {
+                                results.push(row);
+                            }
+                        }
+                    }
+                }
+                else {
+                    results.push(row);
+                }
+                if (this.lim != null) {
+                    if (limit == this.lim) {
+                        break;
+                    }
+                }
+                limit++;
+            }
+            var newResults = new Array();
+            for (var key in results) {
+                var row = results[key];
+                if (this.negativeConds > 0) {
+                    for (var key in this.negativeTransactions) {
+                        var result = this.negativeTransactions[key].get(row);
+                        if (result) {
+                            if (this.ifExistOnResult(newResults, row)) {
+                                newResults.push(row);
+                            }
+                        }
+                    }
+                }
+                else {
+                    newResults.push(row);
+                }
+            }
+            if (this.sort.length > 0) {
+                var i = 0;
+                for (var keySort in this.sort) {
+                    eval(this.sort[keySort]);
+                    i++;
+                }
+            }
+            return newResults;
+        };
+        return Query;
     }());
-    Mvc.Where = Where;
+    Mvc.Query = Query;
 })(Mvc || (Mvc = {}));
 var Mvc;
 (function (Mvc) {

@@ -1,33 +1,49 @@
-namespace Mvc
+///<reference path="Transaction.ts"/>
+
+namespace Builder
 {
-    export class And
+    export class And extends Builder.Transaction
     {
         /**
          * 
          */
-        private conditions : any[] = new Array;
+        private condition: Object = {};
 
         /**
          * 
          * @param condition 
          */
-        public constructor(condition : Object)
+        public constructor(condition : any)
         {
+            super();
             if (typeof condition == "object") {
-                for (var key in condition) {
-                    var value = DataType.getValueByType(condition[key]);
-                    this.conditions.push(
-                        "row[\"" + key + "\"]" + " == " + value
-                    );
-                }
+                this.condition = condition;
             } else {
                 throw "And condition must be an object";
             }
         }
 
-        public get()
+        /**
+         * 
+         */
+        public get(row)
         {
-            return "(" + this.conditions.join(" && ") + ")";
+            var result = new Array();
+            var size   = Object.keys(this.condition).length;
+            for (var key in row) {
+                if (row[key] == this.condition[key]) {
+                    result.push(true);
+                }
+            }
+            if (result.length != size) {
+                return false;
+            }
+            for (var i = 1; i <= size; i++) {
+                if (result[i] == false) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

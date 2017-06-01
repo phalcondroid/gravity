@@ -1,4 +1,4 @@
-namespace Mvc
+namespace Builder
 {
     export class DataType
     {

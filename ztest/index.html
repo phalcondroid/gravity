@@ -3,14 +3,57 @@
         <script src="../gravity.src.js"></script>
         <script src="json.js"></script>
         <script>
-            var b = new Mvc.Builder(jsonData)
+            var builder = new Mvc.Query(jsonData)
+            builder
+            .where(new Builder.And({
+                "platform" : 2,
+                "deviceGroup" : "iMac17,1"
+            }))
+            .where(new Builder.Or(
+                new Builder.Gt({
+                    "fps" : 40
+                })
+            ))
+            .where(new Builder.Not(
+                {
+                    "deviceGroup" : "iMac17,1"
+                }
+            ));
+            
+            /*
+            .where(new Builder.And({
+                "fps" : 29
+            }))
+            .where(new Builder.Or({
+                "platform" : 3
+            }));
+
+            .where(new Builder.Or(
+                new Builder.Lt({
+                    "fps" : 29
+                })
+            ));
+            .orderBy({
+                "deviceGroup" : Builder.Sort.ASC
+            });
             .columns([
                 "deviceGroup",
                 "platform"
             ]).limit(5);
+
+            .where(new Mvc.Or(
+                new Mvc.Lt({
+                    "platform" : 3
+                })
+            ))
+            .where(new Mvc.Lte({
+                "platform"    : 3
+            }));
+
+            */
             
             console.log(
-                b.get()
+                builder.get()
             );
         </script>
     </head>

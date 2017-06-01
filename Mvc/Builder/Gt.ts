@@ -1,8 +1,9 @@
+///<reference path="DataType.ts" />
 ///<reference path="Transaction.ts"/>
 
 namespace Builder
 {
-    export class Not extends Builder.Transaction
+    export class Gt extends Builder.Transaction
     {
         /**
          * 
@@ -31,12 +32,15 @@ namespace Builder
             var result = new Array();
             var size   = Object.keys(this.condition).length;
             for (var key in row) {
-                if (row[key] == this.condition[key]) {
+                if (row[key] > this.condition[key]) {
                     result.push(true);
                 }
             }
-            for (var i = 0; i < size; i++) {
-                if (result[i] == true) {
+            if (result.length != size) {
+                return false;
+            }
+            for (var i = 1; i <= size; i++) {
+                if (result[i] == false) {
                     return false;
                 }
             }

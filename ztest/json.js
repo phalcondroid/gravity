@@ -68,7 +68,7 @@ var jsonData = [
     {
         "id" : "58da7cad3ec333393406329c", 
         "deviceGroup" : "iMac17,1", 
-        "platform" : 4, 
+        "platform" : 2, 
         "version" : "0.4.0", 
         "quality" : 5, 
         "resolution" : "1", 
@@ -79,7 +79,7 @@ var jsonData = [
     {
         "id" : "58da7caf3ec33339340632ac", 
         "deviceGroup" : "motorola Moto G Play", 
-        "platform" : 4, 
+        "platform" : 5, 
         "version" : "0.4.0", 
         "quality" : 0, 
         "resolution" : 1, 
@@ -101,7 +101,7 @@ var jsonData = [
     {
         "id" : "58da7cb03ec33339340632b8", 
         "deviceGroup" : "iPhone 6S Plus", 
-        "platform" : 2, 
+        "platform" : 1, 
         "version" : "0.4.0", 
         "quality" : 3, 
         "resolution" : "1", 

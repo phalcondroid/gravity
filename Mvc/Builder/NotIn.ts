@@ -1,6 +1,8 @@
-namespace Mvc
+///<reference path="DataType.ts" />
+
+namespace Builder
 {
-    export class NotIn
+    export class NotIn extends Builder.Transaction
     {
         /**
          * 
@@ -13,12 +15,20 @@ namespace Mvc
          */
         public constructor(condition : Object)
         {
+            super();
             if (typeof condition == "object") {
                 for (var key in condition) {
-                    var value = DataType.getValueByType(condition[key]);
-                    this.conditions.push(
-                        "row[\"" + key + "\"]" + " == " + value
-                    );
+                    if (condition[key] instanceof Array) {
+                        var row = condition[key];
+                        for (var key2 in row) {
+                            var value2 = Builder.DataType.getValueByType(row[key2]);
+                            this.conditions.push(
+                                "row[\"" + key + "\"]" + " != " + value2
+                            );
+                        }
+                    } else {
+                        throw "Not in value should be array";
+                    }
                 }
             } else {
                 throw "Not condition must be an object";
@@ -27,7 +37,7 @@ namespace Mvc
 
         public get()
         {
-            return "(" + this.conditions.join(" != ") + ")";
+            return "(" + this.conditions.join(" && ") + ")";
         }
     }
 }
