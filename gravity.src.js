@@ -1268,11 +1268,8 @@ var Mvc;
             this.sort = new Array;
             this.data = false;
             this.cols = new Array;
-            this.gt = new Array;
-            this.gte = new Array;
-            this.lt = new Array;
-            this.lte = new Array;
             this.conds = null;
+            this.sortConds = false;
             this.transactions = new Array;
             this.negativeConds = null;
             this.negativeTransactions = new Array();
@@ -1339,66 +1336,37 @@ var Mvc;
          *
          * @param conditions
          */
-        Query.prototype.joinConditions = function () {
-            /*
-            var conditions = "";
-            if (this.and.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.and.join(" && ") + " ";
-            }
-            if (this.or.length > 0) {
-                conditions += this.addOperator(conditions.length, "||") + this.or.join(" || ") + " ";
-            }
-            if (this.not.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.not.join(" && ") + " ";
-            }
-            if (this.in.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.in.join(" && ") + " ";
-            }
-            if (this.notIn.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.notIn.join(" && ") + " ";
-            }
-            if (this.gt.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.gt.join(" && ") + " ";
-            }
-            if (this.gte.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.gte.join(" && ") + " ";
-            }
-            if (this.lt.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.lt.join(" && ") + " ";
-            }
-            if (this.lte.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.lte.join(" && ") + " ";
-            }
-            return conditions;
-            */
+        Query.prototype.orderBy = function (sortContent) {
+            this.sort = sortContent;
+            this.sortConds = true;
         };
         /**
          *
-         * @param conditions
          */
-        Query.prototype.orderBy = function (sortContent) {
-            switch (typeof sortContent) {
+        Query.prototype.resolveSort = function (results) {
+            switch (typeof this.sort) {
                 case Builder.DataType.STRING_TYPE:
-                    this.sort.push("results = Builder.Sort.sortByField('" + sortContent + "');");
+                    results = Builder.Sort.sortByField(results, this.sort);
                     break;
                 case Builder.DataType.OBJECT_TYPE:
-                    if (Array.isArray(sortContent)) {
-                        for (var sortKey in sortContent) {
-                            var sortValue = sortContent[sortKey];
-                            this.sort.push("results = Builder.Sort.sortByField(results, '" + sortValue + "')");
+                    if (this.sort instanceof Array) {
+                        for (var sortKey in this.sort) {
+                            var sortValue = this.sort[sortKey];
+                            results = Builder.Sort.sortByField(results, sortValue);
                         }
                     }
                     else {
-                        for (var sortKey in sortContent) {
-                            var sortType = sortContent[sortKey];
-                            this.sort.push("results = Builder.Sort.sortByField(results, '" + sortKey + "');");
-                            if (sortContent[sortKey] == Builder.Sort.DESC) {
-                                this.sort.push("results = results.reverse();");
+                        for (var sortKey in this.sort) {
+                            var sortType = this.sort[sortKey];
+                            results = Builder.Sort.sortByField(results, sortKey);
+                            if (this.sort[sortKey] == Builder.Sort.DESC) {
+                                results = results.reverse();
                             }
                         }
                     }
                     break;
             }
+            return results;
         };
         /**
          *
@@ -1478,12 +1446,8 @@ var Mvc;
                     newResults.push(row);
                 }
             }
-            if (this.sort.length > 0) {
-                var i = 0;
-                for (var keySort in this.sort) {
-                    eval(this.sort[keySort]);
-                    i++;
-                }
+            if (this.sortConds) {
+                newResults = this.resolveSort(newResults);
             }
             return newResults;
         };

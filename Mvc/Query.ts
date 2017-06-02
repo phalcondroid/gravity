@@ -17,18 +17,15 @@ namespace Mvc
     export class Query
     {
         private lim   : number = null;
-        private sort  : any[]  = new Array;
+        private sort  : Object = new Array;
         private data  : Object = false;
         private cols  : any[]  = new Array;
-        private gt    : any[]  = new Array;
-        private gte   : any[]  = new Array;
-        private lt    : any[]  = new Array;
-        private lte   : any[]  = new Array;
         private conds : number = null;
+        private sortConds : any = false;
         private transactions   = new Array; 
         private negativeConds : number = null;
         private negativeTransactions   = new Array();
-
+        
         /**
          * 
          * @param data 
@@ -51,7 +48,19 @@ namespace Mvc
             return this;
         }
 
-        private getColumns(row)
+        /**
+         * 
+         */
+        public getColumns()
+        {
+            return Object.keys(this.data[0]);
+        }
+
+        /**
+         * 
+         * @param row 
+         */
+        private resolveColumns(row)
         {
             var newRow : Object = {};
             if (Object.keys(this.cols).length > 0) {
@@ -59,7 +68,7 @@ namespace Mvc
                     newRow[this.cols[key]] = row[this.cols[key]];
                 }
             } else {
-                newRow = row;
+                newRow = Object.keys(row);
             }
             return newRow;
         }
@@ -109,76 +118,48 @@ namespace Mvc
          * 
          * @param conditions 
          */
-        private joinConditions()
+        public orderBy(sortContent : Object)
         {
-            /*
-            var conditions = "";
-            if (this.and.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.and.join(" && ") + " ";
-            }
-            if (this.or.length > 0) {
-                conditions += this.addOperator(conditions.length, "||") + this.or.join(" || ") + " ";
-            }
-            if (this.not.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.not.join(" && ") + " ";
-            }
-            if (this.in.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.in.join(" && ") + " ";
-            }
-            if (this.notIn.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.notIn.join(" && ") + " ";
-            }
-            if (this.gt.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.gt.join(" && ") + " ";
-            }
-            if (this.gte.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.gte.join(" && ") + " ";
-            }
-            if (this.lt.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.lt.join(" && ") + " ";
-            }
-            if (this.lte.length > 0) {
-                conditions += this.addOperator(conditions.length, "&&") + this.lte.join(" && ") + " ";
-            }
-            return conditions;
-            */
+            this.sort = sortContent;
+            this.sortConds = true;
         }
 
         /**
-         * 
-         * @param conditions 
+         *  
          */
-        public orderBy(sortContent : Object)
+        private resolveSort(results)
         {
-            switch (typeof sortContent) {
+            switch (typeof this.sort) {
                 case Builder.DataType.STRING_TYPE:
-                        this.sort.push(
-                            "results = Builder.Sort.sortByField('" + sortContent + "');"
+                        results = Builder.Sort.sortByField(
+                            results,
+                            this.sort
                         );
                     break;
                 case Builder.DataType.OBJECT_TYPE:
-                        if (Array.isArray(sortContent)) {
-                            for (let sortKey in sortContent) {
-                                let sortValue = sortContent[sortKey]
-                                this.sort.push(
-                                    "results = Builder.Sort.sortByField(results, '" + sortValue + "')"
+                        if (this.sort instanceof Array) {
+                            for (let sortKey in this.sort) {
+                                let sortValue = this.sort[sortKey];
+                                results = Builder.Sort.sortByField(
+                                    results,
+                                    sortValue
                                 );
                             }
                         } else {
-                            for (let sortKey in sortContent) {
-                                let sortType = sortContent[sortKey];
-                                this.sort.push(
-                                    "results = Builder.Sort.sortByField(results, '" + sortKey + "');"
+                            for (let sortKey in this.sort) {
+                                let sortType = this.sort[sortKey];
+                                results = Builder.Sort.sortByField(
+                                    results,
+                                    sortKey
                                 );
-                                if (sortContent[sortKey] == Builder.Sort.DESC) {
-                                    this.sort.push(
-                                        "results = results.reverse();"
-                                    );
+                                if (this.sort[sortKey] == Builder.Sort.DESC) {
+                                    results = results.reverse();
                                 }
                             }
                         }
                     break;
             }
+            return results;
         }
 
         /**
@@ -224,7 +205,7 @@ namespace Mvc
             for (var key in this.data) {
                 var row     = this.data[key];
                 if (this.cols != null && this.cols.length > 0) {
-                    row = this.getColumns(row);
+                    row = this.resolveColumns(row);
                 }
                 if (this.conds > 0) {
                     for (var key in this.transactions) {
@@ -265,12 +246,8 @@ namespace Mvc
                     newResults.push(row);
                 }
             }
-            if (this.sort.length > 0) {
-                var i = 0;
-                for (let keySort in this.sort) {
-                    eval(this.sort[keySort]);
-                    i++;
-                }
+            if (this.sortConds) {
+                newResults = this.resolveSort(newResults);
             }
             return newResults;
         }
