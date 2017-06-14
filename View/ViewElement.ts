@@ -140,7 +140,7 @@ namespace View
          */
         public show()
         {
-            this.element.style.display = "block";
+            this.element.style.display = "";
             return this;
         }
 

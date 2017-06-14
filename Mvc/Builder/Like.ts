@@ -18,9 +18,9 @@ namespace Builder
             super();
             if (typeof condition == "object") {
                 this.condition = condition;
-            } else {
-                throw "And condition must be an object";
+                return;
             }
+            throw "And condition must be an object";            
         }
 
         /**
@@ -30,15 +30,14 @@ namespace Builder
         {
             var result = new Array();
             var size   = Object.keys(this.condition).length;
-            for (var key in this.condition) {
-                if (typeof row[key] == "string") {
-                    if (this.condition[key] != "") {
-                        if (row[key].indexOf(this.condition[key]) > -1) {
-                            return true;
-                        }
-                    } else {
-                        return false;
+            for (var key in this.condition) {                
+                if (this.condition[key] != "" && typeof row[key] == "string") {
+                    console.log("siks", row[key], this.condition[key]);
+                    var regexp = new RegExp(this.condition[key].replace(/[^A-Za-z0-9]/g, ""), "i");                    
+                    if (regexp.test(row[key])) {
+                         return true;
                     }
+                    return false;
                 }
             }
             return false;

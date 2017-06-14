@@ -46,7 +46,7 @@ namespace Builder
                     }
                 }
             }
-            for (var i = 0; i < size; i++) {
+            for (let i = 0; i < size; i++) {
                 if (result[i] == true) {
                     return true;
                 }

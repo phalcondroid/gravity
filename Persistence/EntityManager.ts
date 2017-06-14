@@ -226,9 +226,63 @@ namespace Persistence
         /**
          *
          */
-        public delete()
+        public delete(model : any)
         {
-            return false;
+            this.getContainer()
+                .set(
+                    "transactionModel",
+                    model
+                );
+
+            this.getContainer()
+                .set(
+                    "transactionObjectModel",
+                    model
+                );
+
+            this.getContainer()
+                .set(
+                    "transactionType",
+                    "delete"
+                );
+
+            if (model instanceof ModelData.AjaxModel) {
+                this.ajax = new Network.Ajax();
+                this.ajax.setDi(this.getDi());
+                var modelName = model.getClassName();
+
+                var url = model.getDeleteUrl();
+                if (url == null) {
+                    url = this.getDi().get("url").get("baseUrl")+
+                    modelName +
+                    "Delete";
+                }
+                this.ajax.setUrl(
+                    url
+                );
+                var reflection = new Reflection.Reflection();
+                var attrsAsString = JSON.stringify(
+                    reflection.getAtttributeAsObjects(model)
+                );
+                var objParams = {};
+                objParams[modelName] = attrsAsString;
+                this.ajax.setParams(objParams);
+                this.ajax.setMethod(
+                    model.getMethod()
+                );
+
+            } else if (model instanceof ModelData.StaticModel) {
+                switch (model.state) {
+                    case UnitOfWork.NEW:
+                            let tempData = model.getData();
+                        break;
+                    case UnitOfWork.CREATED:
+
+                        break;
+                }
+            }
+
+            return this;
         }
 
         /**
@@ -245,12 +299,12 @@ namespace Persistence
             var type =  this.getContainer()
                 .get("transactionType");
 
-            if (type == "save") {
+            if (type == "save" || type == "delete") {
 
                 this.ajax.response(function (response) {
-
                     return fn(this.setResponse(
                         response,
+                        objModel,
                         type,
                         model
                     ));
