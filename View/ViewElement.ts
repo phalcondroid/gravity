@@ -6,6 +6,7 @@ namespace View
      *
      * @type
      */
+    //@fuck
     export class ViewElement implements Service.InjectionAwareInterface
     {
         di;
@@ -37,21 +38,20 @@ namespace View
         private deny = ["Table", "Td", "Div", "Thead", "Tbody", "Tfoot", "Tr", "Td", "Th", "Label", "Span", "I", "A"];
 
         /**
-         * [url description]
-         * @type {String}
+         * 
+         * @type
          */
         private url = "";
 
         /**
-         * [className description]
-         * @type {[type]}
+         * @type
          */
         private className;
 
         /**
          *
-         * @param  {string} name [description]
-         * @return {[type]}      [description]
+         * @param  
+         * @return
          */
         public constructor(name: any = "", newClone = false)
         {
@@ -70,6 +70,14 @@ namespace View
         /**
          *
          */
+        public initialize()
+        {
+
+        }
+
+        /**
+         *
+         */
         public getArguments(args)
         {
             if (typeof args == "object") {
@@ -81,7 +89,7 @@ namespace View
                 }
                 return argsTemp;
             } else {
-                return [];
+                return false
             }
         }
 
@@ -100,14 +108,6 @@ namespace View
         public getArgs()
         {
             return this.args;
-        }
-
-        /**
-         *
-         */
-        public initialize()
-        {
-
         }
 
         /**
@@ -311,6 +311,14 @@ namespace View
             this.element.append(element);
             return this;
         }
+
+        /*
+        public valueListener(fn : Function)
+        {
+            valueListenerNative.bind(this)(fn);
+            return this;
+        }
+        */
 
         /**
          * [click description]
@@ -684,7 +692,7 @@ namespace View
          */
         public val(val: any = false)
         {
-            if (val) {
+            if (val || typeof val == "string") {
                 this.element.value = val;
                 this.attr("value", val);
                 return this;

@@ -13,9 +13,19 @@ namespace Gravity
         private config : Object = null;
 
         /**
+         * 
+         */
+        private try = 0;
+
+        /**
          *
          */
         private env    : number = Environment.Scope.LOCAL;
+
+        /**
+         * 
+         */
+        private catchErrors : Function = function () {}; 
 
         /**
          *
@@ -144,7 +154,6 @@ namespace Gravity
                         if (temp instanceof View.Controller) {
 
                             temp.setDi(di);
-                            temp.setUrl(di.get("url"));
                             temp.initialize();
                             this.resolvePropertiesController(
                                 temp
@@ -191,6 +200,7 @@ namespace Gravity
                         break;
                 }
             }
+            controller.inject();
         }
 
         /**
@@ -201,13 +211,23 @@ namespace Gravity
             new service().initialize(di);
         }
 
+        public catch(fn)
+        {
+            this.catchErrors = fn;
+            return this;
+        }
+
         /**
          *
          */
         public start()
         {
-            var di = new Service.FactoryDefault;
-            this.resolveConfig(di);
+            try {
+                var di = new Service.FactoryDefault;
+                this.resolveConfig(di);
+            } catch (e) {
+                this.catchErrors(e);
+            }
         }
     }
 }

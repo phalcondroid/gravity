@@ -1,24 +1,21 @@
-///<reference path="./ViewAdapter.ts"/>
-///<reference path="../Url/Url.ts"/>
-
-namespace View
+namespace Service
 {
-    export class Controller implements Service.InjectionAwareInterface
+    export class Injectable implements Service.InjectionAwareInterface
     {
-        public di  : Service.Container;
-        public em  : Persistence.EntityManager;
-        public url : Url.Url;
+        di;
 
-        /**
-         *
-         */
-        public initialize()
+        public constructor()
         {
+            
         }
 
-        /**
-         *
-         */
+        public inject()
+        {
+            for (var key in this.getDi()) {
+                this[key] = this.getDi()[key];
+            }
+        }
+
         public getById(id : string)
         {
             let adapter = new View.ViewAdapter(document.getElementById(id));
@@ -66,7 +63,6 @@ namespace View
                     )
                 );
             }
-
             if (result.length == 1) {
                 return result[0];
             }
@@ -87,23 +83,6 @@ namespace View
         public setDi(di : Service.Container)
         {
             this.di = di;
-            this.em = this.di.get("em");
-        }
-
-        /**
-         *
-         */
-        public setUrl(url)
-        {
-            this.url = url;
-        }
-
-        /**
-         *
-         */
-        public getUrl()
-        {
-            return this.url;
         }
     }
 }

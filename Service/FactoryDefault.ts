@@ -1,7 +1,6 @@
-
-/// <reference path="../Persistence/EntityManager" />
-/// <reference path="../Persistence/Hydrator" />
-/// <reference path="../Network/Ajax" />
+/// <reference path="../Persistence/EntityManager.ts" />
+/// <reference path="../Persistence/Hydrator.ts" />
+/// <reference path="../Network/Ajax.ts" />
 
 namespace Service
 {

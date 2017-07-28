@@ -1,5 +1,5 @@
 
-///<reference path="../ViewElement"/>
+///<reference path="../ViewElement.ts"/>
 
 namespace View {
 

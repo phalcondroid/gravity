@@ -15,6 +15,14 @@ namespace Service
             return this.service[serviceName];
         }
 
+        public hasKey(serviceName)
+        {
+            if (typeof this.service[serviceName] == "undefined") {
+                return false;
+            }
+            return true;
+        }
+
         public setPersistent(serviceName, content)
         {
             sessionStorage.setItem(

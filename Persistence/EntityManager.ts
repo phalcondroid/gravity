@@ -127,12 +127,31 @@ namespace Persistence
         {
             this.ajax = new Network.Ajax();
             this.ajax.setDi(this.getDi());
-
-            var url = objModel.getFindUrl();
+            var url = null;
+            switch (type) {
+                case "find":
+                        url = objModel.getFindUrl();
+                    break;
+                case "findOne":
+                        url = objModel.getFindOneUrl();
+                    break;
+                case "insert":
+                        url = objModel.getInsertUrl();
+                    break;
+                case "update":
+                        url = objModel.getUpdateUrl();
+                    break;
+                case "delete":
+                        url = objModel.getDeleteUrl();
+                    break;
+                case "count":
+                        url = objModel.getCountUrl();
+                    break;
+            }
             if (url == null) {
                 url = this.getDi().get("url").get("baseUrl") +
-                objModel.getClassName() +
-                type;
+                type +
+                objModel.getClassName();
             }
             this.ajax.setUrl(
                 url
@@ -300,7 +319,6 @@ namespace Persistence
                 .get("transactionType");
 
             if (type == "save" || type == "delete") {
-
                 this.ajax.response(function (response) {
                     return fn(this.setResponse(
                         response,
@@ -437,6 +455,7 @@ namespace Persistence
                             objModel
                         );
                     break;
+                case "delete":
                 case "save":
                         resultSet = data;
                     break;
@@ -579,13 +598,9 @@ namespace Persistence
         find(conext,      model : ModelData.RawModel, params : Object);
         findOne(context,  model : ModelData.RawModel, params : Object);
         count(context,    model : ModelData.RawModel, params : Object);
-        distinct(context, model : ModelData.RawModel, params : Object);
-        group(context,    model : ModelData.RawModel, params : Object);
         save(context,     model : ModelData.RawModel);
         delete(context,   model : ModelData.RawModel);
-        forget();
         flush();
-        purge();
         reset();
     }
 }

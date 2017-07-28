@@ -1,16 +1,17 @@
 
-/// <reference path="./RawModel"/>
+/// <reference path="./RawModel.ts"/>
 
 namespace ModelData
 {
     export class AjaxModel extends RawModel implements ModelInterface
     {
-
         source        : string;
         insertUrl     : string = null;
         deleteUrl     : string = null;
         updateUrl     : string = null;
         findUrl       : string = null;
+        findOneUrl    : string = null;
+        countUrl      : string = null;
         params        : Object;
         internalId    : string;
         method        : string = "POST";
@@ -23,10 +24,12 @@ namespace ModelData
 
         public setSource(data : any)
         {
-            this.setInsertUrl(data.find);
+            this.setInsertUrl(data.insert);
             this.setUpdateUrl(data.update);
             this.setInsertUrl(data.insert);
-            this.setFindUrl(data.insert);
+            this.setCountUrl(data.count);
+            this.setFindOneUrl(data.findOne);
+            this.setFindUrl(data.find);
         }
 
         public setInsertUrl(url : string)
@@ -37,6 +40,16 @@ namespace ModelData
         public setFindUrl(url : string)
         {
             this.findUrl    = url;
+        }
+
+        public setFindOneUrl(url : string)
+        {
+            this.findOneUrl    = url;
+        }
+
+        public setCountUrl(url : string)
+        {
+            this.countUrl    = url;
         }
 
         public setDeleteUrl(url : string)

@@ -30,11 +30,11 @@ namespace Builder
         {
             var result = new Array();
             var size   = Object.keys(this.condition).length;
-            for (var key in this.condition) {                
+            for (var key in this.condition) {
                 if (this.condition[key] != "" && typeof row[key] == "string") {
-                    console.log("siks", row[key], this.condition[key]);
-                    var regexp = new RegExp(this.condition[key].replace(/[^A-Za-z0-9]/g, ""), "i");                    
-                    if (regexp.test(row[key])) {
+                    //console.log("->", row[key], this.condition[key], this.condition[key].replace(/[^A-Za-z0-9\s]/g, ""));
+                    var regexp = new RegExp(this.condition[key], "i");                    
+                    if (regexp.test(row[key].replace(/([^a-z_0-9\s]+)/gi, ''))) {
                          return true;
                     }
                     return false;
