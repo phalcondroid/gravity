@@ -1,9 +1,10 @@
 
-namespace View {
+namespace Gravity.View 
+{
     export class Component implements Service.InjectionAwareInterface
     {
         di;
-        public constructor(name)
+        public constructor(context)
         {
             
         }

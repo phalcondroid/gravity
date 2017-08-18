@@ -1,14 +1,17 @@
 ///<reference path="./ViewAdapter.ts"/>
+///<reference path="../Mvc/Controller.ts"/>
 
-namespace View
+namespace Gravity.View
 {
     /**
      *
      * @type
      */
     //@fuck
-    export class ViewElement implements Service.InjectionAwareInterface
+    export class Tag implements Service.InjectionAwareInterface
     {
+        public static NO_CONTEXT = 1; 
+
         di;
         public em : Persistence.EntityManager;
 
@@ -78,24 +81,6 @@ namespace View
         /**
          *
          */
-        public getArguments(args)
-        {
-            if (typeof args == "object") {
-                var argsTemp = new Array();
-                for (var i = 0; i < args.length; i++) {
-                    if (args[i] != "atmpnil" && !(args[i] instanceof View.Controller)) {
-                        argsTemp.push(args[i]);
-                    }
-                }
-                return argsTemp;
-            } else {
-                return false
-            }
-        }
-
-        /**
-         *
-         */
         public setArgs(args)
         {
             this.args = args;
@@ -159,7 +144,7 @@ namespace View
         public getById(id : string)
         {
             if (document.getElementById(id)) {
-                let adapter = new View.ViewAdapter(
+                let adapter = new Gravity.View.ViewAdapter(
                     document.getElementById(id)
                 );
                 if (!adapter) {

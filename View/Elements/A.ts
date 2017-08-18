@@ -1,12 +1,13 @@
 
-///<reference path="../ViewElement.ts"/>
+///<reference path="../Tag.ts"/>
+///<reference path="../../Mvc/Controller.ts"/>
 
-namespace View {
+namespace Gravity.View {
 
     /**
      *
      */
-    export class A extends ViewElement
+    export class A extends Gravity.View.Tag
     {
 
         /**
@@ -16,7 +17,7 @@ namespace View {
         {
             super();
             this.create("a");
-            if (!(ctx instanceof View.Controller)) {
+            if (!(ctx instanceof Gravity.Mvc.Controller)) {
                 throw "context must be instance of View.Controller to " + this.getClassName();
             }
             this.setContext(ctx);
@@ -32,7 +33,7 @@ namespace View {
          * @return {[type]} [description]
          */
         public favIcon(favIcon) {
-            let icon = new View.I(this.getContext())
+            let icon = new Gravity.View.I(this.getContext())
             .class(favIcon);
             this.append(icon.getElement());
             return this;

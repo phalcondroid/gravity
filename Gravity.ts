@@ -151,7 +151,7 @@ namespace Gravity
 
                         var temp = new controllers[key].name;
 
-                        if (temp instanceof View.Controller) {
+                        if (temp instanceof Gravity.Mvc.Controller) {
 
                             temp.setDi(di);
                             temp.initialize();
@@ -174,7 +174,7 @@ namespace Gravity
             }
         }
 
-        private resolvePropertiesController(controller : View.Controller)
+        private resolvePropertiesController(controller : Gravity.Mvc.Controller)
         {
             var restricted = [
                 "constructor",
