@@ -81,6 +81,24 @@ namespace Gravity.View
         /**
          *
          */
+        public getArguments(args)
+        {
+            if (typeof args == "object") {
+                var argsTemp = new Array();
+                for (var i = 0; i < args.length; i++) {
+                    if (args[i] != "atmpnil" && !(args[i] instanceof Gravity.Mvc.Controller)) {
+                        argsTemp.push(args[i]);
+                    }
+                }
+                return argsTemp;
+            } else {
+                return false
+            }
+        }
+
+        /**
+         *
+         */
         public setArgs(args)
         {
             this.args = args;
@@ -499,7 +517,7 @@ namespace Gravity.View
                         );
                     break;
                 case "object":
-                        if (append instanceof View.ViewElement) {
+                        if (append instanceof Gravity.View.Tag) {
                             this.verifyElement(
                                 append.getElement()
                             );
@@ -667,7 +685,7 @@ namespace Gravity.View
          */
         public clone(newIdentify = "") {
             let newElement = this.element.clone();
-            return new ViewElement(newIdentify, newElement[0]);
+            return new Gravity.View.Tag(newIdentify, newElement[0]);
         }
 
         /**

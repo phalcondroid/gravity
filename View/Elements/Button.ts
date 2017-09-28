@@ -1,11 +1,12 @@
-///<reference path="../ViewElement"/>
+///<reference path="../Tag.ts"/>
+///<reference path="../../Mvc/Controller.ts"/>
 
-namespace View {
+namespace Gravity.View {
 
     /**
      *
      */
-    export class Button extends ViewElement
+    export class Button extends Gravity.View.Tag
     {
 
         /**
@@ -16,7 +17,7 @@ namespace View {
             super();
             this.create("button");
             this.attr("type", "button");
-            if (!(ctx instanceof View.Controller)) {
+            if (!(ctx instanceof Gravity.Mvc.Controller)) {
                 throw "context must be instance of View.Controller to " + this.getClassName();
             }
             this.setContext(ctx);

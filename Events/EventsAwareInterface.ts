@@ -1,7 +1,7 @@
 
-/// <reference path="./ManagerInterface"/>
+/// <reference path="./EventManagerInterface.ts"/>
 
-namespace Events
+namespace Gravity.Events
 {
     export interface EventsAwareInterface
     {
@@ -13,6 +13,6 @@ namespace Events
     	/**
     	 * Returns the internal event manager
     	 */
-        getEventsManager() : Events.ManagerInterface;
+        getEventsManager() : Gravity.Events.ManagerInterface;
     }
 }

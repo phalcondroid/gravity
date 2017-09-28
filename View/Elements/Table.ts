@@ -1,12 +1,13 @@
-///<reference path="../ViewElement"/>
+///<reference path="../Tag.ts"/>
+///<reference path="../../Mvc/Controller.ts"/>
 
-namespace View
+namespace Gravity.View
 {
     /**
      * [Table description]
      * @type {[type]}
      */
-    export class Table extends ViewElement
+    export class Table extends Gravity.View.Tag
     {
         private tblElements;
         private thead;
@@ -27,22 +28,22 @@ namespace View
         {
             super();
             this.create("table");
-            if (!(ctx instanceof View.Controller)) {
+            if (!(ctx instanceof Gravity.Mvc.Controller)) {
                 throw "context must be instance of View.Controller to " + this.getClassName();
             }
             this.setContext(ctx);
             this.setDi(ctx.getDi());
             this.em = this.getDi().get("em");
 
-            this.thead  = new View.Thead(
+            this.thead  = new Gravity.View.Thead(
                 this.getContext()
             );
 
-            this.tbody = new View.Tbody(
+            this.tbody = new Gravity.View.Tbody(
                 this.getContext()
             );
 
-            this.tfoot = new View.Tfoot(
+            this.tfoot = new Gravity.View.Tfoot(
                 this.getContext()
             );
 
@@ -85,7 +86,7 @@ namespace View
          */
         public toHeadTr(component)
         {
-            let tr = new View.Tr(this.getContext());
+            let tr = new Gravity.View.Tr(this.getContext());
             tr.append(component);
 
             this.thead.append(
@@ -136,7 +137,7 @@ namespace View
          */
         public toBodyTr(component)
         {
-            let tr = new View.Tr(this.getContext());
+            let tr = new Gravity.View.Tr(this.getContext());
             tr.append(component);
 
             this.tbody.append(
@@ -155,7 +156,7 @@ namespace View
          */
         public toFootTr(component)
         {
-            let tr = new View.Tr(this.getContext());
+            let tr = new Gravity.View.Tr(this.getContext());
             tr.append(component);
 
             this.tfoot.append(
@@ -177,14 +178,14 @@ namespace View
         {
             this.header = true;
 
-            this.tr     = new View.Tr(
+            this.tr     = new Gravity.View.Tr(
                 this.getContext()
             );
 
             let i = 0;
             for (let key in columns) {
 
-                let th = new View.Th(
+                let th = new Gravity.View.Th(
                     this.context
                 );
 
@@ -241,7 +242,7 @@ namespace View
 
             this.system = ["click", "customize"];
 
-            var html = new View.ViewElement();
+            var html = new Gravity.View.Tag();
             var i = 0;
 
             for (var key in content) {
@@ -267,7 +268,7 @@ namespace View
                         var contentRow = content[key][row];
                         var finalContent;
 
-                        if (contentRow instanceof View.ViewElement) {
+                        if (contentRow instanceof Gravity.View.Tag) {
                             finalContent = contentRow.getElement();
                         } else if(typeof contentRow == "object" && contentRow != null) {
 

@@ -13,7 +13,7 @@ namespace Gravity.View {
         /**
          *
          */
-        public constructor(ctx, a1 : any = "atmpnil", a2 : any = "atmpnil", a3 : any = "atmpnil", a4 : any = "atmpnil", a5 : any = "atmpnil")
+        public constructor(ctx, args : any = "")
         {
             super();
             this.create("a");

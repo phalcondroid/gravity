@@ -10,7 +10,7 @@ namespace Gravity
         /**
          *
          */
-        private config : Object = null;
+        private config : Object = {};
 
         /**
          * 
@@ -26,6 +26,11 @@ namespace Gravity
          * 
          */
         private catchErrors : Function = function () {}; 
+
+        /**
+         *
+         */
+        private domManager = new Gravity.View.DomManager;
 
         /**
          *
@@ -192,7 +197,7 @@ namespace Gravity
                 switch (typeof controller[key]) {
                     case "function":
                             if (!Helper.ArrayHelper.inArray(restricted, key)) {
-                                var component = controller.getById(key);
+                                var component = this.domManager.getById(key);
                                 if (component) {
                                     controller[key](component);
                                 }

@@ -1,9 +1,10 @@
-///<reference path="../ViewElement"/>
+///<reference path="../Tag.ts"/>
+///<reference path="../../Mvc/Controller.ts"/>
 ///<reference path="../../Model/RawModel"/>
 
-namespace View {
+namespace Gravity.View {
 
-    export class Select extends ViewElement
+    export class Select extends Gravity.View.Tag
     {
 
         private choose = "Choose...";
@@ -15,7 +16,7 @@ namespace View {
         {
             super("");
             this.create("select");
-            if (!(ctx instanceof View.Controller)) {
+            if (!(ctx instanceof Gravity.Mvc.Controller)) {
                 throw "context must be instance of View.Controller to " + this.getClassName();
             }
             this.setContext(ctx);

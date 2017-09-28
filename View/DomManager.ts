@@ -13,9 +13,10 @@ namespace Gravity.View
          * 
          * @param element
          */
-        public constructor(element)
+        public constructor(element = null)
         {
-            this.element = element;
+            if (element != null)
+                this.element = element;
         }
 
         /**
